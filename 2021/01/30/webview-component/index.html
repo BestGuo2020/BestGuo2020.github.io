@@ -1,0 +1,330 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="BestGuo2020"><meta name="copyright" content="BestGuo2020"><meta name="generator" content="Hexo 5.4.0"><meta name="theme" content="hexo-theme-yun"><title>Android 入门篇之 WebView 组件的使用 | 小赫赫的小站</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/star-markdown-css@0.1.24/dist/yun/yun-markdown.min.css"><script src="//at.alicdn.com/t/font_1140697_ed8vp4atwoj.js" async></script><script src="https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>document.addEventListener("DOMContentLoaded", () => {
+  [".post-card",".post-content img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+});
+</script><link id="light-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism.css" media="(prefers-color-scheme: light)"><link id="dark-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism-tomorrow.css" media="(prefers-color-scheme: dark)"><link rel="shortcut icon" type="image/svg+xml" href="/favicon.ico"><link rel="mask-icon" href="/favicon.ico" color="#0078E7"><link rel="alternate icon" href="/yun.ico"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="preload" href="/js/utils.js" as="script"><link rel="preload" href="/js/hexo-theme-yun.js" as="script"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><script id="yun-config">
+    const Yun = window.Yun || {};
+    window.CONFIG = {"hostname":"www.bestguo.top","root":"/","title":"小赫赫的小站","version":"1.5.2","mode":"time","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"搜索...","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）"},"anonymous_image":"https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/avatar/none.jpg","say":{"api":"https://v1.hitokoto.cn","hitokoto":true},"fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/utils.js"></script><script src="/js/hexo-theme-yun.js"></script><link rel="preconnect" href="https://www.google-analytics.com" crossorigin><script async src="https://www.googletagmanager.com/gtag/js?id=G-907LWSSHLS"></script><script>if (CONFIG.hostname === location.hostname) {
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-907LWSSHLS');
+}</script><script>(function(){
+  var bp = document.createElement('script');
+  var curProtocol = window.location.protocol.split(':')[0];
+  if (curProtocol === 'https') {
+    bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+  }
+  else {
+    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+  }
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(bp, s);
+})();</script><meta name="description" content="学习感受WebView 网页视图在 Android APP 中也是用的非常多，比如微信、QQ、淘宝、bilibili 等等这些非常受欢迎的应用都有使用到这个组件。 同时，WebView 是可以调用里面的 Javascript 代码。JavaScript 代码也能够调用的 Android 中相关的代码，这就相当于是混合开发。混合开发的案例也非常多，比如我们的常用的淘宝，它就是使用了混合开发的方式了。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android 入门篇之 WebView 组件的使用">
+<meta property="og:url" content="https://www.bestguo.top/2021/01/30/webview-component/index.html">
+<meta property="og:site_name" content="小赫赫的小站">
+<meta property="og:description" content="学习感受WebView 网页视图在 Android APP 中也是用的非常多，比如微信、QQ、淘宝、bilibili 等等这些非常受欢迎的应用都有使用到这个组件。 同时，WebView 是可以调用里面的 Javascript 代码。JavaScript 代码也能够调用的 Android 中相关的代码，这就相当于是混合开发。混合开发的案例也非常多，比如我们的常用的淘宝，它就是使用了混合开发的方式了。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.bestguo.top/images/Android/webview/QQ%E6%88%AA%E5%9B%BE20210130213210.jpg">
+<meta property="og:image" content="https://www.bestguo.top/images/Android/webview/QQ%E6%88%AA%E5%9B%BE20210130213336.jpg">
+<meta property="og:image" content="https://www.bestguo.top/images/Android/webview/Screenshot_20210130_214525.jpg">
+<meta property="og:image" content="https://www.bestguo.top/images/Android/webview/Screenshot_20210130_214715.jpg">
+<meta property="og:image" content="https://www.bestguo.top/images/Android/webview/Screenshot_20210130_214728.jpg">
+<meta property="og:image" content="https://www.bestguo.top/images/Android/webview/d9flt-ythk8.gif">
+<meta property="og:image" content="https://www.bestguo.top/images/Android/webview/j7vx8-2t7y4.gif">
+<meta property="og:image" content="https://www.bestguo.top/images/Android/webview/31gqw-z2rim.gif">
+<meta property="og:image" content="https://www.bestguo.top/images/Android/webview/4vnee-wx7du.gif">
+<meta property="article:published_time" content="2021-01-30T15:00:00.000Z">
+<meta property="article:modified_time" content="2021-04-21T09:22:13.859Z">
+<meta property="article:author" content="BestGuo2020">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="Android">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.bestguo.top/images/Android/webview/QQ%E6%88%AA%E5%9B%BE20210130213210.jpg"><script src="/js/ui/mode.js"></script></head><body><script defer src="https://cdn.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-passport-line"></use></svg></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="BestGuo2020"><img width="96" loading="lazy" src="/images/avatar.jpg" alt="BestGuo2020"><span class="site-author-status" title="牛气冲天，扭转乾坤！">✨</span></a><div class="site-author-name"><a href="/about/">BestGuo2020</a></div><a class="site-name" href="/about/site.html">小赫赫的小站</a><sub class="site-subtitle">成为更好的自己</sub><div class="site-desciption">一个人的世界是如此的安静</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="首页"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">40</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">12</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">28</span></a></div><a class="site-state-item hty-icon-button" href="/albums/" title="相册集"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-gallery-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://wpa.qq.com/msgrd?v=3&amp;uin=1540113012&amp;site=qq&amp;menu=yes" title="QQ：xiaohehe2021" target="_blank" style="color:#12B7F5"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-qq-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/bestguo2020" title="GitHub：BestGuo2020" target="_blank" style="color:#8251e6"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-github-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/184681623" title="哔哩哔哩: 我叫人员外婆" target="_blank" style="color:#FF8EB3"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-bilibili-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:bestguo2020@foxmail.com" title="E-Mail" target="_blank" style="color:#8E71C1"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-mail-line"></use></svg></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-contrast-2-line"></use></svg></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%A6%E4%B9%A0%E6%84%9F%E5%8F%97"><span class="toc-number">1.</span> <span class="toc-text">学习感受</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E4%BE%8B"><span class="toc-number">2.</span> <span class="toc-text">实例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA-WebView"><span class="toc-number">2.1.</span> <span class="toc-text">创建 WebView</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A0%E8%BD%BD%E7%BD%91%E9%A1%B5"><span class="toc-number">2.2.</span> <span class="toc-text">加载网页</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9C%AC%E5%9C%B0%E5%8A%A0%E8%BD%BD"><span class="toc-number">2.2.1.</span> <span class="toc-text">本地加载</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%9C%E7%A8%8B%E5%8A%A0%E8%BD%BD"><span class="toc-number">2.2.2.</span> <span class="toc-text">远程加载</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9B%E5%85%A5%E6%96%B0%E9%A1%B5%E9%9D%A2"><span class="toc-number">2.3.</span> <span class="toc-text">进入新页面</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%94%E5%9B%9E"><span class="toc-number">2.4.</span> <span class="toc-text">返回</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B6%E5%AE%83%E9%AB%98%E7%BA%A7%E8%AE%BE%E7%BD%AE"><span class="toc-number">2.5.</span> <span class="toc-text">其它高级设置</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%8E%E8%AE%B0"><span class="toc-number">3.</span> <span class="toc-text">后记</span></a></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article"><link itemprop="mainEntityOfPage" href="https://www.bestguo.top/2021/01/30/webview-component/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="BestGuo2020"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="小赫赫的小站"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">Android 入门篇之 WebView 组件的使用</h1><div class="post-meta"><div class="post-time" style="display:inline-block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="创建时间：2021-01-30 23:00:00" itemprop="dateCreated datePublished" datetime="2021-01-30T23:00:00+08:00">2021-01-30</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-2-line"></use></svg></span> <time title="修改时间：2021-04-21 17:22:13" itemprop="dateModified" datetime="2021-04-21T17:22:13+08:00">2021-04-21</time></div><span class="post-busuanzi"><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读次数"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-eye-line"></use></svg> <span id="busuanzi_value_page_pv"></span></span></span><span class="post-meta-divider">-</span><a href="#comment"><span class="post-meta-item-icon" title="评论数"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-chat-3-line"></use></svg> <span class="waline-comment-count" id="/2021/01/30/webview-component/"></span></span></a><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category" href="/categories/Android-%E5%BC%80%E5%8F%91%E7%9A%84%E5%AD%A6%E4%B9%A0%E5%8E%86%E7%A8%8B/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">Android 开发的学习历程</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag" href="/tags/Java/" style="--text-color:#ff9900"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">Java</span></a><a class="tag" href="/tags/Android/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">Android</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body" style="--smc-primary:#0078E7;"><h2 id="学习感受"><a href="#学习感受" class="headerlink" title="学习感受"></a>学习感受</h2><p>WebView 网页视图在 Android APP 中也是用的非常多，比如微信、QQ、淘宝、bilibili 等等这些非常受欢迎的应用都有使用到这个组件。</p>
+<p>同时，WebView 是可以调用里面的 Javascript 代码。JavaScript 代码也能够调用的 Android 中相关的代码，这就相当于是混合开发。混合开发的案例也非常多，比如我们的常用的淘宝，它就是使用了混合开发的方式了。</p>
+<p>本日志仅仅是记录了 WebView 的一些基本的使用，深入学习这种混合的开发方式，这里不过多赘述。</p>
+<span id="more"></span>
+
+<h2 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h2><h3 id="创建-WebView"><a href="#创建-WebView" class="headerlink" title="创建 WebView"></a>创建 WebView</h3><p>创建 WebView 非常简单，只需创建组件即可，同时需要设置id</p>
+<pre class="language-xml" data-language="xml"><code class="language-xml"><span class="token prolog">&lt;?xml version="1.0" encoding="utf-8"?></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>LinearLayout</span> <span class="token attr-name"><span class="token namespace">xmlns:</span>android</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://schemas.android.com/apk/res/android<span class="token punctuation">"</span></span>
+    <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>match_parent<span class="token punctuation">"</span></span>
+    <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>match_parent<span class="token punctuation">"</span></span>
+    <span class="token attr-name"><span class="token namespace">android:</span>orientation</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>vertical<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>WebView</span>
+        <span class="token attr-name"><span class="token namespace">android:</span>id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@+id/web_view<span class="token punctuation">"</span></span>
+        <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>match_parent<span class="token punctuation">"</span></span>
+        <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>match_parent<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>LinearLayout</span><span class="token punctuation">></span></span>
+</code></pre>
+
+<h3 id="加载网页"><a href="#加载网页" class="headerlink" title="加载网页"></a>加载网页</h3><p>加载网页分别有两种不同的加载方式，一个是加载本地的网页，另一个是加载远程的网页。</p>
+<h4 id="本地加载"><a href="#本地加载" class="headerlink" title="本地加载"></a>本地加载</h4><p>在加载本地网页之前，需要创建一个 asset 的文件夹。因为只有 asset 文件夹下的文件不会被编译进去，比如我们之前在 res/drawable 文件夹中放入的这些图片都是会进行一个编译。调用图片的方式，也不是用路径来进行一个编译，而是使用这种 <code>@drawablw/xxxx</code> 这种方式来获取图片的。</p>
+<p>正确的创建的 asset 文件夹的步骤如下。</p>
+<ol>
+<li><p>新建<br><img src="/images/Android/webview/QQ%E6%88%AA%E5%9B%BE20210130213210.jpg" loading="lazy"></p>
+</li>
+<li><p>直接 Finish<br><img src="/images/Android/webview/QQ%E6%88%AA%E5%9B%BE20210130213336.jpg" loading="lazy"></p>
+</li>
+</ol>
+<p>创建完成之后，可以随便写一个 html 代码，放到这个 asset 文件夹下。这里用的是我之前写的一个网页进行测试</p>
+<p>加载网页的方法用的是 onLoad 方法，固定的部分是 file:///android_asset/ ，后面的部分就可以指定的网页的。</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token keyword">package</span> <span class="token namespace">top<span class="token punctuation">.</span>bestguo<span class="token punctuation">.</span>androidlayout</span><span class="token punctuation">;</span>
+
+<span class="token keyword">import</span> <span class="token namespace">android<span class="token punctuation">.</span>support<span class="token punctuation">.</span>v7<span class="token punctuation">.</span>app<span class="token punctuation">.</span></span><span class="token class-name">AppCompatActivity</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token namespace">android<span class="token punctuation">.</span>os<span class="token punctuation">.</span></span><span class="token class-name">Bundle</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token namespace">android<span class="token punctuation">.</span>webkit<span class="token punctuation">.</span></span><span class="token class-name">WebView</span><span class="token punctuation">;</span>
+
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">WebViewActivity</span> <span class="token keyword">extends</span> <span class="token class-name">AppCompatActivity</span> <span class="token punctuation">&#123;</span>
+
+    <span class="token keyword">private</span> <span class="token class-name">WebView</span> webView<span class="token punctuation">;</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">protected</span> <span class="token keyword">void</span> <span class="token function">onCreate</span><span class="token punctuation">(</span><span class="token class-name">Bundle</span> savedInstanceState<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token function">onCreate</span><span class="token punctuation">(</span>savedInstanceState<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">setContentView</span><span class="token punctuation">(</span><span class="token class-name">R</span><span class="token punctuation">.</span>layout<span class="token punctuation">.</span>activity_web_view<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        progressBar <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">ProgressBar</span><span class="token punctuation">)</span> <span class="token function">findViewById</span><span class="token punctuation">(</span><span class="token class-name">R</span><span class="token punctuation">.</span>id<span class="token punctuation">.</span>progress<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        webView <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">WebView</span><span class="token punctuation">)</span> <span class="token function">findViewById</span><span class="token punctuation">(</span><span class="token class-name">R</span><span class="token punctuation">.</span>id<span class="token punctuation">.</span>web_view<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">// 允许 javascript</span>
+        webView<span class="token punctuation">.</span><span class="token function">getSettings</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">setJavaScriptEnabled</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">// 加载本地的 html 文件</span>
+        webView<span class="token punctuation">.</span><span class="token function">loadUrl</span><span class="token punctuation">(</span><span class="token string">"file:///android_asset/index.html"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span></code></pre>
+
+<p>运行效果如下：</p>
+<p><img src="/images/Android/webview/Screenshot_20210130_214525.jpg" loading="lazy"></p>
+<h4 id="远程加载"><a href="#远程加载" class="headerlink" title="远程加载"></a>远程加载</h4><p>远程加载只需要一个 http 或者 https 协议的地址就可以了。不过，在加载远程的一个网址时，需要允许 javascript 网页才能够正常的运行成功。不允许将加载不出来。</p>
+<p>启用 javascript 的方法为 <code>setJavaScriptEnabled</code> ，设置为 true 允许，false 为禁止。</p>
+<p>这里以我的个人网站为例子</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token keyword">package</span> <span class="token namespace">top<span class="token punctuation">.</span>bestguo<span class="token punctuation">.</span>androidlayout</span><span class="token punctuation">;</span>
+
+<span class="token keyword">import</span> <span class="token namespace">android<span class="token punctuation">.</span>support<span class="token punctuation">.</span>v7<span class="token punctuation">.</span>app<span class="token punctuation">.</span></span><span class="token class-name">AppCompatActivity</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token namespace">android<span class="token punctuation">.</span>os<span class="token punctuation">.</span></span><span class="token class-name">Bundle</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token namespace">android<span class="token punctuation">.</span>util<span class="token punctuation">.</span></span><span class="token class-name">Log</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token namespace">android<span class="token punctuation">.</span>webkit<span class="token punctuation">.</span></span><span class="token class-name">WebView</span><span class="token punctuation">;</span>
+
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">WebViewActivity</span> <span class="token keyword">extends</span> <span class="token class-name">AppCompatActivity</span> <span class="token punctuation">&#123;</span>
+
+    <span class="token keyword">private</span> <span class="token class-name">WebView</span> webView<span class="token punctuation">;</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">protected</span> <span class="token keyword">void</span> <span class="token function">onCreate</span><span class="token punctuation">(</span><span class="token class-name">Bundle</span> savedInstanceState<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token function">onCreate</span><span class="token punctuation">(</span>savedInstanceState<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">setContentView</span><span class="token punctuation">(</span><span class="token class-name">R</span><span class="token punctuation">.</span>layout<span class="token punctuation">.</span>activity_web_view<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        progressBar <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">ProgressBar</span><span class="token punctuation">)</span> <span class="token function">findViewById</span><span class="token punctuation">(</span><span class="token class-name">R</span><span class="token punctuation">.</span>id<span class="token punctuation">.</span>progress<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        webView <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">WebView</span><span class="token punctuation">)</span> <span class="token function">findViewById</span><span class="token punctuation">(</span><span class="token class-name">R</span><span class="token punctuation">.</span>id<span class="token punctuation">.</span>web_view<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">// 允许 javascript</span>
+        webView<span class="token punctuation">.</span><span class="token function">getSettings</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">setJavaScriptEnabled</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">// 加载本地的 html 文件</span>
+        <span class="token comment">// webView.loadUrl("file:///android_asset/index.html");</span>
+        webView<span class="token punctuation">.</span><span class="token function">loadUrl</span><span class="token punctuation">(</span><span class="token string">"https://www.bestguo.top"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token punctuation">&#125;</span></code></pre>
+
+<p>运行效果如下</p>
+<p><img src="/images/Android/webview/Screenshot_20210130_214715.jpg" loading="lazy"></p>
+<h3 id="进入新页面"><a href="#进入新页面" class="headerlink" title="进入新页面"></a>进入新页面</h3><p>我们在浏览网页的时候，需要点击超链接来进入新的页面，但是我们在点击时。出现了以下的效果</p>
+<p><img src="/images/Android/webview/Screenshot_20210130_214728.jpg" loading="lazy"></p>
+<p>就是需要我们选择一个外置的浏览器来访问新的页面，这样的体验其实并不好。</p>
+<p>因此，解决这种方法需要用到 <code>setWebViewClient</code> 这个方法，它的参数是 <code>WebViewClient</code> 以及被它所继承的子类，重写其中的方法。这个方法就是 <code>shouldOverrideUrlLoading</code>。</p>
+<p>实现的代码如下</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token keyword">package</span> <span class="token namespace">top<span class="token punctuation">.</span>bestguo<span class="token punctuation">.</span>androidlayout</span><span class="token punctuation">;</span>
+
+<span class="token keyword">import</span> <span class="token namespace">android<span class="token punctuation">.</span>support<span class="token punctuation">.</span>v7<span class="token punctuation">.</span>app<span class="token punctuation">.</span></span><span class="token class-name">AppCompatActivity</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token namespace">android<span class="token punctuation">.</span>os<span class="token punctuation">.</span></span><span class="token class-name">Bundle</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token namespace">android<span class="token punctuation">.</span>webkit<span class="token punctuation">.</span></span><span class="token class-name">WebResourceRequest</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token namespace">android<span class="token punctuation">.</span>webkit<span class="token punctuation">.</span></span><span class="token class-name">WebView</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token namespace">android<span class="token punctuation">.</span>webkit<span class="token punctuation">.</span></span><span class="token class-name">WebViewClient</span><span class="token punctuation">;</span>
+
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">WebViewActivity</span> <span class="token keyword">extends</span> <span class="token class-name">AppCompatActivity</span> <span class="token punctuation">&#123;</span>
+
+    <span class="token keyword">private</span> <span class="token class-name">WebView</span> webView<span class="token punctuation">;</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">protected</span> <span class="token keyword">void</span> <span class="token function">onCreate</span><span class="token punctuation">(</span><span class="token class-name">Bundle</span> savedInstanceState<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token function">onCreate</span><span class="token punctuation">(</span>savedInstanceState<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">setContentView</span><span class="token punctuation">(</span><span class="token class-name">R</span><span class="token punctuation">.</span>layout<span class="token punctuation">.</span>activity_web_view<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        progressBar <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">ProgressBar</span><span class="token punctuation">)</span> <span class="token function">findViewById</span><span class="token punctuation">(</span><span class="token class-name">R</span><span class="token punctuation">.</span>id<span class="token punctuation">.</span>progress<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        webView <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">WebView</span><span class="token punctuation">)</span> <span class="token function">findViewById</span><span class="token punctuation">(</span><span class="token class-name">R</span><span class="token punctuation">.</span>id<span class="token punctuation">.</span>web_view<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">// 允许 javascript</span>
+        webView<span class="token punctuation">.</span><span class="token function">getSettings</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">setJavaScriptEnabled</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">// 加载本地的 html 文件</span>
+        <span class="token comment">// webView.loadUrl("file:///android_asset/index.html");</span>
+        webView<span class="token punctuation">.</span><span class="token function">loadUrl</span><span class="token punctuation">(</span><span class="token string">"https://www.bestguo.top"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        webView<span class="token punctuation">.</span><span class="token function">setWebViewClient</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">MyWebViewClient</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token keyword">private</span> <span class="token keyword">class</span> <span class="token class-name">MyWebViewClient</span> <span class="token keyword">extends</span> <span class="token class-name">WebViewClient</span> <span class="token punctuation">&#123;</span>
+
+        <span class="token comment">// 如果要设置成不用新浏览器打开</span>
+        <span class="token annotation punctuation">@Override</span>
+        <span class="token keyword">public</span> <span class="token keyword">boolean</span> <span class="token function">shouldOverrideUrlLoading</span><span class="token punctuation">(</span><span class="token class-name">WebView</span> view<span class="token punctuation">,</span> <span class="token class-name">WebResourceRequest</span> request<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            view<span class="token punctuation">.</span><span class="token function">loadUrl</span><span class="token punctuation">(</span>request<span class="token punctuation">.</span><span class="token function">getUrl</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">return</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span></code></pre>
+
+<p>建立了一个内部类，类名为 MyWebViewClient，需要继承自 WebViewClient 类。重写其 shouldOverrideUrlLoading 方法，将当前的 webview 中的 url 进行一个重新的加载，这样一来就不会直接提示使用外置浏览器了。</p>
+<p>调用 setWebViewClient 方法是，传入的是自己创建的内部类对象就行了 <code>webView.setWebViewClient(new MyWebViewClient());</code></p>
+<p>效果如下</p>
+<p><img src="/images/Android/webview/d9flt-ythk8.gif" loading="lazy"></p>
+<h3 id="返回"><a href="#返回" class="headerlink" title="返回"></a>返回</h3><p>但是，我们进入到这个页面再返回，又出现了一个问题，请看下图。</p>
+<p><img src="/images/Android/webview/j7vx8-2t7y4.gif" loading="lazy"></p>
+<p>很容易发现，它并没有后退到上一个页面，而是直接退出了。所以这个时候，我们需要对按键进行一个判断。判断方法也非常简单，就是按下的是否为返回键并且能够后退到上一个页面。条件成立则执行返回到上一个页面，条件不成立则直接退出。</p>
+<p>同时网页的前进与后退，也有 6 种方法可以选择</p>
+<ul>
+<li>webview.canGoBack()  能否后退到上一个页面</li>
+<li>webview.goBack()  后退到上一个页面</li>
+<li>webview.canGoForward()  前进到下一个页面</li>
+<li>webview.goForward()  前进到下一个页面</li>
+<li>webview.canGoBackOrForward(int steps)  能否后退或者前景到第几个页面，后退为负值，前进为正值</li>
+<li>webview.GoBackOrForward(int steps)  后退或者前景到第几个页面，后退为负值，前进为正值</li>
+</ul>
+<p>在 WebViewActivity 中重写 onKeyDown 方法，重新判端，按下返回键的操作。</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token comment">/**
+  * 设置返回值，防止直接返回
+  * @param keyCode
+  * @param event
+  * @return
+  */</span>
+<span class="token annotation punctuation">@Override</span>
+<span class="token keyword">public</span> <span class="token keyword">boolean</span> <span class="token function">onKeyDown</span><span class="token punctuation">(</span><span class="token keyword">int</span> keyCode<span class="token punctuation">,</span> <span class="token class-name">KeyEvent</span> event<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token comment">// 如果按下了返回键，并且能够返回到上一级目录</span>
+    <span class="token keyword">if</span><span class="token punctuation">(</span>keyCode <span class="token operator">==</span> <span class="token class-name">KeyEvent</span><span class="token punctuation">.</span>KEYCODE_BACK <span class="token operator">&amp;&amp;</span> webView<span class="token punctuation">.</span><span class="token function">canGoBack</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token comment">// 可以返回到上一级的目录</span>
+        webView<span class="token punctuation">.</span><span class="token function">goBack</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    <span class="token comment">// 退出</span>
+    <span class="token keyword">return</span> <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token function">onKeyDown</span><span class="token punctuation">(</span>keyCode<span class="token punctuation">,</span> event<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span></code></pre>
+
+<p>运行效果如下</p>
+<p><img src="/images/Android/webview/31gqw-z2rim.gif" loading="lazy"></p>
+<h3 id="其它高级设置"><a href="#其它高级设置" class="headerlink" title="其它高级设置"></a>其它高级设置</h3><p>以上问题解决了，我们可以获取进度条来显示网页加载的情况，以及设置标题，将原来的 AndroidLayout 标题进行一个替换。</p>
+<p>要做到这种效果，还是要写一个类，类名为 MyWebChromeClient ，该类需要继承自 WebChromeClient，重写它的两个方法就能够实现以上的功能了。</p>
+<p>重写的两个方法，分别如下：</p>
+<ul>
+<li>onProgressChanged 加载进度，创建一个 ProgressBar 这个组件就可以去实现</li>
+<li>onReceivedTitle 得到的标题，直接使用父类的 setTitle 方法，对标题进行设置</li>
+</ul>
+<p>在此之前，先添加一个进度条的组件</p>
+<pre class="language-xml" data-language="xml"><code class="language-xml"><span class="token prolog">&lt;?xml version="1.0" encoding="utf-8"?></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>LinearLayout</span> <span class="token attr-name"><span class="token namespace">xmlns:</span>android</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://schemas.android.com/apk/res/android<span class="token punctuation">"</span></span>
+    <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>match_parent<span class="token punctuation">"</span></span>
+    <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>match_parent<span class="token punctuation">"</span></span>
+    <span class="token attr-name"><span class="token namespace">android:</span>orientation</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>vertical<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+
+    <span class="token comment">&lt;!-- 进度条 --></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>ProgressBar</span>
+        <span class="token attr-name">style</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@android:style/Widget.ProgressBar.Horizontal<span class="token punctuation">"</span></span>
+        <span class="token attr-name"><span class="token namespace">android:</span>id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@+id/progress<span class="token punctuation">"</span></span>
+        <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>match_parent<span class="token punctuation">"</span></span>
+        <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>3dp<span class="token punctuation">"</span></span>
+        <span class="token attr-name"><span class="token namespace">android:</span>max</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>100<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>WebView</span>
+        <span class="token attr-name"><span class="token namespace">android:</span>id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@+id/web_view<span class="token punctuation">"</span></span>
+        <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>match_parent<span class="token punctuation">"</span></span>
+        <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>match_parent<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>LinearLayout</span><span class="token punctuation">></span></span>
+</code></pre>
+
+<p>对应的Java代码</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token keyword">package</span> <span class="token namespace">top<span class="token punctuation">.</span>bestguo<span class="token punctuation">.</span>androidlayout</span><span class="token punctuation">;</span>
+
+<span class="token keyword">import</span> <span class="token namespace">android<span class="token punctuation">.</span>graphics<span class="token punctuation">.</span></span><span class="token class-name">Bitmap</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token namespace">android<span class="token punctuation">.</span>support<span class="token punctuation">.</span>v7<span class="token punctuation">.</span>app<span class="token punctuation">.</span></span><span class="token class-name">AppCompatActivity</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token namespace">android<span class="token punctuation">.</span>os<span class="token punctuation">.</span></span><span class="token class-name">Bundle</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token namespace">android<span class="token punctuation">.</span>util<span class="token punctuation">.</span></span><span class="token class-name">Log</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token namespace">android<span class="token punctuation">.</span>view<span class="token punctuation">.</span></span><span class="token class-name">KeyEvent</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token namespace">android<span class="token punctuation">.</span>webkit<span class="token punctuation">.</span></span><span class="token class-name">WebChromeClient</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token namespace">android<span class="token punctuation">.</span>webkit<span class="token punctuation">.</span></span><span class="token class-name">WebResourceRequest</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token namespace">android<span class="token punctuation">.</span>webkit<span class="token punctuation">.</span></span><span class="token class-name">WebView</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token namespace">android<span class="token punctuation">.</span>webkit<span class="token punctuation">.</span></span><span class="token class-name">WebViewClient</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token namespace">android<span class="token punctuation">.</span>widget<span class="token punctuation">.</span></span><span class="token class-name">ProgressBar</span><span class="token punctuation">;</span>
+
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">WebViewActivity</span> <span class="token keyword">extends</span> <span class="token class-name">AppCompatActivity</span> <span class="token punctuation">&#123;</span>
+
+    <span class="token keyword">private</span> <span class="token class-name">WebView</span> webView<span class="token punctuation">;</span>
+    <span class="token comment">// 声明了一个进度条组件</span>
+    <span class="token keyword">private</span> <span class="token class-name">ProgressBar</span> progressBar<span class="token punctuation">;</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">protected</span> <span class="token keyword">void</span> <span class="token function">onCreate</span><span class="token punctuation">(</span><span class="token class-name">Bundle</span> savedInstanceState<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token function">onCreate</span><span class="token punctuation">(</span>savedInstanceState<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">setContentView</span><span class="token punctuation">(</span><span class="token class-name">R</span><span class="token punctuation">.</span>layout<span class="token punctuation">.</span>activity_web_view<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        progressBar <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">ProgressBar</span><span class="token punctuation">)</span> <span class="token function">findViewById</span><span class="token punctuation">(</span><span class="token class-name">R</span><span class="token punctuation">.</span>id<span class="token punctuation">.</span>progress<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        webView <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">WebView</span><span class="token punctuation">)</span> <span class="token function">findViewById</span><span class="token punctuation">(</span><span class="token class-name">R</span><span class="token punctuation">.</span>id<span class="token punctuation">.</span>web_view<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">// 允许 javascript</span>
+        webView<span class="token punctuation">.</span><span class="token function">getSettings</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">setJavaScriptEnabled</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">// 加载本地的 html 文件</span>
+        <span class="token comment">// webView.loadUrl("file:///android_asset/index.html");</span>
+        webView<span class="token punctuation">.</span><span class="token function">loadUrl</span><span class="token punctuation">(</span><span class="token string">"https://www.bestguo.top"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        webView<span class="token punctuation">.</span><span class="token function">setWebViewClient</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">MyWebViewClient</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        webView<span class="token punctuation">.</span><span class="token function">setWebChromeClient</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">MyWebChromeClient</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+
+    <span class="token comment">// 新建了一个内部类，继承自 webchromeclient 类</span>
+    <span class="token keyword">private</span> <span class="token keyword">class</span> <span class="token class-name">MyWebChromeClient</span> <span class="token keyword">extends</span> <span class="token class-name">WebChromeClient</span> <span class="token punctuation">&#123;</span>
+        <span class="token annotation punctuation">@Override</span>
+        <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onProgressChanged</span><span class="token punctuation">(</span><span class="token class-name">WebView</span> view<span class="token punctuation">,</span> <span class="token keyword">int</span> newProgress<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token function">onProgressChanged</span><span class="token punctuation">(</span>view<span class="token punctuation">,</span> newProgress<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token comment">// 设置进度的状态</span>
+            progressBar<span class="token punctuation">.</span><span class="token function">setProgress</span><span class="token punctuation">(</span>newProgress<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token class-name">Log</span><span class="token punctuation">.</span><span class="token function">d</span><span class="token punctuation">(</span><span class="token string">"loading"</span><span class="token punctuation">,</span> newProgress <span class="token operator">+</span> <span class="token string">""</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+
+        <span class="token annotation punctuation">@Override</span>
+        <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onReceivedTitle</span><span class="token punctuation">(</span><span class="token class-name">WebView</span> view<span class="token punctuation">,</span> <span class="token class-name">String</span> title<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token function">onReceivedTitle</span><span class="token punctuation">(</span>view<span class="token punctuation">,</span> title<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token function">setTitle</span><span class="token punctuation">(</span>title<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+<span class="token punctuation">&#125;</span></code></pre>
+
+<p>运行效果如下</p>
+<p><img src="/images/Android/webview/4vnee-wx7du.gif" loading="lazy"></p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>项目的代码都在 <a target="_blank" rel="noopener" href="https://github.com/BestGuo2020/AndroidStudy">AndroidStudy</a> 的 github 仓库中。</p>
+<p>KeyEvent 对应的事件，请参考 <a target="_blank" rel="noopener" href="https://www.cnblogs.com/hujingnb/p/10282238.html">https://www.cnblogs.com/hujingnb/p/10282238.html</a></p>
+</div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>BestGuo2020</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="https://www.bestguo.top/2021/01/30/webview-component/" title="Android 入门篇之 WebView 组件的使用">https://www.bestguo.top/2021/01/30/webview-component/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><svg class="icon"><use xlink:href="#icon-creative-commons-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-by-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-nc-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-sa-line"></use></svg></a> 许可协议。</li></ul></section></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/2021/01/31/activity-life/" rel="prev" title="Activity 的生命周期"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-left-s-line"></use></svg><span class="post-nav-text">Activity 的生命周期</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/2021/01/30/scrollview-component/" rel="next" title="Android 入门篇之 ScrollView 组件的使用"><span class="post-nav-text">Android 入门篇之 ScrollView 组件的使用</span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-right-s-line"></use></svg></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>请诸位理性发言！</span><br><span>请勿发布违反中国大陆地区法律的言论，请勿人身攻击、谩骂、侮辱和煽动式的语言。</span><br></div><div id="waline"></div><script>Yun.utils.getScript("https://cdn.jsdelivr.net/npm/@waline/client/dist/Waline.min.js", () => {
+  const walineConfig = {"enable":true,"serverURL":"https://comment.bestguo.top/","comment":true,"requiredFields":["nick","mail"],"placeholder":"有什么想要对和小赫赫说的呢，通过审核评论才会显示😊😊","avatarCDN":"https://gravatar.loli.net/avatar/","el":"#waline","lang":"zh-CN"}
+  walineConfig.path = "/2021/01/30/webview-component/"
+  new Waline(walineConfig)
+}, window.Waline);</script></div></main><footer class="sidebar-translate" id="footer"><div class="beian"><a rel="noopener" href="https://beian.miit.gov.cn/" target="_blank">赣 ICP 备 20009988 号</a></div><div class="copyright"><span>&copy; 2019 – 2021 </span><span class="with-love" id="animate"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-cloud-line"></use></svg></span><span class="author"> BestGuo2020</span></div><div class="powered"><span>由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v5.4.0</span><span class="footer-separator">|</span><span>主题 - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.5.2</span></div><div class="live_time"><span>本站点已正常地运行</span><span id="display_live_time"></span><span class="moe-text"><br/>♬(ノ゜∇゜)ノ♩<br></span><script>function blog_live_time() {
+  setTimeout(blog_live_time, 1000);
+  const start = new Date('2021-01-01T00:00:00');
+  const now = new Date();
+  const timeDiff = (now.getTime() - start.getTime());
+  const msPerMinute = 60 * 1000;
+  const msPerHour = 60 * msPerMinute;
+  const msPerDay = 24 * msPerHour;
+  const passDay = Math.floor(timeDiff / msPerDay);
+  const passHour = Math.floor((timeDiff % msPerDay) / 60 / 60 / 1000);
+  const passMinute = Math.floor((timeDiff % msPerHour) / 60 / 1000);
+  const passSecond = Math.floor((timeDiff % msPerMinute) / 1000);
+  display_live_time.innerHTML = " " + passDay + " 天 " + passHour + " 小时 " + passMinute + " 分 " + passSecond + " 秒";
+}
+blog_live_time();
+</script></div><div id="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_site_uv" title="总访客量"><span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-user-line"></use></svg></span><span id="busuanzi_value_site_uv"></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv" title="总访问量"><span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-eye-line"></use></svg></span><span id="busuanzi_value_site_pv"></span></span></div><div class="footer-support"><span>本网站由</span><a class="footer-support-logo" href="https://www.upyun.com/?utm_source=lianmeng&amp;utm_medium=referral" target="blank" title="又拍云"><img height="30" src="https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/logo/upyun-logo.png" alt="又拍云"></a><span>提供 CDN 加速/云存储服务</span></div></footer><a class="hty-icon-button" id="goUp" aria-label="back-to-top" href="#"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a></div></body></html>

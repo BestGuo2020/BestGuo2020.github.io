@@ -1,0 +1,169 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="BestGuo2020"><meta name="copyright" content="BestGuo2020"><meta name="generator" content="Hexo 5.4.0"><meta name="theme" content="hexo-theme-yun"><title>初识中间件与分布式架构 | 小赫赫的小站</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/star-markdown-css@0.1.24/dist/yun/yun-markdown.min.css"><script src="//at.alicdn.com/t/font_1140697_ed8vp4atwoj.js" async></script><script src="https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>document.addEventListener("DOMContentLoaded", () => {
+  [".post-card",".post-content img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+});
+</script><link id="light-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism.css" media="(prefers-color-scheme: light)"><link id="dark-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism-tomorrow.css" media="(prefers-color-scheme: dark)"><link rel="shortcut icon" type="image/svg+xml" href="/favicon.ico"><link rel="mask-icon" href="/favicon.ico" color="#0078E7"><link rel="alternate icon" href="/yun.ico"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="preload" href="/js/utils.js" as="script"><link rel="preload" href="/js/hexo-theme-yun.js" as="script"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><script id="yun-config">
+    const Yun = window.Yun || {};
+    window.CONFIG = {"hostname":"www.bestguo.top","root":"/","title":"小赫赫的小站","version":"1.5.2","mode":"time","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"搜索...","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）"},"anonymous_image":"https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/avatar/none.jpg","say":{"api":"https://v1.hitokoto.cn","hitokoto":true},"fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/utils.js"></script><script src="/js/hexo-theme-yun.js"></script><link rel="preconnect" href="https://www.google-analytics.com" crossorigin><script async src="https://www.googletagmanager.com/gtag/js?id=G-907LWSSHLS"></script><script>if (CONFIG.hostname === location.hostname) {
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-907LWSSHLS');
+}</script><script>(function(){
+  var bp = document.createElement('script');
+  var curProtocol = window.location.protocol.split(':')[0];
+  if (curProtocol === 'https') {
+    bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+  }
+  else {
+    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+  }
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(bp, s);
+})();</script><meta name="description" content="对于中间件还是比较好理解的，两者之间无法“沟通”，需要介入第三者，间接的使其沟通。不过在生活中有的时候还是不要介入奇奇怪怪的第三者比较好。 什么是中间件举个很常见的例子，外交部发言人（简称发言人）要和外国的记者进行交流。外国记者需要提问，发言人需要回答他的问题。可是直接听取外国记者的问题似乎有些麻烦，那你知道是如何解决的呢？ 没错，就是同声传译了。也就是说有一个翻译，那些外国人听到的都是那个翻译说">
+<meta property="og:type" content="article">
+<meta property="og:title" content="初识中间件与分布式架构">
+<meta property="og:url" content="https://www.bestguo.top/2021/04/22/what-s-middleware/index.html">
+<meta property="og:site_name" content="小赫赫的小站">
+<meta property="og:description" content="对于中间件还是比较好理解的，两者之间无法“沟通”，需要介入第三者，间接的使其沟通。不过在生活中有的时候还是不要介入奇奇怪怪的第三者比较好。 什么是中间件举个很常见的例子，外交部发言人（简称发言人）要和外国的记者进行交流。外国记者需要提问，发言人需要回答他的问题。可是直接听取外国记者的问题似乎有些麻烦，那你知道是如何解决的呢？ 没错，就是同声传译了。也就是说有一个翻译，那些外国人听到的都是那个翻译说">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.bestguo.top/2021/04/22/what-s-middleware/aaadf.jpg">
+<meta property="og:image" content="https://www.bestguo.top/2021/04/22/what-s-middleware/ebpnwjqsiaq.png">
+<meta property="article:published_time" content="2021-04-22T01:11:22.000Z">
+<meta property="article:modified_time" content="2021-06-12T07:55:51.886Z">
+<meta property="article:author" content="BestGuo2020">
+<meta property="article:tag" content="中间件">
+<meta property="article:tag" content="分布式">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.bestguo.top/2021/04/22/what-s-middleware/aaadf.jpg"><script src="/js/ui/mode.js"></script></head><body><script defer src="https://cdn.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-passport-line"></use></svg></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="BestGuo2020"><img width="96" loading="lazy" src="/images/avatar.jpg" alt="BestGuo2020"><span class="site-author-status" title="牛气冲天，扭转乾坤！">✨</span></a><div class="site-author-name"><a href="/about/">BestGuo2020</a></div><a class="site-name" href="/about/site.html">小赫赫的小站</a><sub class="site-subtitle">成为更好的自己</sub><div class="site-desciption">一个人的世界是如此的安静</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="首页"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">40</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">12</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">28</span></a></div><a class="site-state-item hty-icon-button" href="/albums/" title="相册集"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-gallery-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://wpa.qq.com/msgrd?v=3&amp;uin=1540113012&amp;site=qq&amp;menu=yes" title="QQ：xiaohehe2021" target="_blank" style="color:#12B7F5"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-qq-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/bestguo2020" title="GitHub：BestGuo2020" target="_blank" style="color:#8251e6"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-github-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/184681623" title="哔哩哔哩: 我叫人员外婆" target="_blank" style="color:#FF8EB3"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-bilibili-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:bestguo2020@foxmail.com" title="E-Mail" target="_blank" style="color:#8E71C1"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-mail-line"></use></svg></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-contrast-2-line"></use></svg></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E4%B8%AD%E9%97%B4%E4%BB%B6"><span class="toc-number">1.</span> <span class="toc-text">什么是中间件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%89%E5%93%AA%E4%BA%9B%E4%B8%AD%E9%97%B4%E4%BB%B6%E6%8A%80%E6%9C%AF"><span class="toc-number">2.</span> <span class="toc-text">有哪些中间件技术</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6"><span class="toc-number">2.1.</span> <span class="toc-text">消息中间件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E4%B8%AD%E9%97%B4%E4%BB%B6"><span class="toc-number">2.2.</span> <span class="toc-text">负载均衡中间件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%93%E5%AD%98%E4%B8%AD%E9%97%B4%E4%BB%B6"><span class="toc-number">2.3.</span> <span class="toc-text">缓存中间件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%AD%E9%97%B4%E4%BB%B6"><span class="toc-number">2.4.</span> <span class="toc-text">数据库中间件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E6%A1%88%E4%BE%8B"><span class="toc-number">2.5.</span> <span class="toc-text">相关案例</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B0%88%E8%B0%88%E5%88%86%E5%B8%83%E5%BC%8F%E6%9E%B6%E6%9E%84"><span class="toc-number">3.</span> <span class="toc-text">谈谈分布式架构</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A5%BD%E5%A4%84"><span class="toc-number">3.0.1.</span> <span class="toc-text">好处</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AD%98%E5%9C%A8%E9%97%AE%E9%A2%98"><span class="toc-number">3.0.2.</span> <span class="toc-text">存在问题</span></a></li></ol></li></ol></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article"><link itemprop="mainEntityOfPage" href="https://www.bestguo.top/2021/04/22/what-s-middleware/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="BestGuo2020"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="小赫赫的小站"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">初识中间件与分布式架构</h1><div class="post-meta"><div class="post-time" style="display:inline-block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="创建时间：2021-04-22 09:11:22" itemprop="dateCreated datePublished" datetime="2021-04-22T09:11:22+08:00">2021-04-22</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-2-line"></use></svg></span> <time title="修改时间：2021-06-12 15:55:51" itemprop="dateModified" datetime="2021-06-12T15:55:51+08:00">2021-06-12</time></div><span class="post-busuanzi"><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读次数"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-eye-line"></use></svg> <span id="busuanzi_value_page_pv"></span></span></span><span class="post-meta-divider">-</span><a href="#comment"><span class="post-meta-item-icon" title="评论数"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-chat-3-line"></use></svg> <span class="waline-comment-count" id="/2021/04/22/what-s-middleware/"></span></span></a><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category" href="/categories/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">后端开发</span></a></span> > <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category" href="/categories/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/RabbitMQ-%E7%9A%84%E5%AD%A6%E4%B9%A0%E5%8E%86%E7%A8%8B/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">RabbitMQ 的学习历程</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag" href="/tags/%E4%B8%AD%E9%97%B4%E4%BB%B6/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">中间件</span></a><a class="tag" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">分布式</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body" style="--smc-primary:#0078E7;"><p>对于中间件还是比较好理解的，两者之间无法“沟通”，需要介入第三者，间接的使其沟通。不过在生活中有的时候还是不要介入奇奇怪怪的第三者比较好。</p>
+<h2 id="什么是中间件"><a href="#什么是中间件" class="headerlink" title="什么是中间件"></a>什么是中间件</h2><p>举个很常见的例子，外交部发言人（简称发言人）要和外国的记者进行交流。外国记者需要提问，发言人需要回答他的问题。可是直接听取外国记者的问题似乎有些麻烦，那你知道是如何解决的呢？</p>
+<p>没错，就是同声传译了。也就是说有一个翻译，那些外国人听到的都是那个翻译说的话，而不是直接听发言人说的话。</p>
+<p>所以，上面的例子所提到的“同声传译”就叫做中间件。</p>
+<p>在计算机领域中，中间件有以下的说法</p>
+<blockquote>
+<p>中间件（Middleware）是处于操作系统和应用程序之间的软件，也有人认为它应该属于操作系统中的一部分。</p>
+<p>人们在使用中间件时，往往是一组中间件集成在一起，构成一个平台（包括开发平台和运行平台），但在这组中间件中必须要有一个通信中间件，即中间件 = 平台 + 通信，这个定义也限定了只有用于分布式系统中才能称为中间件，同时还可以把它与支撑软件和实用软件区分开来。</p>
+</blockquote>
+<p>中间件的概念似乎很难说清楚，确通过简单的例子就能够较好的理解。按照上面例子，<del>好像</del>能够对应的上的样子耶。</p>
+<span id="more"></span>
+
+<p>不过中间件具有以下的特点。</p>
+<ol start="4">
+<li>标准的协议</li>
+<li>标准的接口</li>
+<li>持久性</li>
+<li>高可用，高可扩</li>
+</ol>
+<blockquote>
+<p>在项目的架构和重构中，使用任何技术和架构的改变我们都需要谨慎斟酌和思考，因为任何技术的融入和变化都可能人员，技术，和成本的增加，中间件的技术一般现在一些互联网公司或者项目中使用比较多，如果你仅仅还只是一个初创公司建议还是使用单体架构，最多加个缓存中间件即可，不要盲目追求新或者所谓的高性能，而追求的背后一定是业务的驱动和项目的驱动，因为一旦追求就意味着你的学习成本，公司的人员结构以及服务器成本，维护和运维的成本都会增加，所以需要谨慎选择和考虑。</p>
+</blockquote>
+<h2 id="有哪些中间件技术"><a href="#有哪些中间件技术" class="headerlink" title="有哪些中间件技术"></a>有哪些中间件技术</h2><p>中间件技术分为 4 类：消息中间件、负载均很中间件、缓存中间件和高可用中间件。先记录这些，对这四类的中间件进行一个了解。</p>
+<h3 id="消息中间件"><a href="#消息中间件" class="headerlink" title="消息中间件"></a>消息中间件</h3><p>消息中间件分别有：</p>
+<ul>
+<li>ActiveMQ</li>
+<li>RabbitMQ</li>
+<li>Kafka</li>
+<li>RocketMQ</li>
+</ul>
+<p>使用场景：</p>
+<ul>
+<li>消息中间件监控数据</li>
+<li>异步数据传输场景</li>
+<li>削峰填谷场景</li>
+<li>任务调度场景</li>
+<li>海量数据同步场景</li>
+<li>分布式事务场景</li>
+<li>日记管理场景</li>
+<li>大数据分析场景</li>
+</ul>
+<p>相关的规范：</p>
+<ul>
+<li>AMQP</li>
+<li>MQTT</li>
+<li>持久化设计</li>
+<li>Kafka协议消息</li>
+<li>分发设计</li>
+<li>高可用设计</li>
+<li>可靠性设计</li>
+<li>容错设计</li>
+</ul>
+<h3 id="负载均衡中间件"><a href="#负载均衡中间件" class="headerlink" title="负载均衡中间件"></a>负载均衡中间件</h3><ul>
+<li>Nginx</li>
+<li>LVS负载均衡软件</li>
+<li>KeepAlive</li>
+<li>CDN</li>
+</ul>
+<h3 id="缓存中间件"><a href="#缓存中间件" class="headerlink" title="缓存中间件"></a>缓存中间件</h3><ul>
+<li>MenCache</li>
+<li>Redis</li>
+</ul>
+<h3 id="数据库中间件"><a href="#数据库中间件" class="headerlink" title="数据库中间件"></a>数据库中间件</h3><ul>
+<li>Mycat</li>
+<li>ShardingJDBC</li>
+</ul>
+<h3 id="相关案例"><a href="#相关案例" class="headerlink" title="相关案例"></a>相关案例</h3><ul>
+<li>异步数据保存</li>
+<li>订单数据的消息分发</li>
+<li>分布式事务</li>
+<li>消息的容错</li>
+<li>分布式锁</li>
+<li>分布式会话</li>
+<li>分库分表</li>
+</ul>
+<h2 id="谈谈分布式架构"><a href="#谈谈分布式架构" class="headerlink" title="谈谈分布式架构"></a>谈谈分布式架构</h2><p>在提起分布式架构之前，先说说单体架构。</p>
+<p>单体架构其实就是所有的代码，静态资源文件都在一个项目中。但是这会导致一个问题，项目规模变大之后如果仅仅是一个小功能需要升级的话，那么就必须得重新去部署整个项目。</p>
+<p>不是说单体架构垃圾，没用。因为毕竟事物具有两面性，它有它存在的意义，如果是为了盲目跟风而去选用分布式技术，那我觉得很没必要。</p>
+<p><img src="/2021/04/22/what-s-middleware/aaadf.jpg" alt="单体架构" loading="lazy"></p>
+<p>（图片来源于网络）</p>
+<p>而且这样的架构所存在的问题便是：</p>
+<ul>
+<li>耦合度太高</li>
+<li>运维的成本过高</li>
+<li>不易维护</li>
+<li>服务器的成本高</li>
+<li>升级架构的难度加大</li>
+</ul>
+<p>分布式架构，就是把系统拆成若干个部分。也就是说一个请求由服务器端的多个系统来完成的。</p>
+<blockquote>
+<p>单体架构就想建设一个小房子很快就能够搞定，如果你要建设一个鸟巢或者大型的建筑，你就必须是各个环节的协同和分布，这样目的也是项目发展都后期的时候要去部署和思考的问题。</p>
+</blockquote>
+<p><img src="/2021/04/22/what-s-middleware/ebpnwjqsiaq.png" alt="分布式结构" loading="lazy"></p>
+<p>（图片来源于网络）</p>
+<p>但是，分布式系统架构也存在一些优点，也有他的问题</p>
+<h4 id="好处"><a href="#好处" class="headerlink" title="好处"></a>好处</h4><ul>
+<li>可以合理的分配服务资源，不造成服务器资源的浪费</li>
+<li>系统的独立维护和部署，耦合度降低。可插拔性。</li>
+<li>系统的架构和技术栈的选择可以变的灵活（而不是单纯的选择 java）</li>
+<li>弹性部署，不会造成平台因部署造成的瘫痪和停服的状态。</li>
+</ul>
+<h4 id="存在问题"><a href="#存在问题" class="headerlink" title="存在问题"></a>存在问题</h4><ul>
+<li>学习成本高，技术栈过多</li>
+<li>运维成本和服务器成本增高</li>
+<li>人员的成本也会增高</li>
+<li>项目的负载度也会上升</li>
+<li>面临的错误和容错性也会成倍增加</li>
+<li>占用的服务器端口和通讯的选择的成本高</li>
+<li>安全性的考虑和因素逼迫可能选择 RMI / MQ 相关的服务器端通讯.</li>
+</ul>
+</div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>BestGuo2020</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="https://www.bestguo.top/2021/04/22/what-s-middleware/" title="初识中间件与分布式架构">https://www.bestguo.top/2021/04/22/what-s-middleware/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><svg class="icon"><use xlink:href="#icon-creative-commons-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-by-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-nc-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-sa-line"></use></svg></a> 许可协议。</li></ul></section></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/2021/04/24/How-to-use-poi-excel/" rel="prev" title="使用 Apache POI 操作 excel 表格"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-left-s-line"></use></svg><span class="post-nav-text">使用 Apache POI 操作 excel 表格</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/2021/04/19/How-do-you-configure-ssh-in-your-pc/" rel="next" title="如何管理你的多个 SSH key"><span class="post-nav-text">如何管理你的多个 SSH key</span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-right-s-line"></use></svg></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>请诸位理性发言！</span><br><span>请勿发布违反中国大陆地区法律的言论，请勿人身攻击、谩骂、侮辱和煽动式的语言。</span><br></div><div id="waline"></div><script>Yun.utils.getScript("https://cdn.jsdelivr.net/npm/@waline/client/dist/Waline.min.js", () => {
+  const walineConfig = {"enable":true,"serverURL":"https://comment.bestguo.top/","comment":true,"requiredFields":["nick","mail"],"placeholder":"有什么想要对和小赫赫说的呢，通过审核评论才会显示😊😊","avatarCDN":"https://gravatar.loli.net/avatar/","el":"#waline","lang":"zh-CN"}
+  walineConfig.path = "/2021/04/22/what-s-middleware/"
+  new Waline(walineConfig)
+}, window.Waline);</script></div></main><footer class="sidebar-translate" id="footer"><div class="beian"><a rel="noopener" href="https://beian.miit.gov.cn/" target="_blank">赣 ICP 备 20009988 号</a></div><div class="copyright"><span>&copy; 2019 – 2021 </span><span class="with-love" id="animate"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-cloud-line"></use></svg></span><span class="author"> BestGuo2020</span></div><div class="powered"><span>由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v5.4.0</span><span class="footer-separator">|</span><span>主题 - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.5.2</span></div><div class="live_time"><span>本站点已正常地运行</span><span id="display_live_time"></span><span class="moe-text"><br/>♬(ノ゜∇゜)ノ♩<br></span><script>function blog_live_time() {
+  setTimeout(blog_live_time, 1000);
+  const start = new Date('2021-01-01T00:00:00');
+  const now = new Date();
+  const timeDiff = (now.getTime() - start.getTime());
+  const msPerMinute = 60 * 1000;
+  const msPerHour = 60 * msPerMinute;
+  const msPerDay = 24 * msPerHour;
+  const passDay = Math.floor(timeDiff / msPerDay);
+  const passHour = Math.floor((timeDiff % msPerDay) / 60 / 60 / 1000);
+  const passMinute = Math.floor((timeDiff % msPerHour) / 60 / 1000);
+  const passSecond = Math.floor((timeDiff % msPerMinute) / 1000);
+  display_live_time.innerHTML = " " + passDay + " 天 " + passHour + " 小时 " + passMinute + " 分 " + passSecond + " 秒";
+}
+blog_live_time();
+</script></div><div id="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_site_uv" title="总访客量"><span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-user-line"></use></svg></span><span id="busuanzi_value_site_uv"></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv" title="总访问量"><span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-eye-line"></use></svg></span><span id="busuanzi_value_site_pv"></span></span></div><div class="footer-support"><span>本网站由</span><a class="footer-support-logo" href="https://www.upyun.com/?utm_source=lianmeng&amp;utm_medium=referral" target="blank" title="又拍云"><img height="30" src="https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/logo/upyun-logo.png" alt="又拍云"></a><span>提供 CDN 加速/云存储服务</span></div></footer><a class="hty-icon-button" id="goUp" aria-label="back-to-top" href="#"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a></div></body></html>

@@ -1,0 +1,189 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="BestGuo2020"><meta name="copyright" content="BestGuo2020"><meta name="generator" content="Hexo 5.4.0"><meta name="theme" content="hexo-theme-yun"><title>操作系统之神秘的银行家算法 | 小赫赫的小站</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/star-markdown-css@0.1.24/dist/yun/yun-markdown.min.css"><script src="//at.alicdn.com/t/font_1140697_ed8vp4atwoj.js" async></script><script src="https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>document.addEventListener("DOMContentLoaded", () => {
+  [".post-card",".post-content img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+});
+</script><link id="light-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism.css" media="(prefers-color-scheme: light)"><link id="dark-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism-tomorrow.css" media="(prefers-color-scheme: dark)"><link rel="shortcut icon" type="image/svg+xml" href="/favicon.ico"><link rel="mask-icon" href="/favicon.ico" color="#0078E7"><link rel="alternate icon" href="/yun.ico"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="preload" href="/js/utils.js" as="script"><link rel="preload" href="/js/hexo-theme-yun.js" as="script"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><script id="yun-config">
+    const Yun = window.Yun || {};
+    window.CONFIG = {"hostname":"www.bestguo.top","root":"/","title":"小赫赫的小站","version":"1.5.2","mode":"time","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"搜索...","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）"},"anonymous_image":"https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/avatar/none.jpg","say":{"api":"https://v1.hitokoto.cn","hitokoto":true},"fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/utils.js"></script><script src="/js/hexo-theme-yun.js"></script><link rel="preconnect" href="https://www.google-analytics.com" crossorigin><script async src="https://www.googletagmanager.com/gtag/js?id=G-907LWSSHLS"></script><script>if (CONFIG.hostname === location.hostname) {
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-907LWSSHLS');
+}</script><script>(function(){
+  var bp = document.createElement('script');
+  var curProtocol = window.location.protocol.split(':')[0];
+  if (curProtocol === 'https') {
+    bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+  }
+  else {
+    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+  }
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(bp, s);
+})();</script><meta name="description" content="前言写这篇文章的目的，能够更简单的去理解银行家算法，这个算法可把我给想秃了😖。 银行家算法是由 Dijkstra 在 1965 年提出的，它是一个非常著名的死锁避免算法。其实吧，我觉得应该叫 花呗 算法更合适😂。以下，我会利用花呗的方式来理解这个算法。 还有就是期末考试要到了，祝大家逢考必过呀😊😊😊。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作系统之神秘的银行家算法">
+<meta property="og:url" content="https://www.bestguo.top/2021/01/05/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B9%8B%E9%93%B6%E8%A1%8C%E5%AE%B6%E7%AE%97%E6%B3%95/index.html">
+<meta property="og:site_name" content="小赫赫的小站">
+<meta property="og:description" content="前言写这篇文章的目的，能够更简单的去理解银行家算法，这个算法可把我给想秃了😖。 银行家算法是由 Dijkstra 在 1965 年提出的，它是一个非常著名的死锁避免算法。其实吧，我觉得应该叫 花呗 算法更合适😂。以下，我会利用花呗的方式来理解这个算法。 还有就是期末考试要到了，祝大家逢考必过呀😊😊😊。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.bestguo.top/images/%E9%93%B6%E8%A1%8C%E5%AE%B6%E7%AE%97%E6%B3%95/first.jpg">
+<meta property="og:image" content="https://www.bestguo.top/images/%E9%93%B6%E8%A1%8C%E5%AE%B6%E7%AE%97%E6%B3%95/condition.png">
+<meta property="og:image" content="https://www.bestguo.top/images/%E9%93%B6%E8%A1%8C%E5%AE%B6%E7%AE%97%E6%B3%95/QQ%E6%88%AA%E5%9B%BE20210105204746.jpg">
+<meta property="og:image" content="https://www.bestguo.top/images/%E9%93%B6%E8%A1%8C%E5%AE%B6%E7%AE%97%E6%B3%95/QQ%E6%88%AA%E5%9B%BE20210105204823.jpg">
+<meta property="article:published_time" content="2021-01-05T00:11:44.000Z">
+<meta property="article:modified_time" content="2021-01-22T02:11:53.552Z">
+<meta property="article:author" content="BestGuo2020">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="数据结构">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.bestguo.top/images/%E9%93%B6%E8%A1%8C%E5%AE%B6%E7%AE%97%E6%B3%95/first.jpg"><script src="/js/ui/mode.js"></script></head><body><script defer src="https://cdn.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-passport-line"></use></svg></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="BestGuo2020"><img width="96" loading="lazy" src="/images/avatar.jpg" alt="BestGuo2020"><span class="site-author-status" title="牛气冲天，扭转乾坤！">✨</span></a><div class="site-author-name"><a href="/about/">BestGuo2020</a></div><a class="site-name" href="/about/site.html">小赫赫的小站</a><sub class="site-subtitle">成为更好的自己</sub><div class="site-desciption">一个人的世界是如此的安静</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="首页"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">40</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">12</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">28</span></a></div><a class="site-state-item hty-icon-button" href="/albums/" title="相册集"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-gallery-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://wpa.qq.com/msgrd?v=3&amp;uin=1540113012&amp;site=qq&amp;menu=yes" title="QQ：xiaohehe2021" target="_blank" style="color:#12B7F5"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-qq-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/bestguo2020" title="GitHub：BestGuo2020" target="_blank" style="color:#8251e6"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-github-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/184681623" title="哔哩哔哩: 我叫人员外婆" target="_blank" style="color:#FF8EB3"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-bilibili-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:bestguo2020@foxmail.com" title="E-Mail" target="_blank" style="color:#8E71C1"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-mail-line"></use></svg></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-contrast-2-line"></use></svg></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%97%E6%B3%95%E4%BB%8B%E7%BB%8D"><span class="toc-number">2.</span> <span class="toc-text">算法介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%97%E6%B3%95%E6%AD%A5%E9%AA%A4"><span class="toc-number">3.</span> <span class="toc-text">算法步骤</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BE%8B%E9%A2%98"><span class="toc-number">4.</span> <span class="toc-text">例题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-number">4.1.</span> <span class="toc-text">问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC1%E9%97%AE%E8%A7%A3%E7%AD%94"><span class="toc-number">4.2.</span> <span class="toc-text">第1问解答</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC2%E9%97%AE%E8%A7%A3%E7%AD%94"><span class="toc-number">4.3.</span> <span class="toc-text">第2问解答</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%BA%90"><span class="toc-number">5.</span> <span class="toc-text">参考资源</span></a></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article"><link itemprop="mainEntityOfPage" href="https://www.bestguo.top/2021/01/05/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B9%8B%E9%93%B6%E8%A1%8C%E5%AE%B6%E7%AE%97%E6%B3%95/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="BestGuo2020"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="小赫赫的小站"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">操作系统之神秘的银行家算法</h1><div class="post-meta"><div class="post-time" style="display:inline-block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="创建时间：2021-01-05 08:11:44" itemprop="dateCreated datePublished" datetime="2021-01-05T08:11:44+08:00">2021-01-05</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-2-line"></use></svg></span> <time title="修改时间：2021-01-22 10:11:53" itemprop="dateModified" datetime="2021-01-22T10:11:53+08:00">2021-01-22</time></div><span class="post-busuanzi"><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读次数"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-eye-line"></use></svg> <span id="busuanzi_value_page_pv"></span></span></span><span class="post-meta-divider">-</span><a href="#comment"><span class="post-meta-item-icon" title="评论数"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-chat-3-line"></use></svg> <span class="waline-comment-count" id="/2021/01/05/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B9%8B%E9%93%B6%E8%A1%8C%E5%AE%B6%E7%AE%97%E6%B3%95/"></span></span></a><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/" style="--text-color:null" itemprop="url" rel="index"><span itemprop="text">操作系统</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag" href="/tags/%E7%AE%97%E6%B3%95/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">算法</span></a><a class="tag" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">数据结构</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body" style="--smc-primary:#0078E7;"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>写这篇文章的目的，能够更简单的去理解银行家算法，这个算法可把我给想秃了😖。</p>
+<p>银行家算法是由 Dijkstra 在 1965 年提出的，它是一个非常著名的死锁避免算法。其实吧，我觉得应该叫<font color="red"> 花呗 </font>算法更合适😂。以下，我会利用花呗的方式来理解这个算法。</p>
+<p>还有就是期末考试要到了，祝大家逢考必过呀😊😊😊。</p>
+<p><img src="/images/%E9%93%B6%E8%A1%8C%E5%AE%B6%E7%AE%97%E6%B3%95/first.jpg" alt="逢考必过" loading="lazy"></p>
+<span id="more"></span>
+
+<h2 id="算法介绍"><a href="#算法介绍" class="headerlink" title="算法介绍"></a>算法介绍</h2><p>银行家算法的实质就是<font color="red">要设法保证系统动态分配资源后不进入不安全状态，以避免可能产生的死锁。</font>即没当进程提出资源请求且系统的资源能够满足该请求时，系统将判断满足此次资源请求后系统状态是否安全，如果判断结果为安全，则给该进程分配资源，否则不分配资源，申请资源的进程将阻塞。</p>
+<p><del>前面的都是 FIFA 可以忽略🐶🐶</del>，但还是建议看一下。</p>
+<p>银行家算法的执行有个前提条件，即要求进程预先提出自己的最大资源请求，并假设系统拥有固定的资源总量。下面介绍银行家算法所用的主要的数据结构。</p>
+<p>什么是向量？向量其实就是一个一维数组。什么是矩阵，矩阵就是一个二维数组。</p>
+<ol>
+<li>可用资源向量 available，记录着系统当前可以使用的资源数目。（花呗公司还剩多少钱）</li>
+<li>最大需求矩阵 max，记录着进程对各类资源的最大需求量。（用户使用花呗的最大额度）</li>
+<li>分配矩阵 allocation，记录着每个进程的当前占有量。（用户已经使用了多少的花呗）</li>
+<li>需求矩阵 need，记录着每个进程对各类资源尚需要的数据。等于“最大需求矩阵 - 分配矩阵”之差。（用户剩余的花呗额度）</li>
+<li>请求向量 request，记录着某个进程当前对各类资源的申请量，是银行家算法的入口参数。（用户想要使用多少花呗）</li>
+</ol>
+<h2 id="算法步骤"><a href="#算法步骤" class="headerlink" title="算法步骤"></a>算法步骤</h2><ol>
+<li>检查资源的安全性。安全，申请请求。不安全，退出检查。</li>
+<li>如果 request[i] &gt; need[i]，则进程 P[i] 出错 （如果你想用花呗借 400，可是你的剩余额度才只有 20，你想想，能借吗？）</li>
+<li>如果 request[i] &gt; available[i]，则进程 P[i] 阻塞（如果你想用花呗借 400，可是花呗公司只有 200，你想想，能借吗？）</li>
+<li>如果 request[i] ≤ need[i] 且 request[i] ≤ available[i]。则需要对相应的数据结构进行修改。<ol>
+<li>available[i] = available[i] - request[i]。（比如花呗公司有 2000，用户向花呗借 20，此时花呗公司还剩 1980）</li>
+<li>allocation[i] = allocation[i + request[i]。（比如用户已经向花呗借了 500，用户在向花呗借 20，此时用户已经借了 520）</li>
+<li>need[i] = need[i] - request[i]。（比如用户的花呗剩余的额度为 300，用户向花呗借了 20，此时用户剩余的花呗额度为 280）</li>
+</ol>
+</li>
+<li>继续检查资源的安全性</li>
+</ol>
+<p>算法的执行过程如下</p>
+<p><img src="/images/%E9%93%B6%E8%A1%8C%E5%AE%B6%E7%AE%97%E6%B3%95/condition.png" alt="执行过程" loading="lazy"></p>
+<h2 id="例题"><a href="#例题" class="headerlink" title="例题"></a>例题</h2><p><img src="/images/%E9%93%B6%E8%A1%8C%E5%AE%B6%E7%AE%97%E6%B3%95/QQ%E6%88%AA%E5%9B%BE20210105204746.jpg" alt="aaa" loading="lazy"><br><img src="/images/%E9%93%B6%E8%A1%8C%E5%AE%B6%E7%AE%97%E6%B3%95/QQ%E6%88%AA%E5%9B%BE20210105204823.jpg" alt="bbb" loading="lazy"></p>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>1、利用安全性算法，分析T(0)时刻的资源分配情况，如果安全，请写出安全序列。<br>2、假设T时刻，进程P1申请资源，其请求向量为Request(0,0,1)，系统能否将资源分配给它。</p>
+<h3 id="第1问解答"><a href="#第1问解答" class="headerlink" title="第1问解答"></a>第1问解答</h3><p>这个安全性算法，其实就是。用户剩余的花呗额度（也就是 need）能否全部借过去。</p>
+<p>然后借完之后，还回去，怎么还？将已使用的额度全部还回去就好了，此时的花呗公司的可用的金额为：<font color="red">已使用的额度 (allocation) + 花呗公司还剩的钱 (available)</font></p>
+<p>T(0)时刻的资源分配情况如下</p>
+<table>
+<thead>
+<tr>
+<th>process</th>
+<th>work</th>
+<th>need</th>
+<th>allocation</th>
+<th>work + allocation</th>
+<th>finish</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>P2</td>
+<td>0 1 1</td>
+<td>0 0 1</td>
+<td>6 1 2</td>
+<td>6 2 3</td>
+<td>true</td>
+</tr>
+<tr>
+<td>p1</td>
+<td>6 2 3</td>
+<td>2 2 2</td>
+<td>1 0 0</td>
+<td>7 2 3</td>
+<td>true</td>
+</tr>
+<tr>
+<td>p3</td>
+<td>7 2 3</td>
+<td>1 0 3</td>
+<td>2 1 1</td>
+<td>9 3 4</td>
+<td>true</td>
+</tr>
+<tr>
+<td>p4</td>
+<td>9 3 4</td>
+<td>4 2 0</td>
+<td>0 0 2</td>
+<td>9 3 6</td>
+<td>true</td>
+</tr>
+</tbody></table>
+<p>其中 work 是当前的 available 数量。<br>由安全序列算法，结合表可知，安全序列为 &lt;p2, p1, p3, p4&gt;</p>
+<p>但是安全序列是不唯一的。这个安全序列出现的原因是因为在检查 P1 的时候，出现了阻塞。当 P2 的资源释放了，p1再去尝试，可用资源是否能够满足 P1 的需求。</p>
+<p>所以才有 &lt;p2, p1, p3, p4&gt;</p>
+<h3 id="第2问解答"><a href="#第2问解答" class="headerlink" title="第2问解答"></a>第2问解答</h3><p>1、判断 request(0,0,1) ≤ available(0,1,1) 通过（如果花呗公司的金额够借）<br>2、判断 request(0,0,1) ≤ need(1,0,3) 通过（如果用户借的额度比用户剩余额度小）</p>
+<p>available = available - request = 0,1,1 - 0,0,1 = 0,1,0（向花呗公司借了0,0,1，花呗公司还剩0,1,0）<br>allocation = allocation + request = 1,0,0 + 0,0,1 = 1,0,1（用户向花呗借了0,0,1。加起来就是已使用的花呗额度）<br>need = need - request = 2,2,2 - 0,0,1 = 2,2,1（用户向花呗借了0,0,1，用户可用的花呗额度就是减去已经借的额度）</p>
+<p>所以，此时的资源分配情况如下</p>
+<table>
+<thead>
+<tr>
+<th>process</th>
+<th>max</th>
+<th>allocation</th>
+<th>need</th>
+<th>available</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>P1</td>
+<td>3,2,2</td>
+<td>1,0,1</td>
+<td>2,2,1</td>
+<td>0,1,0</td>
+</tr>
+<tr>
+<td>P2</td>
+<td>6,1,3</td>
+<td>6,1,2</td>
+<td>0,0,1</td>
+<td></td>
+</tr>
+<tr>
+<td>P3</td>
+<td>3 1 4</td>
+<td>2 1 1</td>
+<td>1 0 3</td>
+<td></td>
+</tr>
+<tr>
+<td>P4</td>
+<td>4 2 2</td>
+<td>0 0 2</td>
+<td>4 2 0</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>经过分析发现，可用的资源数已经不能满足所有进程，该系统不安全。进程P1阻塞。</p>
+<p>原来 Hexo 主题之间的表格需要前后空两行才能正常显示，我麻了，搞了我很久。😂😂😂</p>
+<h2 id="参考资源"><a href="#参考资源" class="headerlink" title="参考资源"></a>参考资源</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_33414271/article/details/80245715">https://blog.csdn.net/qq_33414271/article/details/80245715</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/wkfvawl/p/11929508.html">https://www.cnblogs.com/wkfvawl/p/11929508.html</a><br><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/e19eff4311f4">https://www.jianshu.com/p/e19eff4311f4</a></p>
+</div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>BestGuo2020</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="https://www.bestguo.top/2021/01/05/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B9%8B%E9%93%B6%E8%A1%8C%E5%AE%B6%E7%AE%97%E6%B3%95/" title="操作系统之神秘的银行家算法">https://www.bestguo.top/2021/01/05/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B9%8B%E9%93%B6%E8%A1%8C%E5%AE%B6%E7%AE%97%E6%B3%95/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><svg class="icon"><use xlink:href="#icon-creative-commons-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-by-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-nc-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-sa-line"></use></svg></a> 许可协议。</li></ul></section></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/2021/01/22/AndroidStudio%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE/" rel="prev" title="Android 开发环境安装"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-left-s-line"></use></svg><span class="post-nav-text">Android 开发环境安装</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/2021/01/03/%E7%BB%99%E4%BD%A0%E7%9A%84%E7%BD%91%E7%AB%99%E5%8A%A0%E4%B8%80%E6%8A%8A%E9%94%81/" rel="next" title="给你的网站加一把锁"><span class="post-nav-text">给你的网站加一把锁</span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-right-s-line"></use></svg></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>请诸位理性发言！</span><br><span>请勿发布违反中国大陆地区法律的言论，请勿人身攻击、谩骂、侮辱和煽动式的语言。</span><br></div><div id="waline"></div><script>Yun.utils.getScript("https://cdn.jsdelivr.net/npm/@waline/client/dist/Waline.min.js", () => {
+  const walineConfig = {"enable":true,"serverURL":"https://comment.bestguo.top/","comment":true,"requiredFields":["nick","mail"],"placeholder":"有什么想要对和小赫赫说的呢，通过审核评论才会显示😊😊","avatarCDN":"https://gravatar.loli.net/avatar/","el":"#waline","lang":"zh-CN"}
+  walineConfig.path = "/2021/01/05/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B9%8B%E9%93%B6%E8%A1%8C%E5%AE%B6%E7%AE%97%E6%B3%95/"
+  new Waline(walineConfig)
+}, window.Waline);</script></div></main><footer class="sidebar-translate" id="footer"><div class="beian"><a rel="noopener" href="https://beian.miit.gov.cn/" target="_blank">赣 ICP 备 20009988 号</a></div><div class="copyright"><span>&copy; 2019 – 2021 </span><span class="with-love" id="animate"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-cloud-line"></use></svg></span><span class="author"> BestGuo2020</span></div><div class="powered"><span>由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v5.4.0</span><span class="footer-separator">|</span><span>主题 - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.5.2</span></div><div class="live_time"><span>本站点已正常地运行</span><span id="display_live_time"></span><span class="moe-text"><br/>♬(ノ゜∇゜)ノ♩<br></span><script>function blog_live_time() {
+  setTimeout(blog_live_time, 1000);
+  const start = new Date('2021-01-01T00:00:00');
+  const now = new Date();
+  const timeDiff = (now.getTime() - start.getTime());
+  const msPerMinute = 60 * 1000;
+  const msPerHour = 60 * msPerMinute;
+  const msPerDay = 24 * msPerHour;
+  const passDay = Math.floor(timeDiff / msPerDay);
+  const passHour = Math.floor((timeDiff % msPerDay) / 60 / 60 / 1000);
+  const passMinute = Math.floor((timeDiff % msPerHour) / 60 / 1000);
+  const passSecond = Math.floor((timeDiff % msPerMinute) / 1000);
+  display_live_time.innerHTML = " " + passDay + " 天 " + passHour + " 小时 " + passMinute + " 分 " + passSecond + " 秒";
+}
+blog_live_time();
+</script></div><div id="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_site_uv" title="总访客量"><span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-user-line"></use></svg></span><span id="busuanzi_value_site_uv"></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv" title="总访问量"><span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-eye-line"></use></svg></span><span id="busuanzi_value_site_pv"></span></span></div><div class="footer-support"><span>本网站由</span><a class="footer-support-logo" href="https://www.upyun.com/?utm_source=lianmeng&amp;utm_medium=referral" target="blank" title="又拍云"><img height="30" src="https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/logo/upyun-logo.png" alt="又拍云"></a><span>提供 CDN 加速/云存储服务</span></div></footer><a class="hty-icon-button" id="goUp" aria-label="back-to-top" href="#"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a></div></body></html>
