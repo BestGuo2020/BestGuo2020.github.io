@@ -1,0 +1,145 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="BestGuo2020"><meta name="copyright" content="BestGuo2020"><meta name="generator" content="Hexo 5.4.0"><meta name="theme" content="hexo-theme-yun"><title>SpringBoot开发小技巧 | 小赫赫的小站</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/star-markdown-css@0.1.24/dist/yun/yun-markdown.min.css"><script src="//at.alicdn.com/t/font_1140697_ed8vp4atwoj.js" async></script><script src="https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>document.addEventListener("DOMContentLoaded", () => {
+  [".post-card",".post-content img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+});
+</script><link id="light-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism.css" media="(prefers-color-scheme: light)"><link id="dark-prism-css" rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@latest/themes/prism-tomorrow.css" media="(prefers-color-scheme: dark)"><link rel="shortcut icon" type="image/svg+xml" href="/favicon.ico"><link rel="mask-icon" href="/favicon.ico" color="#0078E7"><link rel="alternate icon" href="/yun.ico"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="preload" href="/js/utils.js" as="script"><link rel="preload" href="/js/hexo-theme-yun.js" as="script"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><script id="yun-config">
+    const Yun = window.Yun || {};
+    window.CONFIG = {"hostname":"www.bestguo.top","root":"/","title":"小赫赫的小站","version":"1.5.2","mode":"time","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"搜索...","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）"},"anonymous_image":"https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/avatar/none.jpg","say":{"api":"https://v1.hitokoto.cn","hitokoto":true},"fireworks":{"colors":["102, 167, 221","62, 131, 225","33, 78, 194"]}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/utils.js"></script><script src="/js/hexo-theme-yun.js"></script><link rel="preconnect" href="https://www.google-analytics.com" crossorigin><script async src="https://www.googletagmanager.com/gtag/js?id=G-907LWSSHLS"></script><script>if (CONFIG.hostname === location.hostname) {
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-907LWSSHLS');
+}</script><script>(function(){
+  var bp = document.createElement('script');
+  var curProtocol = window.location.protocol.split(':')[0];
+  if (curProtocol === 'https') {
+    bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+  }
+  else {
+    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+  }
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(bp, s);
+})();</script><meta name="description" content="SpringBoot 虽然很多配置项都是自动配置的，但是有时候某些配置项需要手动配置。以及通过一些模块来简化 SpringBoot 的开发，提升开发的效率。 最佳实践 引入场景依赖 https:&#x2F;&#x2F;docs.spring.io&#x2F;spring-boot&#x2F;docs&#x2F;current&#x2F;reference&#x2F;html&#x2F;using-spring-boot.html#using-boot-starter   查看">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SpringBoot开发小技巧">
+<meta property="og:url" content="https://www.bestguo.top/2021/06/28/springboot-best-coding/index.html">
+<meta property="og:site_name" content="小赫赫的小站">
+<meta property="og:description" content="SpringBoot 虽然很多配置项都是自动配置的，但是有时候某些配置项需要手动配置。以及通过一些模块来简化 SpringBoot 的开发，提升开发的效率。 最佳实践 引入场景依赖 https:&#x2F;&#x2F;docs.spring.io&#x2F;spring-boot&#x2F;docs&#x2F;current&#x2F;reference&#x2F;html&#x2F;using-spring-boot.html#using-boot-starter   查看">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.bestguo.top/2021/06/28/springboot-best-coding/QQ%E6%88%AA%E5%9B%BE20210628104113.png">
+<meta property="og:image" content="https://www.bestguo.top/2021/06/28/springboot-best-coding/QQ%E6%88%AA%E5%9B%BE20210628133709.png">
+<meta property="og:image" content="https://www.bestguo.top/2021/06/28/springboot-best-coding/QQ%E6%88%AA%E5%9B%BE20210628133648.png">
+<meta property="og:image" content="https://www.bestguo.top/2021/06/28/springboot-best-coding/QQ%E6%88%AA%E5%9B%BE20210628133837.png">
+<meta property="og:image" content="https://www.bestguo.top/2021/06/28/springboot-best-coding/QQ%E6%88%AA%E5%9B%BE20210628134128.png">
+<meta property="article:published_time" content="2021-06-28T02:15:21.000Z">
+<meta property="article:modified_time" content="2021-06-28T07:34:28.735Z">
+<meta property="article:author" content="BestGuo2020">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="SpringBoot">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.bestguo.top/2021/06/28/springboot-best-coding/QQ%E6%88%AA%E5%9B%BE20210628104113.png"><script src="/js/ui/mode.js"></script></head><body><script defer src="https://cdn.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-passport-line"></use></svg></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="BestGuo2020"><img width="96" loading="lazy" src="/images/avatar.jpg" alt="BestGuo2020"><span class="site-author-status" title="牛气冲天，扭转乾坤！">✨</span></a><div class="site-author-name"><a href="/about/">BestGuo2020</a></div><a class="site-name" href="/about/site.html">小赫赫的小站</a><sub class="site-subtitle">成为更好的自己</sub><div class="site-desciption">一个人的世界是如此的安静</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="首页"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">42</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">12</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">28</span></a></div><a class="site-state-item hty-icon-button" href="/albums/" title="相册集"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-gallery-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://wpa.qq.com/msgrd?v=3&amp;uin=1540113012&amp;site=qq&amp;menu=yes" title="QQ：xiaohehe2021" target="_blank" style="color:#12B7F5"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-qq-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/bestguo2020" title="GitHub：BestGuo2020" target="_blank" style="color:#8251e6"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-github-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/184681623" title="哔哩哔哩: 我叫人员外婆" target="_blank" style="color:#FF8EB3"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-bilibili-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:bestguo2020@foxmail.com" title="E-Mail" target="_blank" style="color:#8E71C1"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-mail-line"></use></svg></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-contrast-2-line"></use></svg></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5"><span class="toc-number">1.</span> <span class="toc-text">最佳实践</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E5%8F%91%E5%B0%8F%E5%B7%A5%E5%85%B7"><span class="toc-number">2.</span> <span class="toc-text">开发小工具</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Lombok"><span class="toc-number">2.1.</span> <span class="toc-text">Lombok</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B"><span class="toc-number">2.1.1.</span> <span class="toc-text">使用示例</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#dev-tools"><span class="toc-number">2.2.</span> <span class="toc-text">dev tools</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Spring-Initializer"><span class="toc-number">2.3.</span> <span class="toc-text">Spring Initializer</span></a></li></ol></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article"><link itemprop="mainEntityOfPage" href="https://www.bestguo.top/2021/06/28/springboot-best-coding/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="BestGuo2020"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="小赫赫的小站"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">SpringBoot开发小技巧</h1><div class="post-meta"><div class="post-time" style="display:inline-block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="创建时间：2021-06-28 10:15:21" itemprop="dateCreated datePublished" datetime="2021-06-28T10:15:21+08:00">2021-06-28</time></div><span class="post-busuanzi"><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读次数"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-eye-line"></use></svg> <span id="busuanzi_value_page_pv"></span></span></span><span class="post-meta-divider">-</span><a href="#comment"><span class="post-meta-item-icon" title="评论数"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-chat-3-line"></use></svg> <span class="waline-comment-count" id="/2021/06/28/springboot-best-coding/"></span></span></a><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category" href="/categories/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">后端开发</span></a></span> > <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category" href="/categories/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/SpringBoot-%E5%BC%80%E5%8F%91%E5%AD%A6%E4%B9%A0%E5%8E%86%E7%A8%8B/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">SpringBoot 开发学习历程</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag" href="/tags/Java/" style="--text-color:#ff9900"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">Java</span></a><a class="tag" href="/tags/SpringBoot/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">SpringBoot</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body" style="--smc-primary:#0078E7;"><p>SpringBoot 虽然很多配置项都是自动配置的，但是有时候某些配置项需要手动配置。以及通过一些模块来简化 SpringBoot 的开发，提升开发的效率。</p>
+<h2 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h2><ul>
+<li>引入场景依赖<ul>
+<li><a target="_blank" rel="noopener" href="https://docs.spring.io/spring-boot/docs/current/reference/html/using-spring-boot.html#using-boot-starter">https://docs.spring.io/spring-boot/docs/current/reference/html/using-spring-boot.html#using-boot-starter</a></li>
+</ul>
+</li>
+<li>查看自动配管了哪些(选做)<ul>
+<li>自己分析，引入场景对应的自动配置一般都生效了</li>
+<li>配置文件中 debug = true 开启自动配置报告。Negative (不生效) / Positive (生效)</li>
+</ul>
+</li>
+<li>是否需要修改<ul>
+<li>参照文档修改配置项<br><a target="_blank" rel="noopener" href="https://docs.spring.io/spring-boot/docs/current/reference/html/appendix-application-properties.html#common-application-properties">https://docs.spring.io/spring-boot/docs/current/reference/html/appendix-application-properties.html#common-application-properties</a></li>
+<li>自己分析。xxxxProperties绑定了配置文件的哪些。自定义加入或者替换组件<br>@Bean、@Component……</li>
+<li>自定义器 XXXXXCustomizer; </li>
+<li>…..</li>
+</ul>
+</li>
+</ul>
+<h2 id="开发小工具"><a href="#开发小工具" class="headerlink" title="开发小工具"></a>开发小工具</h2><p>非常实用的一些开发小工具</p>
+<h3 id="Lombok"><a href="#Lombok" class="headerlink" title="Lombok"></a>Lombok</h3><p>简化 JavaBean 的开发，可以不用写重复的构造方法，getter 和 setter 以及 toString 方法。能写出这样的代码真的是天才👍👍。</p>
+<pre class="language-xml" data-language="xml"><code class="language-xml"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">></span></span>
+	<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>org.projectlombok<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>lombok<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactid</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span></code></pre>
+
+<p>安装 idea 的 Lombok 插件。不过我这个版本它自己预装了，没有的话还是要去装一个。</p>
+<p><img src="/2021/06/28/springboot-best-coding/QQ%E6%88%AA%E5%9B%BE20210628104113.png" alt="QQ截图20210628104113" loading="lazy"></p>
+<p>相关的注解</p>
+<ul>
+<li>Data 注解：用于生成 JavaBean 中的 setter 、getter 和 toString 方法。</li>
+<li>AllArgsConstructor 注解：用于生成 JavaBean 中的带全部参数的构造方法</li>
+<li>NoArgsConstructor 注解：用于生成 JavaBean 中的带无参数的构造方法</li>
+<li>ToString 注解：用于生成 toString 方法，在 Data 注解中已经包含过</li>
+<li>Slf4j 注解：用于输出日志。</li>
+</ul>
+<h4 id="使用示例"><a href="#使用示例" class="headerlink" title="使用示例"></a>使用示例</h4><p>给 Car 类，自动生成 getter 和 setter 方法。</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@Data</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Car</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">private</span> <span class="token class-name">String</span> brand<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token class-name">Integer</span> price<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span></code></pre>
+
+<p>给 Pet 类生成一个不带参数的构造方法、带全部参数的构造方法和 toString 方法。</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@AllArgsConstructor</span> <span class="token comment">// 有参数的构造方法</span>
+<span class="token annotation punctuation">@NoArgsConstructor</span> <span class="token comment">// 无参数的构造方法</span>
+<span class="token annotation punctuation">@ToString</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Pet</span> <span class="token punctuation">&#123;</span>
+    <span class="token keyword">private</span> <span class="token class-name">String</span> name<span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span></code></pre>
+
+<p>在控制层中输出日志</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@Controller</span>
+<span class="token annotation punctuation">@RequestMapping</span><span class="token punctuation">(</span><span class="token string">"/hello"</span><span class="token punctuation">)</span>
+<span class="token annotation punctuation">@Slf4j</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">HelloController</span> <span class="token punctuation">&#123;</span>
+    
+    <span class="token annotation punctuation">@RequestMapping</span><span class="token punctuation">(</span><span class="token string">"/springboot2"</span><span class="token punctuation">)</span>
+    <span class="token annotation punctuation">@ResponseBody</span>
+    <span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">hello</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        log<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"请求进来了~"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token string">"Hello, SpringBoot2!"</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+    
+<span class="token punctuation">&#125;</span></code></pre>
+
+<h3 id="dev-tools"><a href="#dev-tools" class="headerlink" title="dev tools"></a>dev tools</h3><p>dev tools 可以在不点击 idea 的项目重启按钮的情况些，通过项目构建（ctrl + f9）的方式来对项目进行更新。不过这种项目更新实质上是重启 SpringBoot 项目。</p>
+<p>相关的依赖</p>
+<pre class="language-xml" data-language="xml"><code class="language-xml"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">></span></span>
+	<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>org.springframework.boot<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>spring-boot-devtools<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>optional</span><span class="token punctuation">></span></span>true<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>optional</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span></code></pre>
+
+<p>其实这不算是热更新部署，它仅仅是对项目进行重启而已。甚至在有些电脑，即使加载了 dev tools 重启也无济于事。</p>
+<h3 id="Spring-Initializer"><a href="#Spring-Initializer" class="headerlink" title="Spring Initializer"></a>Spring Initializer</h3><p>它是一个 SpringBoot 的项目初始化向导，通过可视化界面，选择需要引入的场景即可成功的构建成为一个 SpringBoot 项目</p>
+<p><img src="/2021/06/28/springboot-best-coding/QQ%E6%88%AA%E5%9B%BE20210628133709.png" alt="QQ截图20210628133709.png" loading="lazy"></p>
+<p>设置项目名和包名</p>
+<p><img src="/2021/06/28/springboot-best-coding/QQ%E6%88%AA%E5%9B%BE20210628133648.png" alt="QQ截图20210628133648.png" loading="lazy"></p>
+<p>选择需要导入的场景</p>
+<p><img src="/2021/06/28/springboot-best-coding/QQ%E6%88%AA%E5%9B%BE20210628133837.png" alt="QQ截图20210628133837.png" loading="lazy"></p>
+<p>点击 Finish ，开始构建项目。即可构建成为一个 SpringBoot 项目。</p>
+<p><img src="/2021/06/28/springboot-best-coding/QQ%E6%88%AA%E5%9B%BE20210628134128.png" alt="QQ截图20210628134128.png" loading="lazy"></p>
+</div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>BestGuo2020</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="https://www.bestguo.top/2021/06/28/springboot-best-coding/" title="SpringBoot开发小技巧">https://www.bestguo.top/2021/06/28/springboot-best-coding/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><svg class="icon"><use xlink:href="#icon-creative-commons-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-by-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-nc-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-sa-line"></use></svg></a> 许可协议。</li></ul></section></article><div class="post-nav"><div class="post-nav-item"></div><div class="post-nav-item"><a class="post-nav-next" href="/2021/06/26/springboot-annotations-ususally/" rel="next" title="SpringBoot注解的学习"><span class="post-nav-text">SpringBoot注解的学习</span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-right-s-line"></use></svg></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>请诸位理性发言！</span><br><span>请勿发布违反中国大陆地区法律的言论，请勿人身攻击、谩骂、侮辱和煽动式的语言。</span><br></div><div id="waline"></div><script>Yun.utils.getScript("https://cdn.jsdelivr.net/npm/@waline/client/dist/Waline.min.js", () => {
+  const walineConfig = {"enable":true,"serverURL":"https://comment.bestguo.top/","comment":true,"requiredFields":["nick","mail"],"placeholder":"有什么想要对和小赫赫说的呢，通过审核评论才会显示😊😊","avatarCDN":"https://gravatar.loli.net/avatar/","el":"#waline","lang":"zh-CN"}
+  walineConfig.path = "/2021/06/28/springboot-best-coding/"
+  new Waline(walineConfig)
+}, window.Waline);</script></div></main><footer class="sidebar-translate" id="footer"><div class="beian"><a rel="noopener" href="https://beian.miit.gov.cn/" target="_blank">赣 ICP 备 20009988 号</a></div><div class="copyright"><span>&copy; 2019 – 2021 </span><span class="with-love" id="animate"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-cloud-line"></use></svg></span><span class="author"> BestGuo2020</span></div><div class="powered"><span>由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v5.4.0</span><span class="footer-separator">|</span><span>主题 - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.5.2</span></div><div class="live_time"><span>本站点已正常地运行</span><span id="display_live_time"></span><span class="moe-text"><br/>♬(ノ゜∇゜)ノ♩<br></span><script>function blog_live_time() {
+  setTimeout(blog_live_time, 1000);
+  const start = new Date('2021-01-01T00:00:00');
+  const now = new Date();
+  const timeDiff = (now.getTime() - start.getTime());
+  const msPerMinute = 60 * 1000;
+  const msPerHour = 60 * msPerMinute;
+  const msPerDay = 24 * msPerHour;
+  const passDay = Math.floor(timeDiff / msPerDay);
+  const passHour = Math.floor((timeDiff % msPerDay) / 60 / 60 / 1000);
+  const passMinute = Math.floor((timeDiff % msPerHour) / 60 / 1000);
+  const passSecond = Math.floor((timeDiff % msPerMinute) / 1000);
+  display_live_time.innerHTML = " " + passDay + " 天 " + passHour + " 小时 " + passMinute + " 分 " + passSecond + " 秒";
+}
+blog_live_time();
+</script></div><div id="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_site_uv" title="总访客量"><span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-user-line"></use></svg></span><span id="busuanzi_value_site_uv"></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv" title="总访问量"><span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-eye-line"></use></svg></span><span id="busuanzi_value_site_pv"></span></span></div><div class="footer-support"><span>本网站由</span><a class="footer-support-logo" href="https://www.upyun.com/?utm_source=lianmeng&amp;utm_medium=referral" target="blank" title="又拍云"><img height="30" src="https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/logo/upyun-logo.png" alt="又拍云"></a><span>提供 CDN 加速/云存储服务</span></div></footer><a class="hty-icon-button" id="goUp" aria-label="back-to-top" href="#"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a></div></body></html>
