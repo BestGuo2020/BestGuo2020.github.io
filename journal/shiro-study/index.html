@@ -1,0 +1,360 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="BestGuo2020"><meta name="copyright" content="BestGuo2020"><meta name="generator" content="Hexo 6.2.0"><meta name="theme" content="hexo-theme-yun"><title>Shiro 学习小记 | BestGuo 的小窝</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/star-markdown-css@0.3.3/dist/yun/yun-markdown.min.css"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/prism-theme-vars/base.css"><script src="https://fastly.jsdelivr.net/npm/@unocss/runtime/mini.global.js"></script><script src="https://fastly.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>function initScrollReveal() {
+  [".post-card",".markdown-body img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+}
+document.addEventListener("DOMContentLoaded", initScrollReveal);
+document.addEventListener("pjax:success", initScrollReveal);
+</script><link rel="icon" type="image/png" href="/favicon.ico"><link rel="mask-icon" href="/favicon.ico" color="#0078E7"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="preconnect" href="https://fastly.jsdelivr.net/npm/" crossorigin><script id="yun-config">
+    window.Yun = {}
+    window.CONFIG = {"hostname":"www.bestguo.top","root":"/","title":["Best","Guo","的","小","窝"],"version":"1.10.0","mode":"time","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"搜索...","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）"},"anonymous_image":"https://cdn.yunyoujun.cn/img/avatar/none.jpg","say":{"api":"https://el-bot-api.vercel.app/api/words/young"},"local_search":{"path":"/search.xml"},"fireworks":{"colors":null},"waline":{"config":{"enable":true,"serverURL":"https://comment.bestguo.top","comment":true,"requiredFields":["nick","mail"],"placeholder":"有什么想要对 BestGuo 说的呢，输入正确有效的邮箱有机会收到回复哟😊😊","avatarCDN":"https://seccdn.libravatar.org/avatar/","emoji":["https://unpkg.com/@waline/emojis@1.0.1/weibo/","https://unpkg.com/@waline/emojis@1.0.1/bilibili/","https://unpkg.com/@waline/emojis@1.0.1/qq/","https://unpkg.com/@waline/emojis@1.0.1/tieba/"],"avatar":"monsterid","el":"#waline","lang":"zh-CN"},"cdn":"https://fastly.jsdelivr.net/npm/@waline/client@v2/dist/waline.js","dark":"html.dark"},"vendors":{"darken":"https://fastly.jsdelivr.net/npm/darken@1.5.0"}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/hexo-theme-yun.js" type="module"></script><link rel="preconnect" href="https://www.google-analytics.com" crossorigin><script async src="https://www.googletagmanager.com/gtag/js?id=G-907LWSSHLS"></script><script>if (CONFIG.hostname === location.hostname) {
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-907LWSSHLS');
+}</script><script>(function(){
+  var bp = document.createElement('script');
+  var curProtocol = window.location.protocol.split(':')[0];
+  if (curProtocol === 'https') {
+    bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+  }
+  else {
+    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+  }
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(bp, s);
+})();</script><meta name="description" content="Shiro 介绍权限体系在现代软件应用中有着非常重要的地位。一个应用如果没有权限体系都会显着这个系统“特别不安全”，无论是传统的 MIS 系统还是互联网项目出于对业务数据和应用自身的安全，都会设置自己的安全策略。 Apache Shiro 是一个强大的并且简单使用的 Java 权限框架。主要应用认证（Authentication）、授权（Authorization）、加密（Cryptography">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Shiro 学习小记">
+<meta property="og:url" content="https://www.bestguo.top/journal/shiro-study/index.html">
+<meta property="og:site_name" content="BestGuo 的小窝">
+<meta property="og:description" content="Shiro 介绍权限体系在现代软件应用中有着非常重要的地位。一个应用如果没有权限体系都会显着这个系统“特别不安全”，无论是传统的 MIS 系统还是互联网项目出于对业务数据和应用自身的安全，都会设置自己的安全策略。 Apache Shiro 是一个强大的并且简单使用的 Java 权限框架。主要应用认证（Authentication）、授权（Authorization）、加密（Cryptography">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fattach.dataguru.cn%2Fattachments%2Fforum%2F201403%2F10%2F1435301im3t21cbc0itmbi.png&refer=http%3A%2F%2Fattach.dataguru.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1650680539&t=675d9d7d30c47a14cefe25549d6bbc93">
+<meta property="article:published_time" content="2022-03-24T02:53:00.000Z">
+<meta property="article:modified_time" content="2022-05-25T10:47:49.034Z">
+<meta property="article:author" content="BestGuo2020">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="Shiro">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fattach.dataguru.cn%2Fattachments%2Fforum%2F201403%2F10%2F1435301im3t21cbc0itmbi.png&refer=http%3A%2F%2Fattach.dataguru.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1650680539&t=675d9d7d30c47a14cefe25549d6bbc93"><script>(function() {
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+  const setting = localStorage.getItem('darken-mode') || 'auto'
+  if (setting === 'dark' || (prefersDark && setting !== 'light'))
+    document.documentElement.classList.toggle('dark', true)
+})()</script></head><body><script src="https://code.iconify.design/2/2.1.1/iconify.min.js"></script><script>// Define global variable
+IconifyProviders = {
+  // Empty prefix: overwrite default API provider configuration
+  '': {
+    // Use custom API first, use Iconify public API as backup
+    resources: [
+        'https://api.iconify.design',
+    ],
+    // Wait for 1 second before switching API hosts
+    rotate: 1000,
+  },
+};</script><script defer src="https://fastly.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js" type="module"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js" type="module"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><span class="icon iconify" data-icon="ri:list-ordered"></span></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><span class="icon iconify" data-icon="ri:passport-line"></span></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="BestGuo2020"><img width="96" loading="lazy" src="/images/avatar.jpg" alt="BestGuo2020"><span class="site-author-status" title="最忙的半年">🥵</span></a><div class="site-author-name"><a href="/about/">BestGuo2020</a></div><a class="site-name" href="/about/site.html">BestGuo 的小窝</a><sub class="site-subtitle">善良、勇敢、可爱</sub><div class="site-description">一个人的世界是如此的安静</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="首页"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:home-4-line"></span></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:archive-line"></span></span><span class="site-state-item-count">69</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:folder-2-line"></span></span><span class="site-state-item-count">19</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="site-state-item-count">43</span></a></div><a class="site-state-item hty-icon-button" href="/albums/" title="相册集"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:gallery-line"></span></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://wpa.qq.com/msgrd?v=3&amp;uin=1540113012&amp;site=qq&amp;menu=yes" title="QQ：xiaohehe2021" target="_blank" style="color:#12B7F5"><span class="icon iconify" data-icon="ri:qq-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/bestguo2020" title="GitHub：BestGuo2020" target="_blank" style="color:#8251e6"><span class="icon iconify" data-icon="ri:github-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/184681623" title="哔哩哔哩: 我叫人员外婆" target="_blank" style="color:#FF8EB3"><span class="icon iconify" data-icon="ri:bilibili-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:bestguo2020@foxmail.com" title="E-Mail" target="_blank" style="color:#8E71C1"><span class="icon iconify" data-icon="ri:mail-line"></span></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><span class="icon iconify" data-icon="ri:contrast-2-line"></span></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Shiro-%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">Shiro 介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD"><span class="toc-number">2.</span> <span class="toc-text">核心功能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Shiro-%E7%9A%84%E6%9E%B6%E6%9E%84%E5%8E%9F%E7%90%86"><span class="toc-number">3.</span> <span class="toc-text">Shiro 的架构原理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Subject"><span class="toc-number">3.1.</span> <span class="toc-text">Subject</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Security-Manager"><span class="toc-number">3.2.</span> <span class="toc-text">Security Manager</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Authenticator"><span class="toc-number">3.3.</span> <span class="toc-text">Authenticator</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Authorizer"><span class="toc-number">3.4.</span> <span class="toc-text">Authorizer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Session-Manager"><span class="toc-number">3.5.</span> <span class="toc-text">Session Manager</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Cache-Manager"><span class="toc-number">3.6.</span> <span class="toc-text">Cache Manager</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Session-DAO"><span class="toc-number">3.7.</span> <span class="toc-text">Session DAO</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Realms"><span class="toc-number">3.8.</span> <span class="toc-text">Realms</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Shiro-%E7%9A%84-INI-%E6%96%87%E4%BB%B6"><span class="toc-number">4.</span> <span class="toc-text">Shiro 的 INI 文件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Shiro-%E5%86%85%E7%BD%AE%E7%9A%84%E8%BF%87%E6%BB%A4%E5%99%A8"><span class="toc-number">4.1.</span> <span class="toc-text">Shiro 内置的过滤器</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%A4%E8%AF%81%E7%9B%B8%E5%85%B3%E7%9A%84%E8%BF%87%E6%BB%A4%E5%99%A8"><span class="toc-number">4.1.1.</span> <span class="toc-text">认证相关的过滤器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8E%88%E6%9D%83%E7%9B%B8%E5%85%B3%E8%BF%87%E6%BB%A4%E5%99%A8"><span class="toc-number">4.1.2.</span> <span class="toc-text">授权相关过滤器</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Shiro-%E5%9F%BA%E6%9C%AC%E8%AE%A4%E8%AF%81%E6%B5%81%E7%A8%8B"><span class="toc-number">5.</span> <span class="toc-text">Shiro 基本认证流程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%80%E5%8D%95%E5%B0%8F%E8%AF%95%E4%B8%80%E4%B8%8B"><span class="toc-number">5.1.</span> <span class="toc-text">简单小试一下</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%A4%E8%AF%81%E7%9A%84%E8%BF%87%E7%A8%8B"><span class="toc-number">5.2.</span> <span class="toc-text">认证的过程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Shiro-%E7%9A%84%E6%8E%88%E6%9D%83"><span class="toc-number">6.</span> <span class="toc-text">Shiro 的授权</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A4%E6%96%AD%E8%A7%92%E8%89%B2"><span class="toc-number">6.1.</span> <span class="toc-text">判断角色</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#hasRole-%E6%96%B9%E6%B3%95"><span class="toc-number">6.1.1.</span> <span class="toc-text">hasRole 方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#hasRoles-%E6%96%B9%E6%B3%95"><span class="toc-number">6.1.2.</span> <span class="toc-text">hasRoles 方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#hasAllRoles-%E6%96%B9%E6%B3%95"><span class="toc-number">6.1.3.</span> <span class="toc-text">hasAllRoles 方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#checkPermission-%E6%96%B9%E6%B3%95"><span class="toc-number">6.1.4.</span> <span class="toc-text">checkPermission 方法</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A4%E6%96%AD%E6%9D%83%E9%99%90"><span class="toc-number">6.2.</span> <span class="toc-text">判断权限</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%88%E6%9D%83%E6%96%B9%E5%BC%8F"><span class="toc-number">6.3.</span> <span class="toc-text">授权方式</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8E%E8%A7%92%E8%89%B2%E7%9A%84%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6"><span class="toc-number">6.3.1.</span> <span class="toc-text">基于角色的访问控制</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8E%E8%B5%84%E6%BA%90%E7%9A%84%E8%AE%BF%E9%97%AE%E6%8E%A7%E5%88%B6"><span class="toc-number">6.3.2.</span> <span class="toc-text">基于资源的访问控制</span></a></li></ol></li></ol></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article" style="--smc-primary:#0078E7;"><link itemprop="mainEntityOfPage" href="https://www.bestguo.top/journal/shiro-study/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="BestGuo2020"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="BestGuo 的小窝"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">Shiro 学习小记</h1><div class="post-meta"><div class="post-time"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:calendar-line"></span></span> <time title="创建时间：2022-03-24 10:53:00" itemprop="dateCreated datePublished" datetime="2022-03-24T10:53:00+08:00">2022-03-24</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:calendar-2-line"></span></span> <time title="修改时间：2022-05-25 18:47:49" itemprop="dateModified" datetime="2022-05-25T18:47:49+08:00">2022-05-25</time></div><span class="post-busuanzi"><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读次数"><span class="icon iconify" data-icon="ri:eye-line"></span> <span id="busuanzi_value_page_pv"></span></span></span><span class="post-meta-divider">-</span><a href="#comment"><span class="post-meta-item-icon" title="评论数"><span class="icon iconify" data-icon="ri:chat-3-line"></span> <span class="waline-comment-count" id="/journal/shiro-study/"></span></span></a><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><span class="icon iconify" data-icon="ri:folder-line"></span></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">后端开发</span></a></span> > <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/%E6%9D%83%E9%99%90%E6%A1%86%E6%9E%B6%E5%AD%A6%E4%B9%A0%E5%8E%86%E7%A8%8B/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">权限框架学习历程</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/Java/" style="--text-color:#ff9900"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">Java</span></a><a class="tag-item" href="/tags/Shiro/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">Shiro</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body"><h2 id="Shiro-介绍"><a href="#Shiro-介绍" class="headerlink" title="Shiro 介绍"></a>Shiro 介绍</h2><p>权限体系在现代软件应用中有着非常重要的地位。一个应用如果没有权限体系都会显着这个系统“特别不安全”，无论是传统的 MIS 系统还是互联网项目出于对业务数据和应用自身的安全，都会设置自己的安全策略。</p>
+<p>Apache Shiro 是一个强大的并且简单使用的 Java 权限框架。主要应用认证（Authentication）、授权（Authorization）、加密（Cryptography）和 Session Manager。Shiro 具有简单易懂的 API，使用Shiro 可以快速并且简单的应用到任何应用中，无论是从最小的移动 app 到最大的企业级 web 应用都可以使用。</p>
+<span id="more"></span>
+
+<h2 id="核心功能"><a href="#核心功能" class="headerlink" title="核心功能"></a>核心功能</h2><p><strong><font color="red">Authentication</font></strong> 认证。如用户的登录。</p>
+<p><strong><font color="red">Authorization</font></strong> 授权。用户是否有权限访问指定 URL 等。</p>
+<p><strong>Cryptography</strong> 密码学。如密码的加密。</p>
+<p><strong>Session Management</strong> Session 管理。</p>
+<p><strong>Web Integration</strong> Web集成。Shiro不依赖于容器。</p>
+<h2 id="Shiro-的架构原理"><a href="#Shiro-的架构原理" class="headerlink" title="Shiro 的架构原理"></a>Shiro 的架构原理</h2><p>Shiro 的架构如下图所示，接下来将介绍架构的每一个部分。</p>
+<p><img src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fattach.dataguru.cn%2Fattachments%2Fforum%2F201403%2F10%2F1435301im3t21cbc0itmbi.png&refer=http%3A%2F%2Fattach.dataguru.cn&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1650680539&t=675d9d7d30c47a14cefe25549d6bbc93" alt="shiro架构" loading="lazy"></p>
+<h3 id="Subject"><a href="#Subject" class="headerlink" title="Subject"></a>Subject</h3><p>主体。每个“用户”登录成功后都会对应一个 Subject 对象，所有“用户”信息都存放在 Subject 中。可以理解成 Subject 就是 Shiro 提供的用户实体类。没有 Subject 就没有认证这个操作。</p>
+<h3 id="Security-Manager"><a href="#Security-Manager" class="headerlink" title="Security Manager"></a>Security Manager</h3><p>Shiro 最大的容器，此客器中包含了 Shiro 的绝大多数功能。在其它项目中，获取 Security Manager 是编写代码的第一步。但是 Spring Boot 中已经帮助我们进行自动化配置了。</p>
+<h3 id="Authenticator"><a href="#Authenticator" class="headerlink" title="Authenticator"></a>Authenticator</h3><p>认证器。执行认证过程时所调用的组件，其中包含了认证策略。</p>
+<h3 id="Authorizer"><a href="#Authorizer" class="headerlink" title="Authorizer"></a>Authorizer</h3><p>授权器。执行授权时调用的组件。</p>
+<h3 id="Session-Manager"><a href="#Session-Manager" class="headerlink" title="Session Manager"></a>Session Manager</h3><p>Shiro 被 Web 集成后，HttpSession 对象会由 Shiro 的 Session Manager 进行管理。</p>
+<h3 id="Cache-Manager"><a href="#Cache-Manager" class="headerlink" title="Cache Manager"></a>Cache Manager</h3><p>缓存管理。Shiro 执行很多第三方缓存技术，如 EHCache 等。</p>
+<h3 id="Session-DAO"><a href="#Session-DAO" class="headerlink" title="Session DAO"></a>Session DAO</h3><p>操作 Session 内容的组件。</p>
+<h3 id="Realms"><a href="#Realms" class="headerlink" title="Realms"></a>Realms</h3><p>Shiro 框架实现权限控制不依赖于数据库，通过内置数据也可以实现权限控制，比如后面提到的 ini 文件。但是目前绝大多数应用的数据都存储在数据库中，所以 Shiro 提供了 Realms 组件，此组件的作用就是访问数据库。Shiro 内置的访问数据库的代码，通过简单配置就可以访问数据库，也可以自定义 Realms 实现访问数据库逻辑。</p>
+<h2 id="Shiro-的-INI-文件"><a href="#Shiro-的-INI-文件" class="headerlink" title="Shiro 的 INI 文件"></a>Shiro 的 INI 文件</h2><p>INI 英文名称是 Initialization file，INI 文件是 Window 系统配置文件的扩展名。Shiro 的全局配置文件就是“.ini”文件，ini 中数据都是固定数据。</p>
+<p>.ini 文件内容的语法和 .properties 类似，都是 key=value 格式，INI 文件中包含了 4 个部分。分别是 main、users、roles、urls。</p>
+<p>Shiro 的配置文件大致有如下内容：</p>
+<pre class="language-ini" data-language="ini"><code class="language-ini"><span class="token selector">[main]</span>
+<span class="token comment"># Shiro 的一些全局配置</span>
+
+<span class="token selector">[users]</span>
+<span class="token comment"># 用户名=密码,角色名</span>
+<span class="token constant">xiaohehe</span><span class="token attr-value"><span class="token punctuation">=</span>123456,role1,role2</span>
+
+<span class="token selector">[roles]</span>
+<span class="token comment"># 角色名=权限名</span>
+<span class="token constant">role1</span><span class="token attr-value"><span class="token punctuation">=</span>user:inseet,role2=user:update</span>
+<span class="token constant">role2</span><span class="token attr-value"><span class="token punctuation">=</span>insert,update,delete,select</span>
+
+<span class="token selector">[urls]</span>
+<span class="token comment"># 定义哪个控制器被哪个过滤器过滤。Shiro 内置很多过滤器。此部分主要在 WEB 应用中使用</span>
+<span class="token comment"># 控制器名称（可理解成url请求路径）=过滤器名称</span>
+<span class="token constant">/login</span><span class="token attr-value"><span class="token punctuation">=</span>authc</span>
+<span class="token constant">/**</span><span class="token attr-value"><span class="token punctuation">=</span>anon</span></code></pre>
+
+<h3 id="Shiro-内置的过滤器"><a href="#Shiro-内置的过滤器" class="headerlink" title="Shiro 内置的过滤器"></a>Shiro 内置的过滤器</h3><p>过滤器分为两类：认证相关过滤器和授权相关过滤器</p>
+<h4 id="认证相关的过滤器"><a href="#认证相关的过滤器" class="headerlink" title="认证相关的过滤器"></a>认证相关的过滤器</h4><table>
+<thead>
+<tr>
+<th>过滤器名</th>
+<th>过滤器类</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>anon</td>
+<td>AnonymousFilter</td>
+<td>匿名拦截器，不需要登录即可访问的资源，匿名用户或游客，一般用于过滤静态资源。</td>
+</tr>
+<tr>
+<td>authc</td>
+<td>FormAuthenticationFilter</td>
+<td>需要认证登录才能访问</td>
+</tr>
+<tr>
+<td>authcBasic</td>
+<td>BasicHttpAuthenticationFilter</td>
+<td>httpBasic 身份验证拦截器。</td>
+</tr>
+<tr>
+<td>user</td>
+<td>UserFilter</td>
+<td>用户拦截器，表示必须存在用户。</td>
+</tr>
+<tr>
+<td>logout</td>
+<td>authc.LogoutFilter</td>
+<td>退出拦截器，执行后会直接跳转到shiroFilterFactoryBean.setLoginUrl() 设置的 url</td>
+</tr>
+</tbody></table>
+<h4 id="授权相关过滤器"><a href="#授权相关过滤器" class="headerlink" title="授权相关过滤器"></a>授权相关过滤器</h4><table>
+<thead>
+<tr>
+<th>过滤器名</th>
+<th>过滤器类</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>noSessionCreation</td>
+<td>NoSessionCreationFilter</td>
+<td>阻止在请求期间创建新的会话。以保证无状态的体验</td>
+</tr>
+<tr>
+<td>perms</td>
+<td>PermissionsAuthorizationFilter</td>
+<td>验证用户是否拥有权限，表示需要某些权限才能通过</td>
+</tr>
+<tr>
+<td>port</td>
+<td>PortFilter</td>
+<td>指定请求访问的端口号，如果不匹配则跳转到登录页面</td>
+</tr>
+<tr>
+<td>rest</td>
+<td>HttpMethodPermissionFilter</td>
+<td>根据请求的方法</td>
+</tr>
+<tr>
+<td>roles</td>
+<td>RolesAuthorizationFilter</td>
+<td>角色过滤器。判断当前用户是否指定角色。</td>
+</tr>
+<tr>
+<td>ssl</td>
+<td>SslFilter</td>
+<td>表示安全的url请求，协议为https。</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>以上的权限过滤器不一要全部用，按照项目的具体情况来分配相应的权限，使用相关的过滤器即可。后面在学习到<a href="/journal/shiro-spring">整合到 SpringBoot </a>的时候会抽出一些用法。</p>
+</blockquote>
+<p><strong>在 INI 文件中的配置时，需要按照下面的方式配置。</strong></p>
+<p>anon：不认证也可以访问。例如：<code>/admin/=anon</code>，<code>/login=anno</code></p>
+<p>authc：必须认证。<code>/**=authc</code> ——所有的资源都认证。</p>
+<p>authcBasic：没有参数时表示 httpBasic 认证(客户端认证方式)。</p>
+<p>logout：退出。</p>
+<p>noSessionCreation：新增 Filter，表示没有 Session 创建。</p>
+<p>perms：判断是有具有指定权限。例如：<code>/admin/user/=perms[ &quot;per1” &quot; per2” ]</code>。必须同时具有给定权限才可以访问。如果只有一个权限可以省略双引号。</p>
+<p>port：限制端口。例如：<code>/admin/**=port[8081]</code>。只要请求不是 8081 端口就重新发送URL到8081端口。</p>
+<p>rest：请求方式和权限的简便写法。例如：<code>/admin/**=rest[user]</code>，相当于<code>/admin/** = perms[user:方式]</code>，方式是http请求的方式: post 、get 等。</p>
+<p>roles：判断是否具有指定角色。<code>/admin/** =roles[role1]</code>。</p>
+<p>ssl：表示是安全的请求。协议为 https。</p>
+<p>user：表示必须存在用户。</p>
+<h2 id="Shiro-基本认证流程"><a href="#Shiro-基本认证流程" class="headerlink" title="Shiro 基本认证流程"></a>Shiro 基本认证流程</h2><ol>
+<li>获取 Subject 主体，通过主体 Subject 对象的 login 方法进行登录。</li>
+<li>把 Subject 中内容传递给Security Manager。</li>
+<li>把 Security Manager 内部组件 Authenticator 进行认证。</li>
+<li>使用 Realm 来认证数据，比如使用 INI Realm 来认证，调用 ini 文件中数据。</li>
+</ol>
+<h3 id="简单小试一下"><a href="#简单小试一下" class="headerlink" title="简单小试一下"></a>简单小试一下</h3><p>1、创建一个 Maven 工程、复制以下依赖。</p>
+<pre class="language-markup" data-language="markup"><code class="language-markup"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>org.apache.shiro<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>shiro-core<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">></span></span>1.8.0<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>commons-logging<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>commons-logging<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">></span></span>1.2<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span></code></pre>
+
+<p>2、在 resources 目录下，创建一个 ini 文件。新建一个 users 选项，按照 <code>用户名=密码</code> 的方式在 ini 文件中添加用户。</p>
+<pre class="language-ini" data-language="ini"><code class="language-ini"><span class="token selector">[users]</span>
+<span class="token constant">zs</span><span class="token attr-value"><span class="token punctuation">=</span>123</span>
+<span class="token constant">sxc</span><span class="token attr-value"><span class="token punctuation">=</span>123</span>
+<span class="token constant">xiaohehe</span><span class="token attr-value"><span class="token punctuation">=</span>123</span></code></pre>
+
+<p>3、创建一个 Main 方法。</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token keyword">package</span> <span class="token namespace">top<span class="token punctuation">.</span>bestguo<span class="token punctuation">.</span>shirofirst</span><span class="token punctuation">;</span>
+
+<span class="token keyword">import</span> <span class="token namespace">org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>shiro<span class="token punctuation">.</span></span><span class="token class-name">SecurityUtils</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token namespace">org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>shiro<span class="token punctuation">.</span>authc<span class="token punctuation">.</span></span><span class="token class-name">IncorrectCredentialsException</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token namespace">org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>shiro<span class="token punctuation">.</span>authc<span class="token punctuation">.</span></span><span class="token class-name">UnknownAccountException</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token namespace">org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>shiro<span class="token punctuation">.</span>authc<span class="token punctuation">.</span></span><span class="token class-name">UsernamePasswordToken</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token namespace">org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>shiro<span class="token punctuation">.</span>config<span class="token punctuation">.</span></span><span class="token class-name">IniSecurityManagerFactory</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token namespace">org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>shiro<span class="token punctuation">.</span>mgt<span class="token punctuation">.</span></span><span class="token class-name">SecurityManager</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token namespace">org<span class="token punctuation">.</span>apache<span class="token punctuation">.</span>shiro<span class="token punctuation">.</span>subject<span class="token punctuation">.</span></span><span class="token class-name">Subject</span><span class="token punctuation">;</span>
+
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">ShiroFirstApplication</span> <span class="token punctuation">&#123;</span>
+
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"Hello World!"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">// 1、解析 ini 文件，创建 SecurityManager 工厂</span>
+        <span class="token class-name">IniSecurityManagerFactory</span> managerFactory <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">IniSecurityManagerFactory</span><span class="token punctuation">(</span><span class="token string">"classpath:shiro.ini"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">// 2、获得 SecurityManager 实例对象</span>
+        <span class="token class-name">SecurityManager</span> instance <span class="token operator">=</span> managerFactory<span class="token punctuation">.</span><span class="token function">getInstance</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">// 3、将 SecurityManager 对象保存到 SecurityUtils 中</span>
+        <span class="token class-name">SecurityUtils</span><span class="token punctuation">.</span><span class="token function">setSecurityManager</span><span class="token punctuation">(</span>instance<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">// 4、获取 Subject 主题对象</span>
+        <span class="token class-name">Subject</span> subject <span class="token operator">=</span> <span class="token class-name">SecurityUtils</span><span class="token punctuation">.</span><span class="token function">getSubject</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">// 5、创建令牌对象，相当于是给我们用户自己输入用户名和密码</span>
+        <span class="token class-name">UsernamePasswordToken</span> token <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">UsernamePasswordToken</span><span class="token punctuation">(</span><span class="token string">"sxc"</span><span class="token punctuation">,</span> <span class="token string">"1123"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment">// 6、进行认证的比较（Realms）</span>
+        <span class="token keyword">try</span> <span class="token punctuation">&#123;</span>
+            subject<span class="token punctuation">.</span><span class="token function">login</span><span class="token punctuation">(</span>token<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"认证成功！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">UnknownAccountException</span> exception<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"认证失败，未知的账户！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">IncorrectCredentialsException</span> exception<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"认证失败，不正确的口令！"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">&#125;</span>
+    <span class="token punctuation">&#125;</span>
+
+<span class="token punctuation">&#125;</span>
+</code></pre>
+
+<p>4、运行结果</p>
+<pre class="language-txt" data-language="txt"><code class="language-txt">&#x2F;&#x2F; 用户名为sxc、密码为 1123
+Hello World!
+SLF4J: Failed to load class &quot;org.slf4j.impl.StaticLoggerBinder&quot;.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http:&#x2F;&#x2F;www.slf4j.org&#x2F;codes.html#StaticLoggerBinder for further details.
+认证失败，不正确的口令！
+    
+&#x2F;&#x2F; 用户名为 sc、密码为 123
+Hello World!
+SLF4J: Failed to load class &quot;org.slf4j.impl.StaticLoggerBinder&quot;.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http:&#x2F;&#x2F;www.slf4j.org&#x2F;codes.html#StaticLoggerBinder for further details.
+认证失败，未知的账户！
+
+&#x2F;&#x2F; 用户名为 sxc、密码为 123
+Hello World!
+SLF4J: Failed to load class &quot;org.slf4j.impl.StaticLoggerBinder&quot;.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http:&#x2F;&#x2F;www.slf4j.org&#x2F;codes.html#StaticLoggerBinder for further details.
+认证成功！</code></pre>
+
+<h3 id="认证的过程"><a href="#认证的过程" class="headerlink" title="认证的过程"></a>认证的过程</h3><p>在上面的示例中，使用了 UsernamePasswordToken 类来进行用户的认证，认证原理首先是比对用户名，判断用户名是否存在，然后再判断用户的密码是否匹配。如果用户名或者密码不正确，那么则通过异常抛出的形式提示用户名或者密码是否有效。</p>
+<h2 id="Shiro-的授权"><a href="#Shiro-的授权" class="headerlink" title="Shiro 的授权"></a>Shiro 的授权</h2><p>若要判断一个用户是否有什么权限，有两种方式，一种是利用方法返回的布尔值进行判断，另一种方法没有返回值，但是会抛出异常，通过捕获异常的方式来处理用户有哪些权限。</p>
+<p>判断用户是否有角色以及权限，前提是用户能够正确的通过认证。</p>
+<h3 id="判断角色"><a href="#判断角色" class="headerlink" title="判断角色"></a>判断角色</h3><p>判断角色的方法有 hasRole、hasRoles、hasAllRole、checkRole 等，一般来说，带 has 前缀的都带返回值，类型为 boolean 型。</p>
+<h4 id="hasRole-方法"><a href="#hasRole-方法" class="headerlink" title="hasRole 方法"></a>hasRole 方法</h4><p>判断当前认证成功用户是否具有某一个角色，返回一个 boolean 值。</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token keyword">boolean</span> hasRole <span class="token operator">=</span> subject<span class="token punctuation">.</span><span class="token function">hasRole</span><span class="token punctuation">(</span><span class="token string">"role2"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>hasRole<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+
+<h4 id="hasRoles-方法"><a href="#hasRoles-方法" class="headerlink" title="hasRoles 方法"></a>hasRoles 方法</h4><p>判断当前用户是否具有多个角色，返回一组 boolean 值。</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token class-name">ArrayList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">></span></span> list <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">></span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+list<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token string">"role1"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+list<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token string">"role2"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token class-name">Arrays</span><span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span>subject<span class="token punctuation">.</span><span class="token function">hasRoles</span><span class="token punctuation">(</span>list<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// boolean[] 型</span></code></pre>
+
+<h4 id="hasAllRoles-方法"><a href="#hasAllRoles-方法" class="headerlink" title="hasAllRoles 方法"></a>hasAllRoles 方法</h4><p>判断当前用户是否包含当前列出的全部的角色。</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token class-name">ArrayList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">String</span><span class="token punctuation">></span></span> list <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token punctuation">></span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+list<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token string">"role1"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+list<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token string">"role2"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>subject<span class="token punctuation">.</span><span class="token function">hasAllRoles</span><span class="token punctuation">(</span>list<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+
+<h4 id="checkPermission-方法"><a href="#checkPermission-方法" class="headerlink" title="checkPermission 方法"></a>checkPermission 方法</h4><p>功能上和 hasRole 一样，只是它是通过异常抛出的形式。</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token keyword">try</span> <span class="token punctuation">&#123;</span>
+    subject<span class="token punctuation">.</span><span class="token function">checkRole</span><span class="token punctuation">(</span><span class="token string">"fsffsdf"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span>
+<span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">UnauthorizedException</span> exception<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    exception<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">&#125;</span></code></pre>
+
+<h3 id="判断权限"><a href="#判断权限" class="headerlink" title="判断权限"></a>判断权限</h3><p>权限是包含在角色中，也就是意味着当前用户包含着这些权限，此时可以判断该用户拥有哪些可以操作的权限了。</p>
+<p>判断权限的方法有：isPermitted、isPermittedAll、checkPermission、checkPermissions 等，使用方法也和判断角色一样，但是传入的参数是权限名称而不是角色名称。一般来说，带 is 前缀的都带返回值，类型为 boolean 型。</p>
+<h3 id="授权方式"><a href="#授权方式" class="headerlink" title="授权方式"></a>授权方式</h3><p>授权方式分为两种，分别是基于角色的访问控制（Role-Based Access Control）和基于资源的访问控制（Resource-Based Access Control），两者简称都是 RBAC。</p>
+<h4 id="基于角色的访问控制"><a href="#基于角色的访问控制" class="headerlink" title="基于角色的访问控制"></a>基于角色的访问控制</h4><p>RBAC 基于角色的访问控制（Role-Based Access Control）是以角色为中心进行访问控制。</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token keyword">if</span><span class="token punctuation">(</span>subject<span class="token punctuation">.</span><span class="token function">hasRole</span><span class="token punctuation">(</span><span class="token string">"admin"</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token comment">// 操作什么资源</span>
+<span class="token punctuation">&#125;</span></code></pre>
+
+<h4 id="基于资源的访问控制"><a href="#基于资源的访问控制" class="headerlink" title="基于资源的访问控制"></a>基于资源的访问控制</h4><p>RBAC 基于资源的访问控制（Resource-Based Access Control）是以资源为中心进行访问控制。</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token keyword">if</span><span class="token punctuation">(</span>subject<span class="token punctuation">.</span><span class="token function">isPermission</span><span class="token punctuation">(</span><span class="token string">"user:create:*"</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token comment">// 对所有的用户具有创建的权限</span>
+<span class="token punctuation">&#125;</span>
+<span class="token keyword">if</span><span class="token punctuation">(</span>subject<span class="token punctuation">.</span><span class="token function">isPermission</span><span class="token punctuation">(</span><span class="token string">"user:update:01"</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token comment">// 对01的用户具有创建的权限</span>
+<span class="token punctuation">&#125;</span></code></pre>
+
+<blockquote>
+<p>权限字符串的规则是：<code>资源标识符∶操作︰资源实例标识符</code>，意思是对哪个资源的哪个实例具有什么操作，”:” 是资源 / 操作 / 实例的分割符,权限字符串也可以使用 * 通配符。</p>
+<p>user：系统中的一个模块</p>
+<p>create：创建</p>
+<p>*：某个资源的实例</p>
+</blockquote>
+</div></section><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>BestGuo2020</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="https://www.bestguo.top/journal/shiro-study/" title="Shiro 学习小记">https://www.bestguo.top/journal/shiro-study/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><span class="icon iconify" data-icon="ri:creative-commons-line"></span><span class="icon iconify" data-icon="ri:creative-commons-by-line"></span><span class="icon iconify" data-icon="ri:creative-commons-nc-line"></span><span class="icon iconify" data-icon="ri:creative-commons-sa-line"></span></a> 许可协议。</li></ul></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/journal/shiro-spring/" rel="prev" title="Shiro 与 SpringBoot 整合"><span class="icon iconify" data-icon="ri:arrow-left-s-line"></span><span class="post-nav-text">Shiro 与 SpringBoot 整合</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/journal/redis-sentinel/" rel="next" title="Redis 哨兵模式"><span class="post-nav-text">Redis 哨兵模式</span><span class="icon iconify" data-icon="ri:arrow-right-s-line"></span></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>请诸位理性发言！</span><br><span>请勿发布违反中国大陆地区法律的言论，请勿人身攻击、谩骂、侮辱和煽动式的语言。</span><br></div><div id="waline"></div><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/@waline/client@v2/dist/waline.css"><script>window.CONFIG.waline.config.path = "/journal/shiro-study/"</script><div class="js-Pjax"><script src="/js/comments/waline.js" type="module" defer></script></div></div></main><footer class="sidebar-translate" id="footer"><div class="beian"><a rel="noopener" href="https://beian.miit.gov.cn/" target="_blank">赣 ICP 备 20009988 号</a></div><div class="copyright"><span>&copy; 2019 – 2022 </span><span class="with-love" id="animate"><span class="icon iconify" data-icon="ri:cloud-line"></span></span><span class="author"> BestGuo2020</span></div><div class="powered"><span>由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v6.2.0</span><span class="footer-separator">|</span><span>主题 - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.10.0</span></div><div class="live-time"><span>本站点已正常地运行</span><span id="display_live_time"></span><span class="moe-text"><br/>♬(ノ゜∇゜)ノ♩<br></span><script>function blog_live_time() {
+  setTimeout(blog_live_time, 1000);
+  const start = new Date('2019-01-01T00:00:00');
+  const now = new Date();
+  const timeDiff = (now.getTime() - start.getTime());
+  const msPerMinute = 60 * 1000;
+  const msPerHour = 60 * msPerMinute;
+  const msPerDay = 24 * msPerHour;
+  const passDay = Math.floor(timeDiff / msPerDay);
+  const passHour = Math.floor((timeDiff % msPerDay) / 60 / 60 / 1000);
+  const passMinute = Math.floor((timeDiff % msPerHour) / 60 / 1000);
+  const passSecond = Math.floor((timeDiff % msPerMinute) / 1000);
+  display_live_time.innerHTML = ` ${passDay} 天 ${passHour} 小时 ${passMinute} 分 ${passSecond} 秒`;
+}
+blog_live_time();
+</script></div><div id="busuanzi"><span id="busuanzi_container_site_uv" title="总访客量"><span><span class="icon iconify" data-icon="ri:user-line"></span></span><span id="busuanzi_value_site_uv"></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv" title="总访问量"><span><span class="icon iconify" data-icon="ri:eye-line"></span></span><span id="busuanzi_value_site_pv"></span></span><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div class="footer-support"><span>本网站由</span><a class="footer-support-logo" href="https://www.upyun.com/?utm_source=lianmeng&amp;utm_medium=referral" target="blank" title="又拍云"><img height="30" src="https://cdn.yunyoujun.cn/img/logo/upyun-logo.png" alt="又拍云"></a><span>提供 CDN 加速服务</span></div></footer><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><span class="icon iconify" data-icon="ri:arrow-up-s-line"></span><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a><a class="popup-trigger hty-icon-button icon-search" id="search" href="javascript:;" title="搜索"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:search-line"></span></span></a><script>window.addEventListener("DOMContentLoaded", () => {
+  // Handle and trigger popup window
+  document.querySelector(".popup-trigger").addEventListener("click", () => {
+    document.querySelector(".popup").classList.add("show");
+    setTimeout(() => {
+      document.querySelector(".search-input").focus();
+    }, 100);
+  });
+
+  // Monitor main search box
+  const onPopupClose = () => {
+    document.querySelector(".popup").classList.remove("show");
+  };
+
+  document.querySelector(".popup-btn-close").addEventListener("click", () => {
+    onPopupClose();
+  });
+
+  window.addEventListener("keyup", event => {
+    if (event.key === "Escape") {
+      onPopupClose();
+    }
+  });
+});
+</script><script src="/js/search/local-search.js" defer type="module"></script><div class="popup search-popup"><div class="search-header"><span class="popup-btn-close close-icon hty-icon-button"><span class="icon iconify" data-icon="ri:close-line"></span></span></div><div class="search-input-container"><input class="search-input" id="local-search-input" type="text" placeholder="搜索..." value=""></div><div id="local-search-result"></div></div></div></body></html>

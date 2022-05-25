@@ -1,0 +1,206 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="BestGuo2020"><meta name="copyright" content="BestGuo2020"><meta name="generator" content="Hexo 6.2.0"><meta name="theme" content="hexo-theme-yun"><title>BestGuo 的小窝</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/star-markdown-css@0.3.3/dist/yun/yun-markdown.min.css"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/prism-theme-vars/base.css"><script src="https://fastly.jsdelivr.net/npm/@unocss/runtime/mini.global.js"></script><script src="https://fastly.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>function initScrollReveal() {
+  [".post-card",".markdown-body img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+}
+document.addEventListener("DOMContentLoaded", initScrollReveal);
+document.addEventListener("pjax:success", initScrollReveal);
+</script><link rel="icon" type="image/png" href="/favicon.ico"><link rel="mask-icon" href="/favicon.ico" color="#0078E7"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="preconnect" href="https://fastly.jsdelivr.net/npm/" crossorigin><script id="yun-config">
+    window.Yun = {}
+    window.CONFIG = {"hostname":"www.bestguo.top","root":"/","title":["Best","Guo","的","小","窝"],"version":"1.10.0","mode":"time","copycode":true,"page":{"isPost":false},"i18n":{"placeholder":"搜索...","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）"},"anonymous_image":"https://cdn.yunyoujun.cn/img/avatar/none.jpg","say":{"api":"https://el-bot-api.vercel.app/api/words/young"},"local_search":{"path":"/search.xml"},"fireworks":{"colors":null},"waline":{"config":{"enable":true,"serverURL":"https://comment.bestguo.top","comment":true,"requiredFields":["nick","mail"],"placeholder":"有什么想要对 BestGuo 说的呢，输入正确有效的邮箱有机会收到回复哟😊😊","avatarCDN":"https://seccdn.libravatar.org/avatar/","emoji":["https://unpkg.com/@waline/emojis@1.0.1/weibo/","https://unpkg.com/@waline/emojis@1.0.1/bilibili/","https://unpkg.com/@waline/emojis@1.0.1/qq/","https://unpkg.com/@waline/emojis@1.0.1/tieba/"],"avatar":"monsterid","el":"#waline","lang":"zh-CN"},"cdn":"https://fastly.jsdelivr.net/npm/@waline/client@v2/dist/waline.js","dark":"html.dark"},"vendors":{"darken":"https://fastly.jsdelivr.net/npm/darken@1.5.0"}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/hexo-theme-yun.js" type="module"></script><link rel="preconnect" href="https://www.google-analytics.com" crossorigin><script async src="https://www.googletagmanager.com/gtag/js?id=G-907LWSSHLS"></script><script>if (CONFIG.hostname === location.hostname) {
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-907LWSSHLS');
+}</script><script>(function(){
+  var bp = document.createElement('script');
+  var curProtocol = window.location.protocol.split(':')[0];
+  if (curProtocol === 'https') {
+    bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+  }
+  else {
+    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+  }
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(bp, s);
+})();</script><meta name="description" content="Web SQL   请按下 F12 查看执行的效果   打开&#x2F;建立数据库   建表   删表   修改表的字段   插入数据   更新数据   查询数据   删除数据     var db &#x3D; null;   &#x2F;&#x2F; 建库   function createDB() {     db &#x3D; openDatabase(&quot;xiaohehe233&quot;, &quot;0.1&quot;, &quot;测试用的">
+<meta property="og:type" content="website">
+<meta property="og:title" content="BestGuo 的小窝">
+<meta property="og:url" content="https://www.bestguo.top/images/demo/create2.html">
+<meta property="og:site_name" content="BestGuo 的小窝">
+<meta property="og:description" content="Web SQL   请按下 F12 查看执行的效果   打开&#x2F;建立数据库   建表   删表   修改表的字段   插入数据   更新数据   查询数据   删除数据     var db &#x3D; null;   &#x2F;&#x2F; 建库   function createDB() {     db &#x3D; openDatabase(&quot;xiaohehe233&quot;, &quot;0.1&quot;, &quot;测试用的">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-05-25T10:47:51.712Z">
+<meta property="article:modified_time" content="2022-05-25T10:47:51.712Z">
+<meta property="article:author" content="BestGuo2020">
+<meta property="article:tag" content="善良、勇敢、可爱的男孩子">
+<meta name="twitter:card" content="summary"><script>(function() {
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+  const setting = localStorage.getItem('darken-mode') || 'auto'
+  if (setting === 'dark' || (prefersDark && setting !== 'light'))
+    document.documentElement.classList.toggle('dark', true)
+})()</script></head><body><script src="https://code.iconify.design/2/2.1.1/iconify.min.js"></script><script>// Define global variable
+IconifyProviders = {
+  // Empty prefix: overwrite default API provider configuration
+  '': {
+    // Use custom API first, use Iconify public API as backup
+    resources: [
+        'https://api.iconify.design',
+    ],
+    // Wait for 1 second before switching API hosts
+    rotate: 1000,
+  },
+};</script><script defer src="https://fastly.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js" type="module"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js" type="module"></script><div class="sidebar-panel sidebar-panel-active" id="site-overview-wrap"><div class="site-info"><a class="site-author-avatar" href="/about/" title="BestGuo2020"><img width="96" loading="lazy" src="/images/avatar.jpg" alt="BestGuo2020"><span class="site-author-status" title="最忙的半年">🥵</span></a><div class="site-author-name"><a href="/about/">BestGuo2020</a></div><a class="site-name" href="/about/site.html">BestGuo 的小窝</a><sub class="site-subtitle">善良、勇敢、可爱</sub><div class="site-description">一个人的世界是如此的安静</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="首页"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:home-4-line"></span></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:archive-line"></span></span><span class="site-state-item-count">69</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:folder-2-line"></span></span><span class="site-state-item-count">19</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="site-state-item-count">43</span></a></div><a class="site-state-item hty-icon-button" href="/albums/" title="相册集"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:gallery-line"></span></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://wpa.qq.com/msgrd?v=3&amp;uin=1540113012&amp;site=qq&amp;menu=yes" title="QQ：xiaohehe2021" target="_blank" style="color:#12B7F5"><span class="icon iconify" data-icon="ri:qq-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/bestguo2020" title="GitHub：BestGuo2020" target="_blank" style="color:#8251e6"><span class="icon iconify" data-icon="ri:github-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/184681623" title="哔哩哔哩: 我叫人员外婆" target="_blank" style="color:#FF8EB3"><span class="icon iconify" data-icon="ri:bilibili-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:bestguo2020@foxmail.com" title="E-Mail" target="_blank" style="color:#8E71C1"><span class="icon iconify" data-icon="ri:mail-line"></span></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><span class="icon iconify" data-icon="ri:contrast-2-line"></span></a></div></aside><main class="sidebar-translate" id="content"><div class="hty-card" id="page"><header class="post-header"><h1 class="post-title" itemprop="name headline"></h1></header><div class="text-center"><div class="post-meta"><div class="post-time"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:calendar-line"></span></span> <time title="创建时间：2022-05-25 18:47:51" itemprop="dateCreated datePublished" datetime="2022-05-25T18:47:51+08:00">2022-05-25</time></div></div></div><article id="page"><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body"><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+  Web SQL<br>
+  请按下 F12 查看执行的效果<br>
+  <button onclick="createDB()">打开/建立数据库</button>
+  <button onclick="createTable()">建表</button>
+  <button onclick="dropTable()">删表</button>
+  <button onclick="alterTable()">修改表的字段</button>
+  <button onclick="insertData()">插入数据</button>
+  <button onclick="updateData()">更新数据</button>
+  <button onclick="selectData()">查询数据</button>
+  <button onclick="deleteData()">删除数据</button>
+</body>
+<script>
+  var db = null;
+  // 建库
+  function createDB() {
+    db = openDatabase("xiaohehe233", "0.1", "测试用的数据库", 1 * 1024 * 1024, function(msg){
+      console.log(msg);
+    });
+  }
+  // 建表
+  function createTable() {
+    db.transaction(function(tx){
+      tx.executeSql(`
+        create table phone_book (
+          phone_number  int  primary key,
+          name  varchar(20)  not null,
+          age  int
+        )
+      `);
+    }, function(e) {
+      console.log(e, "创建过程出现不可预知的异常");
+    }, function(e) {
+      console.log(e, "创建成功！");
+    });
+  }
+  // 删表
+  function dropTable() {
+    db.transaction(function(tx){
+      tx.executeSql(`drop table phone_book`);
+    }, function(e) {
+      console.log(e, "删表过程出现不可预知的异常");
+    }, function(e) {
+      console.log(e, "删表成功！");
+    });
+  }
+  // 修改表的字段
+  function alterTable() {
+    db.transaction(function(tx){
+      tx.executeSql(`
+        alter table phone_book add birthday date
+      `);
+    }, function(e) {
+      console.log(e, "修改过程出现不可预知的异常");
+    }, function(e) {
+      console.log(e, "修改成功！");
+    });
+  }
+  // 插入数据
+  function insertData() {
+    db.transaction(function(tx){
+      tx.executeSql(`insert into phone_book(phone_number, name, age) values (13122223333, 'xiaohehe1', 12)`);
+      tx.executeSql(`insert into phone_book(phone_number, name, age) values (13122223344, 'xiaohehe2', 11)`);
+      tx.executeSql(`insert into phone_book(phone_number, name, age) values (13122223345, 'xiaohehe3', 13)`);
+    }, function(e) {
+      console.log(e, "插入数据的过程出现不可预知的异常");
+    }, function(e) {
+      console.log(e, "插入数据成功！");
+    });
+  }
+  // 更新数据
+  function updateData() {
+    db.transaction(function(tx){
+      tx.executeSql(`update phone_book set phone_number = 1111111 where name = 'xiaohehe1'`);
+    }, function(e) {
+      console.log(e, "更新数据的过程出现不可预知的异常");
+    }, function(e) {
+      console.log(e, "更新数据成功！");
+    });
+  }
+  // 查询数据
+  var age = 11;
+  function selectData() {
+    db.transaction(function(tx){
+      tx.executeSql(`select * from phone_book where age > ?`, [age], function(tx, results) {
+        console.log(results);
+      });
+    }, function(e) {
+      console.log(e, "查询数据的过程出现不可预知的异常");
+    }, function(e) {
+      console.log(e, "查询数据成功！");
+    });
+  }
+  // 删除数据
+  function deleteData() {
+    db.transaction(function(tx){
+      tx.executeSql(`delete from phone_book where age = 11`, [], function(tx, results) {
+        console.log(results);
+      });
+    }, function(e) {
+      console.log(e, "删除数据的过程出现不可预知的异常");
+    }, function(e) {
+      console.log(e, "删除数据成功！");
+    });
+  }
+</script>
+</html></div></section></article></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>请诸位理性发言！</span><br><span>请勿发布违反中国大陆地区法律的言论，请勿人身攻击、谩骂、侮辱和煽动式的语言。</span><br></div><div id="waline"></div><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/@waline/client@v2/dist/waline.css"><script>window.CONFIG.waline.config.path = "/images/demo/create2.html"</script><div class="js-Pjax"><script src="/js/comments/waline.js" type="module" defer></script></div></div></main><footer class="sidebar-translate" id="footer"><div class="beian"><a rel="noopener" href="https://beian.miit.gov.cn/" target="_blank">赣 ICP 备 20009988 号</a></div><div class="copyright"><span>&copy; 2019 – 2022 </span><span class="with-love" id="animate"><span class="icon iconify" data-icon="ri:cloud-line"></span></span><span class="author"> BestGuo2020</span></div><div class="powered"><span>由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v6.2.0</span><span class="footer-separator">|</span><span>主题 - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.10.0</span></div><div class="live-time"><span>本站点已正常地运行</span><span id="display_live_time"></span><span class="moe-text"><br/>♬(ノ゜∇゜)ノ♩<br></span><script>function blog_live_time() {
+  setTimeout(blog_live_time, 1000);
+  const start = new Date('2019-01-01T00:00:00');
+  const now = new Date();
+  const timeDiff = (now.getTime() - start.getTime());
+  const msPerMinute = 60 * 1000;
+  const msPerHour = 60 * msPerMinute;
+  const msPerDay = 24 * msPerHour;
+  const passDay = Math.floor(timeDiff / msPerDay);
+  const passHour = Math.floor((timeDiff % msPerDay) / 60 / 60 / 1000);
+  const passMinute = Math.floor((timeDiff % msPerHour) / 60 / 1000);
+  const passSecond = Math.floor((timeDiff % msPerMinute) / 1000);
+  display_live_time.innerHTML = ` ${passDay} 天 ${passHour} 小时 ${passMinute} 分 ${passSecond} 秒`;
+}
+blog_live_time();
+</script></div><div id="busuanzi"><span id="busuanzi_container_site_uv" title="总访客量"><span><span class="icon iconify" data-icon="ri:user-line"></span></span><span id="busuanzi_value_site_uv"></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv" title="总访问量"><span><span class="icon iconify" data-icon="ri:eye-line"></span></span><span id="busuanzi_value_site_pv"></span></span><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div class="footer-support"><span>本网站由</span><a class="footer-support-logo" href="https://www.upyun.com/?utm_source=lianmeng&amp;utm_medium=referral" target="blank" title="又拍云"><img height="30" src="https://cdn.yunyoujun.cn/img/logo/upyun-logo.png" alt="又拍云"></a><span>提供 CDN 加速服务</span></div></footer><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><span class="icon iconify" data-icon="ri:arrow-up-s-line"></span><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a><a class="popup-trigger hty-icon-button icon-search" id="search" href="javascript:;" title="搜索"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:search-line"></span></span></a><script>window.addEventListener("DOMContentLoaded", () => {
+  // Handle and trigger popup window
+  document.querySelector(".popup-trigger").addEventListener("click", () => {
+    document.querySelector(".popup").classList.add("show");
+    setTimeout(() => {
+      document.querySelector(".search-input").focus();
+    }, 100);
+  });
+
+  // Monitor main search box
+  const onPopupClose = () => {
+    document.querySelector(".popup").classList.remove("show");
+  };
+
+  document.querySelector(".popup-btn-close").addEventListener("click", () => {
+    onPopupClose();
+  });
+
+  window.addEventListener("keyup", event => {
+    if (event.key === "Escape") {
+      onPopupClose();
+    }
+  });
+});
+</script><script src="/js/search/local-search.js" defer type="module"></script><div class="popup search-popup"><div class="search-header"><span class="popup-btn-close close-icon hty-icon-button"><span class="icon iconify" data-icon="ri:close-line"></span></span></div><div class="search-input-container"><input class="search-input" id="local-search-input" type="text" placeholder="搜索..." value=""></div><div id="local-search-result"></div></div></div></body></html>

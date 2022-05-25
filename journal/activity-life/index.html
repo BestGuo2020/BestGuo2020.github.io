@@ -1,0 +1,182 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="BestGuo2020"><meta name="copyright" content="BestGuo2020"><meta name="generator" content="Hexo 6.2.0"><meta name="theme" content="hexo-theme-yun"><title>Activity 的生命周期 | BestGuo 的小窝</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/star-markdown-css@0.3.3/dist/yun/yun-markdown.min.css"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/prism-theme-vars/base.css"><script src="https://fastly.jsdelivr.net/npm/@unocss/runtime/mini.global.js"></script><script src="https://fastly.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>function initScrollReveal() {
+  [".post-card",".markdown-body img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+}
+document.addEventListener("DOMContentLoaded", initScrollReveal);
+document.addEventListener("pjax:success", initScrollReveal);
+</script><link rel="icon" type="image/png" href="/favicon.ico"><link rel="mask-icon" href="/favicon.ico" color="#0078E7"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="preconnect" href="https://fastly.jsdelivr.net/npm/" crossorigin><script id="yun-config">
+    window.Yun = {}
+    window.CONFIG = {"hostname":"www.bestguo.top","root":"/","title":["Best","Guo","的","小","窝"],"version":"1.10.0","mode":"time","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"搜索...","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）"},"anonymous_image":"https://cdn.yunyoujun.cn/img/avatar/none.jpg","say":{"api":"https://el-bot-api.vercel.app/api/words/young"},"local_search":{"path":"/search.xml"},"fireworks":{"colors":null},"waline":{"config":{"enable":true,"serverURL":"https://comment.bestguo.top","comment":true,"requiredFields":["nick","mail"],"placeholder":"有什么想要对 BestGuo 说的呢，输入正确有效的邮箱有机会收到回复哟😊😊","avatarCDN":"https://seccdn.libravatar.org/avatar/","emoji":["https://unpkg.com/@waline/emojis@1.0.1/weibo/","https://unpkg.com/@waline/emojis@1.0.1/bilibili/","https://unpkg.com/@waline/emojis@1.0.1/qq/","https://unpkg.com/@waline/emojis@1.0.1/tieba/"],"avatar":"monsterid","el":"#waline","lang":"zh-CN"},"cdn":"https://fastly.jsdelivr.net/npm/@waline/client@v2/dist/waline.js","dark":"html.dark"},"vendors":{"darken":"https://fastly.jsdelivr.net/npm/darken@1.5.0"}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/hexo-theme-yun.js" type="module"></script><link rel="preconnect" href="https://www.google-analytics.com" crossorigin><script async src="https://www.googletagmanager.com/gtag/js?id=G-907LWSSHLS"></script><script>if (CONFIG.hostname === location.hostname) {
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-907LWSSHLS');
+}</script><script>(function(){
+  var bp = document.createElement('script');
+  var curProtocol = window.location.protocol.split(':')[0];
+  if (curProtocol === 'https') {
+    bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+  }
+  else {
+    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+  }
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(bp, s);
+})();</script><meta name="description" content="前言首次学习 Activity 的生命周期，似懂非懂。不过通过代码的方式可以大致理解一下，Activity 在创建的时候会执行那些方法，比如临时退出到主界面，手机息屏，新消息，来电等等状态时。会执行到的方法。 一个 Activity 的生命周期如下。  图片来自网络，侵删">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Activity 的生命周期">
+<meta property="og:url" content="https://www.bestguo.top/journal/activity-life/index.html">
+<meta property="og:site_name" content="BestGuo 的小窝">
+<meta property="og:description" content="前言首次学习 Activity 的生命周期，似懂非懂。不过通过代码的方式可以大致理解一下，Activity 在创建的时候会执行那些方法，比如临时退出到主界面，手机息屏，新消息，来电等等状态时。会执行到的方法。 一个 Activity 的生命周期如下。  图片来自网络，侵删">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://images0.cnblogs.com/blog2015/614265/201508/281713137507426.jpg">
+<meta property="og:image" content="https://www.bestguo.top/images/Android/lifecycle/QQ%E6%88%AA%E5%9B%BE20210131164457.jpg">
+<meta property="og:image" content="https://www.bestguo.top/images/Android/lifecycle/QQ%E6%88%AA%E5%9B%BE20210131165004.jpg">
+<meta property="og:image" content="https://www.bestguo.top/images/Android/lifecycle/QQ%E6%88%AA%E5%9B%BE20210131165319.jpg">
+<meta property="og:image" content="https://www.bestguo.top/images/Android/lifecycle/QQ%E6%88%AA%E5%9B%BE20210131165530.jpg">
+<meta property="article:published_time" content="2021-01-31T08:20:00.000Z">
+<meta property="article:modified_time" content="2022-05-25T10:47:48.778Z">
+<meta property="article:author" content="BestGuo2020">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="Java">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://images0.cnblogs.com/blog2015/614265/201508/281713137507426.jpg"><script>(function() {
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+  const setting = localStorage.getItem('darken-mode') || 'auto'
+  if (setting === 'dark' || (prefersDark && setting !== 'light'))
+    document.documentElement.classList.toggle('dark', true)
+})()</script></head><body><script src="https://code.iconify.design/2/2.1.1/iconify.min.js"></script><script>// Define global variable
+IconifyProviders = {
+  // Empty prefix: overwrite default API provider configuration
+  '': {
+    // Use custom API first, use Iconify public API as backup
+    resources: [
+        'https://api.iconify.design',
+    ],
+    // Wait for 1 second before switching API hosts
+    rotate: 1000,
+  },
+};</script><script defer src="https://fastly.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js" type="module"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js" type="module"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><span class="icon iconify" data-icon="ri:list-ordered"></span></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><span class="icon iconify" data-icon="ri:passport-line"></span></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="BestGuo2020"><img width="96" loading="lazy" src="/images/avatar.jpg" alt="BestGuo2020"><span class="site-author-status" title="最忙的半年">🥵</span></a><div class="site-author-name"><a href="/about/">BestGuo2020</a></div><a class="site-name" href="/about/site.html">BestGuo 的小窝</a><sub class="site-subtitle">善良、勇敢、可爱</sub><div class="site-description">一个人的世界是如此的安静</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="首页"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:home-4-line"></span></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:archive-line"></span></span><span class="site-state-item-count">69</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:folder-2-line"></span></span><span class="site-state-item-count">19</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="site-state-item-count">43</span></a></div><a class="site-state-item hty-icon-button" href="/albums/" title="相册集"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:gallery-line"></span></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://wpa.qq.com/msgrd?v=3&amp;uin=1540113012&amp;site=qq&amp;menu=yes" title="QQ：xiaohehe2021" target="_blank" style="color:#12B7F5"><span class="icon iconify" data-icon="ri:qq-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/bestguo2020" title="GitHub：BestGuo2020" target="_blank" style="color:#8251e6"><span class="icon iconify" data-icon="ri:github-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/184681623" title="哔哩哔哩: 我叫人员外婆" target="_blank" style="color:#FF8EB3"><span class="icon iconify" data-icon="ri:bilibili-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:bestguo2020@foxmail.com" title="E-Mail" target="_blank" style="color:#8E71C1"><span class="icon iconify" data-icon="ri:mail-line"></span></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><span class="icon iconify" data-icon="ri:contrast-2-line"></span></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B"><span class="toc-number">2.</span> <span class="toc-text">示例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9B%E5%85%A5-Activity"><span class="toc-number">2.1.</span> <span class="toc-text">进入 Activity</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%81%AF%E5%B1%8F%E6%88%96%E8%80%85%E8%BF%9B%E5%85%A5%E5%85%B6%E5%AE%83%E5%BA%94%E7%94%A8"><span class="toc-number">2.2.</span> <span class="toc-text">息屏或者进入其它应用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%80%E5%87%BA"><span class="toc-number">2.3.</span> <span class="toc-text">退出</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">3.</span> <span class="toc-text">总结</span></a></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article" style="--smc-primary:#0078E7;"><link itemprop="mainEntityOfPage" href="https://www.bestguo.top/journal/activity-life/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="BestGuo2020"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="BestGuo 的小窝"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">Activity 的生命周期</h1><div class="post-meta"><div class="post-time"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:calendar-line"></span></span> <time title="创建时间：2021-01-31 16:20:00" itemprop="dateCreated datePublished" datetime="2021-01-31T16:20:00+08:00">2021-01-31</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:calendar-2-line"></span></span> <time title="修改时间：2022-05-25 18:47:48" itemprop="dateModified" datetime="2022-05-25T18:47:48+08:00">2022-05-25</time></div><span class="post-busuanzi"><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读次数"><span class="icon iconify" data-icon="ri:eye-line"></span> <span id="busuanzi_value_page_pv"></span></span></span><span class="post-meta-divider">-</span><a href="#comment"><span class="post-meta-item-icon" title="评论数"><span class="icon iconify" data-icon="ri:chat-3-line"></span> <span class="waline-comment-count" id="/journal/activity-life/"></span></span></a><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><span class="icon iconify" data-icon="ri:folder-line"></span></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/Android-%E5%BC%80%E5%8F%91%E7%9A%84%E5%AD%A6%E4%B9%A0%E5%8E%86%E7%A8%8B/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">Android 开发的学习历程</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/Android/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">Android</span></a><a class="tag-item" href="/tags/Java/" style="--text-color:#ff9900"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">Java</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>首次学习 Activity 的生命周期，似懂非懂。不过通过代码的方式可以大致理解一下，Activity 在创建的时候会执行那些方法，比如临时退出到主界面，手机息屏，新消息，来电等等状态时。会执行到的方法。</p>
+<p>一个 Activity 的生命周期如下。</p>
+<p><img src="https://images0.cnblogs.com/blog2015/614265/201508/281713137507426.jpg" loading="lazy"></p>
+<center>图片来自网络，侵删</center>
+
+<span id="more"></span>
+
+<p>这张图看的不是很懂，但是生命周期的方法有以下 6 个</p>
+<ul>
+<li>onCreate</li>
+<li>onStart</li>
+<li>onResume</li>
+<li>onPause</li>
+<li>onStop</li>
+<li>onDestroy</li>
+</ul>
+<p>接下来，我们将通过代码的方式对这些方法进行应用。</p>
+<h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><p>以下示例将这些方法进行演示一遍</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token keyword">package</span> <span class="token namespace">top<span class="token punctuation">.</span>bestguo<span class="token punctuation">.</span>androidlayout</span><span class="token punctuation">;</span>
+
+<span class="token keyword">import</span> <span class="token namespace">android<span class="token punctuation">.</span>os<span class="token punctuation">.</span></span><span class="token class-name">Bundle</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token namespace">android<span class="token punctuation">.</span>support<span class="token punctuation">.</span>annotation<span class="token punctuation">.</span></span><span class="token class-name">Nullable</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token namespace">android<span class="token punctuation">.</span>support<span class="token punctuation">.</span>v7<span class="token punctuation">.</span>app<span class="token punctuation">.</span></span><span class="token class-name">AppCompatActivity</span><span class="token punctuation">;</span>
+<span class="token keyword">import</span> <span class="token namespace">android<span class="token punctuation">.</span>util<span class="token punctuation">.</span></span><span class="token class-name">Log</span><span class="token punctuation">;</span>
+
+<span class="token comment">/**
+ * Created by He Guo on 2021/1/31.
+ */</span>
+
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">LifeCycleActivity</span> <span class="token keyword">extends</span> <span class="token class-name">AppCompatActivity</span> <span class="token punctuation">&#123;</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">protected</span> <span class="token keyword">void</span> <span class="token function">onCreate</span><span class="token punctuation">(</span><span class="token annotation punctuation">@Nullable</span> <span class="token class-name">Bundle</span> savedInstanceState<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token function">onCreate</span><span class="token punctuation">(</span>savedInstanceState<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">setContentView</span><span class="token punctuation">(</span><span class="token class-name">R</span><span class="token punctuation">.</span>layout<span class="token punctuation">.</span>activity_life_cycle<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">Log</span><span class="token punctuation">.</span><span class="token function">d</span><span class="token punctuation">(</span><span class="token string">"LifeCycle"</span><span class="token punctuation">,</span> <span class="token string">"----onCreate----"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">protected</span> <span class="token keyword">void</span> <span class="token function">onStart</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token function">onStart</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">Log</span><span class="token punctuation">.</span><span class="token function">d</span><span class="token punctuation">(</span><span class="token string">"LifeCycle"</span><span class="token punctuation">,</span> <span class="token string">"----onStart----"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">protected</span> <span class="token keyword">void</span> <span class="token function">onResume</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token function">onResume</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">Log</span><span class="token punctuation">.</span><span class="token function">d</span><span class="token punctuation">(</span><span class="token string">"LifeCycle"</span><span class="token punctuation">,</span> <span class="token string">"----onResume----"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">protected</span> <span class="token keyword">void</span> <span class="token function">onPause</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token function">onPause</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">Log</span><span class="token punctuation">.</span><span class="token function">d</span><span class="token punctuation">(</span><span class="token string">"LifeCycle"</span><span class="token punctuation">,</span> <span class="token string">"----onPause----"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">protected</span> <span class="token keyword">void</span> <span class="token function">onStop</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token function">onStop</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">Log</span><span class="token punctuation">.</span><span class="token function">d</span><span class="token punctuation">(</span><span class="token string">"LifeCycle"</span><span class="token punctuation">,</span> <span class="token string">"----onStop----"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">protected</span> <span class="token keyword">void</span> <span class="token function">onDestroy</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+        <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token function">onDestroy</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token class-name">Log</span><span class="token punctuation">.</span><span class="token function">d</span><span class="token punctuation">(</span><span class="token string">"LifeCycle"</span><span class="token punctuation">,</span> <span class="token string">"----onDestroy----"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">&#125;</span>
+<span class="token punctuation">&#125;</span></code></pre>
+
+<h3 id="进入-Activity"><a href="#进入-Activity" class="headerlink" title="进入 Activity"></a>进入 Activity</h3><p>进入 Activity 时，共执行了三个方法。先 onCreate，再 onStart，最后 onResume</p>
+<p><img src="/images/Android/lifecycle/QQ%E6%88%AA%E5%9B%BE20210131164457.jpg" loading="lazy"></p>
+<h3 id="息屏或者进入其它应用"><a href="#息屏或者进入其它应用" class="headerlink" title="息屏或者进入其它应用"></a>息屏或者进入其它应用</h3><p>当手机处于息屏或者到其它程序中的状态时，执行了两个方法。先 onPause，再 onStop</p>
+<p><img src="/images/Android/lifecycle/QQ%E6%88%AA%E5%9B%BE20210131165004.jpg" loading="lazy"></p>
+<p>当手机解锁或者回到当前的 Activity 时，也是执行了两个方法。先 onStart、再 onResume</p>
+<p><img src="/images/Android/lifecycle/QQ%E6%88%AA%E5%9B%BE20210131165319.jpg" loading="lazy"></p>
+<h3 id="退出"><a href="#退出" class="headerlink" title="退出"></a>退出</h3><p>当退出这个 activity 时，会执行三个方法。先 onPause、再 onStop、最后是 onDestroy</p>
+<p><img src="/images/Android/lifecycle/QQ%E6%88%AA%E5%9B%BE20210131165530.jpg" loading="lazy"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在应用了这些方法时，大概能猜测到部分方法的用途</p>
+<p>onCreate 方法就是在初始化一些组件的时候，需要写在这些方法中。只会执行一次。<br>onStart 方法可以用于加载数据，即这个阶段是向服务器请求数据，或者是从本地来加载数据。<br>onPause 方法可以用于视频，比如手机息屏或者突然来电，遇到这种状态，我们需要对视频进行暂停。<br>onDestroy 也是只执行一次，具体用在什么地方还猜不到。</p>
+<p>其它的生命周期的方法，还没猜到它们的应用场景。</p>
+<p>好辣，差不多就这些咯。</p>
+<p>项目的代码都在 <a target="_blank" rel="noopener" href="https://github.com/BestGuo2020/AndroidStudy">AndroidStudy</a> 的 github 仓库中。</p>
+</div></section><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>BestGuo2020</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="https://www.bestguo.top/journal/activity-life/" title="Activity 的生命周期">https://www.bestguo.top/journal/activity-life/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><span class="icon iconify" data-icon="ri:creative-commons-line"></span><span class="icon iconify" data-icon="ri:creative-commons-by-line"></span><span class="icon iconify" data-icon="ri:creative-commons-nc-line"></span><span class="icon iconify" data-icon="ri:creative-commons-sa-line"></span></a> 许可协议。</li></ul></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/journal/popupwindow-component/" rel="prev" title="Android 入门篇之 PopupWindow 组件的使用"><span class="icon iconify" data-icon="ri:arrow-left-s-line"></span><span class="post-nav-text">Android 入门篇之 PopupWindow 组件的使用</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/journal/webview-component/" rel="next" title="Android 入门篇之 WebView 组件的使用"><span class="post-nav-text">Android 入门篇之 WebView 组件的使用</span><span class="icon iconify" data-icon="ri:arrow-right-s-line"></span></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>请诸位理性发言！</span><br><span>请勿发布违反中国大陆地区法律的言论，请勿人身攻击、谩骂、侮辱和煽动式的语言。</span><br></div><div id="waline"></div><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/@waline/client@v2/dist/waline.css"><script>window.CONFIG.waline.config.path = "/journal/activity-life/"</script><div class="js-Pjax"><script src="/js/comments/waline.js" type="module" defer></script></div></div></main><footer class="sidebar-translate" id="footer"><div class="beian"><a rel="noopener" href="https://beian.miit.gov.cn/" target="_blank">赣 ICP 备 20009988 号</a></div><div class="copyright"><span>&copy; 2019 – 2022 </span><span class="with-love" id="animate"><span class="icon iconify" data-icon="ri:cloud-line"></span></span><span class="author"> BestGuo2020</span></div><div class="powered"><span>由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v6.2.0</span><span class="footer-separator">|</span><span>主题 - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.10.0</span></div><div class="live-time"><span>本站点已正常地运行</span><span id="display_live_time"></span><span class="moe-text"><br/>♬(ノ゜∇゜)ノ♩<br></span><script>function blog_live_time() {
+  setTimeout(blog_live_time, 1000);
+  const start = new Date('2019-01-01T00:00:00');
+  const now = new Date();
+  const timeDiff = (now.getTime() - start.getTime());
+  const msPerMinute = 60 * 1000;
+  const msPerHour = 60 * msPerMinute;
+  const msPerDay = 24 * msPerHour;
+  const passDay = Math.floor(timeDiff / msPerDay);
+  const passHour = Math.floor((timeDiff % msPerDay) / 60 / 60 / 1000);
+  const passMinute = Math.floor((timeDiff % msPerHour) / 60 / 1000);
+  const passSecond = Math.floor((timeDiff % msPerMinute) / 1000);
+  display_live_time.innerHTML = ` ${passDay} 天 ${passHour} 小时 ${passMinute} 分 ${passSecond} 秒`;
+}
+blog_live_time();
+</script></div><div id="busuanzi"><span id="busuanzi_container_site_uv" title="总访客量"><span><span class="icon iconify" data-icon="ri:user-line"></span></span><span id="busuanzi_value_site_uv"></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv" title="总访问量"><span><span class="icon iconify" data-icon="ri:eye-line"></span></span><span id="busuanzi_value_site_pv"></span></span><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div class="footer-support"><span>本网站由</span><a class="footer-support-logo" href="https://www.upyun.com/?utm_source=lianmeng&amp;utm_medium=referral" target="blank" title="又拍云"><img height="30" src="https://cdn.yunyoujun.cn/img/logo/upyun-logo.png" alt="又拍云"></a><span>提供 CDN 加速服务</span></div></footer><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><span class="icon iconify" data-icon="ri:arrow-up-s-line"></span><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a><a class="popup-trigger hty-icon-button icon-search" id="search" href="javascript:;" title="搜索"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:search-line"></span></span></a><script>window.addEventListener("DOMContentLoaded", () => {
+  // Handle and trigger popup window
+  document.querySelector(".popup-trigger").addEventListener("click", () => {
+    document.querySelector(".popup").classList.add("show");
+    setTimeout(() => {
+      document.querySelector(".search-input").focus();
+    }, 100);
+  });
+
+  // Monitor main search box
+  const onPopupClose = () => {
+    document.querySelector(".popup").classList.remove("show");
+  };
+
+  document.querySelector(".popup-btn-close").addEventListener("click", () => {
+    onPopupClose();
+  });
+
+  window.addEventListener("keyup", event => {
+    if (event.key === "Escape") {
+      onPopupClose();
+    }
+  });
+});
+</script><script src="/js/search/local-search.js" defer type="module"></script><div class="popup search-popup"><div class="search-header"><span class="popup-btn-close close-icon hty-icon-button"><span class="icon iconify" data-icon="ri:close-line"></span></span></div><div class="search-input-container"><input class="search-input" id="local-search-input" type="text" placeholder="搜索..." value=""></div><div id="local-search-result"></div></div></div></body></html>

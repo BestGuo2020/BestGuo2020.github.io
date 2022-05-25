@@ -1,0 +1,209 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="BestGuo2020"><meta name="copyright" content="BestGuo2020"><meta name="generator" content="Hexo 6.2.0"><meta name="theme" content="hexo-theme-yun"><title>期末项目之在线考试系统 | BestGuo 的小窝</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/star-markdown-css@0.3.3/dist/yun/yun-markdown.min.css"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/prism-theme-vars/base.css"><script src="https://fastly.jsdelivr.net/npm/@unocss/runtime/mini.global.js"></script><script src="https://fastly.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>function initScrollReveal() {
+  [".post-card",".markdown-body img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+}
+document.addEventListener("DOMContentLoaded", initScrollReveal);
+document.addEventListener("pjax:success", initScrollReveal);
+</script><link rel="icon" type="image/png" href="/favicon.ico"><link rel="mask-icon" href="/favicon.ico" color="#0078E7"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="preconnect" href="https://fastly.jsdelivr.net/npm/" crossorigin><script id="yun-config">
+    window.Yun = {}
+    window.CONFIG = {"hostname":"www.bestguo.top","root":"/","title":["Best","Guo","的","小","窝"],"version":"1.10.0","mode":"time","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"搜索...","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）"},"anonymous_image":"https://cdn.yunyoujun.cn/img/avatar/none.jpg","say":{"api":"https://el-bot-api.vercel.app/api/words/young"},"local_search":{"path":"/search.xml"},"fireworks":{"colors":null},"waline":{"config":{"enable":true,"serverURL":"https://comment.bestguo.top","comment":true,"requiredFields":["nick","mail"],"placeholder":"有什么想要对 BestGuo 说的呢，输入正确有效的邮箱有机会收到回复哟😊😊","avatarCDN":"https://seccdn.libravatar.org/avatar/","emoji":["https://unpkg.com/@waline/emojis@1.0.1/weibo/","https://unpkg.com/@waline/emojis@1.0.1/bilibili/","https://unpkg.com/@waline/emojis@1.0.1/qq/","https://unpkg.com/@waline/emojis@1.0.1/tieba/"],"avatar":"monsterid","el":"#waline","lang":"zh-CN"},"cdn":"https://fastly.jsdelivr.net/npm/@waline/client@v2/dist/waline.js","dark":"html.dark"},"vendors":{"darken":"https://fastly.jsdelivr.net/npm/darken@1.5.0"}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/hexo-theme-yun.js" type="module"></script><link rel="preconnect" href="https://www.google-analytics.com" crossorigin><script async src="https://www.googletagmanager.com/gtag/js?id=G-907LWSSHLS"></script><script>if (CONFIG.hostname === location.hostname) {
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-907LWSSHLS');
+}</script><script>(function(){
+  var bp = document.createElement('script');
+  var curProtocol = window.location.protocol.split(':')[0];
+  if (curProtocol === 'https') {
+    bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+  }
+  else {
+    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+  }
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(bp, s);
+})();</script><meta name="description" content="这学期的期末项目将使用本学期所学技术，即使用 Spring + SpringMVC + MyBatis 的在线考试系统。 所需技术本次期末项目采用以下技术，其中又分为前端部分和后端部分 后端部分 Spring + SpringMVC + MyBatis Apache POI（处理word，excel） pageHelper（处理分页） JUnit（用于单元测试）">
+<meta property="og:type" content="article">
+<meta property="og:title" content="期末项目之在线考试系统">
+<meta property="og:url" content="https://www.bestguo.top/journal/ssm-online-exam/index.html">
+<meta property="og:site_name" content="BestGuo 的小窝">
+<meta property="og:description" content="这学期的期末项目将使用本学期所学技术，即使用 Spring + SpringMVC + MyBatis 的在线考试系统。 所需技术本次期末项目采用以下技术，其中又分为前端部分和后端部分 后端部分 Spring + SpringMVC + MyBatis Apache POI（处理word，excel） pageHelper（处理分页） JUnit（用于单元测试）">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.bestguo.top/journal/ssm-online-exam/QQ%E6%88%AA%E5%9B%BE20210509173006.jpg">
+<meta property="og:image" content="https://www.bestguo.top/journal/ssm-online-exam/Diagram_1.png">
+<meta property="og:image" content="https://www.bestguo.top/journal/ssm-online-exam/QQ%E6%88%AA%E5%9B%BE20210611212912.png">
+<meta property="article:published_time" content="2021-04-06T11:00:00.000Z">
+<meta property="article:modified_time" content="2022-05-25T10:47:49.107Z">
+<meta property="article:author" content="BestGuo2020">
+<meta property="article:tag" content="Git">
+<meta property="article:tag" content="UML">
+<meta property="article:tag" content="ssm">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.bestguo.top/journal/ssm-online-exam/QQ%E6%88%AA%E5%9B%BE20210509173006.jpg"><script>(function() {
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+  const setting = localStorage.getItem('darken-mode') || 'auto'
+  if (setting === 'dark' || (prefersDark && setting !== 'light'))
+    document.documentElement.classList.toggle('dark', true)
+})()</script></head><body><script src="https://code.iconify.design/2/2.1.1/iconify.min.js"></script><script>// Define global variable
+IconifyProviders = {
+  // Empty prefix: overwrite default API provider configuration
+  '': {
+    // Use custom API first, use Iconify public API as backup
+    resources: [
+        'https://api.iconify.design',
+    ],
+    // Wait for 1 second before switching API hosts
+    rotate: 1000,
+  },
+};</script><script defer src="https://fastly.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js" type="module"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js" type="module"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><span class="icon iconify" data-icon="ri:list-ordered"></span></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><span class="icon iconify" data-icon="ri:passport-line"></span></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="BestGuo2020"><img width="96" loading="lazy" src="/images/avatar.jpg" alt="BestGuo2020"><span class="site-author-status" title="最忙的半年">🥵</span></a><div class="site-author-name"><a href="/about/">BestGuo2020</a></div><a class="site-name" href="/about/site.html">BestGuo 的小窝</a><sub class="site-subtitle">善良、勇敢、可爱</sub><div class="site-description">一个人的世界是如此的安静</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="首页"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:home-4-line"></span></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:archive-line"></span></span><span class="site-state-item-count">69</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:folder-2-line"></span></span><span class="site-state-item-count">19</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="site-state-item-count">43</span></a></div><a class="site-state-item hty-icon-button" href="/albums/" title="相册集"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:gallery-line"></span></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://wpa.qq.com/msgrd?v=3&amp;uin=1540113012&amp;site=qq&amp;menu=yes" title="QQ：xiaohehe2021" target="_blank" style="color:#12B7F5"><span class="icon iconify" data-icon="ri:qq-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/bestguo2020" title="GitHub：BestGuo2020" target="_blank" style="color:#8251e6"><span class="icon iconify" data-icon="ri:github-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/184681623" title="哔哩哔哩: 我叫人员外婆" target="_blank" style="color:#FF8EB3"><span class="icon iconify" data-icon="ri:bilibili-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:bestguo2020@foxmail.com" title="E-Mail" target="_blank" style="color:#8E71C1"><span class="icon iconify" data-icon="ri:mail-line"></span></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><span class="icon iconify" data-icon="ri:contrast-2-line"></span></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%80%E9%9C%80%E6%8A%80%E6%9C%AF"><span class="toc-number">1.</span> <span class="toc-text">所需技术</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%8E%E7%AB%AF%E9%83%A8%E5%88%86"><span class="toc-number">1.1.</span> <span class="toc-text">后端部分</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%89%8D%E7%AB%AF%E9%83%A8%E5%88%86"><span class="toc-number">1.2.</span> <span class="toc-text">前端部分</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE%E5%8D%8F%E4%BD%9C"><span class="toc-number">2.</span> <span class="toc-text">项目协作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E6%93%8D%E4%BD%9C"><span class="toc-number">2.1.</span> <span class="toc-text">如何操作</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A6%82%E6%9E%9C%E4%BD%A0%E6%98%AF%E6%96%B0%E5%8A%A0%E5%85%A5%E7%9A%84%E7%BB%84%E5%91%98"><span class="toc-number">2.1.1.</span> <span class="toc-text">如果你是新加入的组员</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A6%82%E6%9E%9C%E4%BD%A0%E6%98%AF%E5%B7%B2%E7%BB%8F%E5%8A%A0%E5%85%A5%E7%9A%84%E7%BB%84%E5%91%98"><span class="toc-number">2.1.2.</span> <span class="toc-text">如果你是已经加入的组员</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%AF%E8%83%BD%E5%87%BA%E7%8E%B0%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">2.2.</span> <span class="toc-text">可能出现的问题</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#2021-04-29"><span class="toc-number">2.2.1.</span> <span class="toc-text">2021-04-29</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2021-05-09"><span class="toc-number">2.2.2.</span> <span class="toc-text">2021-05-09</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2021-05-13"><span class="toc-number">2.2.3.</span> <span class="toc-text">2021-05-13</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%97%AE%E9%A2%98-1"><span class="toc-number">2.2.3.1.</span> <span class="toc-text">问题 1</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E6%9E%90"><span class="toc-number">3.</span> <span class="toc-text">分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E6%8F%8F%E8%BF%B0"><span class="toc-number">3.1.</span> <span class="toc-text">系统描述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A1%A8%E8%AE%BE%E8%AE%A1"><span class="toc-number">3.2.</span> <span class="toc-text">表设计</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BF%83%E5%BE%97"><span class="toc-number">4.</span> <span class="toc-text">心得</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2021-06-08"><span class="toc-number">4.1.</span> <span class="toc-text">2021-06-08</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2021-06-11"><span class="toc-number">4.2.</span> <span class="toc-text">2021-06-11</span></a></li></ol></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article" style="--smc-primary:#0078E7;"><link itemprop="mainEntityOfPage" href="https://www.bestguo.top/journal/ssm-online-exam/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="BestGuo2020"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="BestGuo 的小窝"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">期末项目之在线考试系统</h1><div class="post-meta"><div class="post-time"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:calendar-line"></span></span> <time title="创建时间：2021-04-06 19:00:00" itemprop="dateCreated datePublished" datetime="2021-04-06T19:00:00+08:00">2021-04-06</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:calendar-2-line"></span></span> <time title="修改时间：2022-05-25 18:47:49" itemprop="dateModified" datetime="2022-05-25T18:47:49+08:00">2022-05-25</time></div><span class="post-busuanzi"><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读次数"><span class="icon iconify" data-icon="ri:eye-line"></span> <span id="busuanzi_value_page_pv"></span></span></span><span class="post-meta-divider">-</span><a href="#comment"><span class="post-meta-item-icon" title="评论数"><span class="icon iconify" data-icon="ri:chat-3-line"></span> <span class="waline-comment-count" id="/journal/ssm-online-exam/"></span></span></a><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><span class="icon iconify" data-icon="ri:folder-line"></span></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/%E5%B0%8F%E8%B5%AB%E8%B5%AB%E7%9A%84%E9%A1%B9%E7%9B%AE%E6%97%A5%E5%BF%97/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">小赫赫的项目日志</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/Git/" style="--text-color:#F14E32"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">Git</span></a><a class="tag-item" href="/tags/UML/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">UML</span></a><a class="tag-item" href="/tags/ssm/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">ssm</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body"><p>这学期的期末项目将使用本学期所学技术，即使用 Spring + SpringMVC + MyBatis 的在线考试系统。</p>
+<h2 id="所需技术"><a href="#所需技术" class="headerlink" title="所需技术"></a>所需技术</h2><p>本次期末项目采用以下技术，其中又分为前端部分和后端部分</p>
+<h3 id="后端部分"><a href="#后端部分" class="headerlink" title="后端部分"></a>后端部分</h3><ol>
+<li>Spring + SpringMVC + MyBatis</li>
+<li>Apache POI（处理word，excel）</li>
+<li>pageHelper（处理分页）</li>
+<li>JUnit（用于单元测试）</li>
+</ol>
+<span id="more"></span>
+
+<h3 id="前端部分"><a href="#前端部分" class="headerlink" title="前端部分"></a>前端部分</h3><ol>
+<li>MiniLayUI</li>
+<li>JQuery</li>
+</ol>
+<h2 id="项目协作"><a href="#项目协作" class="headerlink" title="项目协作"></a>项目协作</h2><p>项目协作的部分使用 git，使用 gitee 作为代码仓库。在使用 git 作为多人协作会可能出现以下的问题，一个是不会用，另一个是会用之后，不知该如何去合并。</p>
+<p>还有一些合作上的问题，等等各种疑难杂项。</p>
+<h3 id="如何操作"><a href="#如何操作" class="headerlink" title="如何操作"></a>如何操作</h3><p>在此之前，需要注册一个 gitee 的账号，后续的代码协作才能继续操作。</p>
+<p>gitee 账号创建完成之后，需要配置 SSH，SSH 的配置可以参考下面的链接。</p>
+<p><a href="/2021/04/19/How-do-you-configure-ssh-in-your-pc/">如何管理你的多个 SSH key</a></p>
+<h4 id="如果你是新加入的组员"><a href="#如果你是新加入的组员" class="headerlink" title="如果你是新加入的组员"></a>如果你是新加入的组员</h4><p>1、首先获取项目：</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token function">git</span> clone https://gitee.com/bestguo2020/ssm_online_exam.git</code></pre>
+
+<p>2、获取项目完成切换到 dev01 分支进行操作了</p>
+<blockquote>
+<p>分支的可以理解成工作区，但是专业的叫法还是叫“分支”</p>
+</blockquote>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token function">git</span> checkout dev01</code></pre>
+
+<p>接下来就是配置开发者的邮箱和用户名，配置用户名和邮箱可以参考以下链接</p>
+<p><a href="https://www.bestguo.top/2021/04/19/How-do-you-configure-ssh-in-your-pc/#%E9%A1%B9%E7%9B%AE%E9%85%8D%E7%BD%AE">如何管理你的多个 SSH key - 项目配置</a></p>
+<p>以下配置完成之后就可以继续愉快的写代码了。</p>
+<p>3、假如你某项功能完成之后，需要添加你要提交的代码（“.” 代表全部的代码）</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token function">git</span> <span class="token function">add</span> <span class="token builtin class-name">.</span></code></pre>
+
+<p>4、在提交代码时需要交代清楚你需要做了哪些工作，也就是 xxxxx 里的内容需要填写的部分。</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token function">git</span> commit -m <span class="token string">"xxxxxx"</span></code></pre>
+
+<p>5、推送到远程仓库之前，将 gitee 上的远程代码拉取下来</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token function">git</span> pull origin dev01</code></pre>
+
+<p>6、开始推送，同时也需要将你的工作区推到 gitee</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token function">git</span> push origin dev01</code></pre>
+
+<h4 id="如果你是已经加入的组员"><a href="#如果你是已经加入的组员" class="headerlink" title="如果你是已经加入的组员"></a>如果你是已经加入的组员</h4><p>1、首先获取最新的项目：</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token function">git</span> pull origin dev01</code></pre>
+
+<p>拉取完成之后就可以继续愉快的写代码了。</p>
+<p>2、假如你某项功能完成之后，需要添加你要提交的代码（“.” 代表全部的代码）</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token function">git</span> <span class="token function">add</span> <span class="token builtin class-name">.</span></code></pre>
+
+<p>3、在提交代码时需要交代清楚你需要做了哪些工作，也就是 xxxxx 里的内容需要填写的部分。</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token function">git</span> commit -m <span class="token string">"xxxxxx"</span></code></pre>
+
+<p>4、推送到远程仓库之前，将 gitee 上的远程代码拉取下来</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token function">git</span> pull origin dev01</code></pre>
+
+<p>5、开始推送，同时也需要将你的工作区推到 gitee</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token function">git</span> push origin dev01</code></pre>
+
+<h3 id="可能出现的问题"><a href="#可能出现的问题" class="headerlink" title="可能出现的问题"></a>可能出现的问题</h3><p>在进行协作的时候，可能会出现代码冲突等等问题，后续出现了问题在新创建的日志中记录</p>
+<h4 id="2021-04-29"><a href="#2021-04-29" class="headerlink" title="2021-04-29"></a>2021-04-29</h4><p>提交项目时出现权限不够的问题，其实就是没将成员添加进来。<a href="/2021/04/29/git-push-access-denied/">参考链接</a></p>
+<h4 id="2021-05-09"><a href="#2021-05-09" class="headerlink" title="2021-05-09"></a>2021-05-09</h4><p>模拟提交代码的时候由于修改同一个位置导致的代码冲突，这种冲突没办法只好通过协商的方式解决。</p>
+<p>拉取代码时出现代码冲突信息</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">git</span> pull origin dev01
+remote: Enumerating objects: <span class="token number">6</span>, done.
+remote: Counting objects: <span class="token number">100</span>% <span class="token punctuation">(</span><span class="token number">6</span>/6<span class="token punctuation">)</span>, done.
+remote: Compressing objects: <span class="token number">100</span>% <span class="token punctuation">(</span><span class="token number">2</span>/2<span class="token punctuation">)</span>, done.
+remote: Total <span class="token number">4</span> <span class="token punctuation">(</span>delta <span class="token number">1</span><span class="token punctuation">)</span>, reused <span class="token number">0</span> <span class="token punctuation">(</span>delta <span class="token number">0</span><span class="token punctuation">)</span>, pack-reused <span class="token number">0</span>
+Unpacking objects: <span class="token number">100</span>% <span class="token punctuation">(</span><span class="token number">4</span>/4<span class="token punctuation">)</span>, done.
+From gitee.com:bestguo2020/ssm_online_exam
+ * branch            dev01      -<span class="token operator">></span> FETCH_HEAD
+   271754d<span class="token punctuation">..</span>e441092  dev01      -<span class="token operator">></span> origin/dev01
+Auto-merging asd.txt
+CONFLICT <span class="token punctuation">(</span>content<span class="token punctuation">)</span>: Merge conflict <span class="token keyword">in</span> asd.txt
+Automatic merge failed<span class="token punctuation">;</span> fix conflicts and <span class="token keyword">then</span> commit the result.</code></pre>
+
+<p>发生冲突之后，asd.txt 中的文件内容如下</p>
+<p><img src="/journal/ssm-online-exam/QQ%E6%88%AA%E5%9B%BE20210509173006.jpg" alt="QQ截图20210509173006" loading="lazy"></p>
+<p>解决的办法有三种，一种是保留上面的，另一种时保留下面的，最后一种是两者都保留。</p>
+<p>通过协商完成之后，重新执行如下命令</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token function">git</span> <span class="token function">add</span> <span class="token builtin class-name">.</span>
+<span class="token function">git</span> commit -m <span class="token string">"xxxxxx"</span></code></pre>
+
+<p>（xxxxx 里的内容需要填写的部分）</p>
+<h4 id="2021-05-13"><a href="#2021-05-13" class="headerlink" title="2021-05-13"></a>2021-05-13</h4><h5 id="问题-1"><a href="#问题-1" class="headerlink" title="问题 1"></a>问题 1</h5><p>学生端登录之后跳出页面已过期的问题，其主要原因：学生端系统中右侧的 iframe 嵌入的页面是教师端。导致教师端的 session 为空。从而重定向到登录界面。</p>
+<p>解决办法：新建一个学生端的左侧导航菜单的配置文件，重新配置该菜单即可。</p>
+<p>呃(⊙o⊙)……</p>
+<p>后面实在是没空记录了😂😂😂</p>
+<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><h3 id="系统描述"><a href="#系统描述" class="headerlink" title="系统描述"></a>系统描述</h3><p>在线考试系统中，学生和教师需要进行登录方可进入考试系统。教师可以将自己的题目上传到系统，形成自己的题库，可以发布考题进行线上考核，同时也可以生成试卷进行线下考核，但是线下考核的分数需要人工来进行判定。考试结束之后，系统会自动计算每个学生的考试成绩，成绩计算完成之后，教师可以查询学生的考试情况，也可以将线上考试成绩进行导出。</p>
+<p>学生在登录进入考试系统参加考试，在参加考试之前需要加入班级并选择一个班级，并且可以查看，待老师发布考题，在规定的时间开始才能开始考试，考试结束之后，学生可以查看考试成绩，也可以不看，等老师将成绩公布出来也行。如果学生加错了班级或者想退出班级，可以直接退出该班级。</p>
+<p>管理员除了拥有教师的全部功能，还可以管理教师信息、学生信息和班级信息。</p>
+<h3 id="表设计"><a href="#表设计" class="headerlink" title="表设计"></a>表设计</h3><p>该系统中的数据库表和表之间的关系，以及单个表中的字段和属性</p>
+<p><img src="/journal/ssm-online-exam/Diagram_1.png" alt="数据库表之间的关系" loading="lazy"></p>
+<p>后续就是和未来的组员沟通交流的时刻了。</p>
+<h2 id="心得"><a href="#心得" class="headerlink" title="心得"></a>心得</h2><h3 id="2021-06-08"><a href="#2021-06-08" class="headerlink" title="2021-06-08"></a>2021-06-08</h3><p>这是我第一次和舍友进行多人项目合作，毕竟作为一个难度系数为 1.0 的考试系统，在加上时间才只有短短的一个月的时间，一个人硬刚肯定是受不了的。这也是我体会到多人协作的好处（前提是没有啥都不做的，不过我们还好，至少每个人都有去做的）。</p>
+<p>其实遇到可以一起做项目的同学挺不容易的，而且还要和组员进行一个沟通。还要教舍友如何简简单单的使用 git ，用来方便的将我们写的代码进行一个合并。他们都能够较好的去使用，这个项目我觉得帮了大忙的还是 git ，它可以告诉我们在项目协作的时候，有提示冲突的地方，这种也是很好去解决的。还有代码的合并不需要我们人工来合并，这样也不会非常浪费在合并代码上了。</p>
+<p>第一次和舍友进行协作，我觉得还是很成功的。</p>
+<p>这周五就要开始项目答辩啦，祝我好运吧。今天还有一个安卓的期末项目答辩，加油加油！</p>
+<p>———————–✂—————————</p>
+<p>安卓期末答辩终于结束了，稳的一匹 💁👌🎍，就差周五的 J2EE 的项目答辩了，可以的。</p>
+<p>突然想起这周还有英语四级。哈哈哈哈哈哈哈哈，完了，啥也没什么准备呀😂😂😂，直接裸考，英语四级又很差。英语四级就随缘吧 😅。这是我第一次考，也是我最后一次考。</p>
+<h3 id="2021-06-11"><a href="#2021-06-11" class="headerlink" title="2021-06-11"></a>2021-06-11</h3><p>今天的 j2ee 答辩有点小紧张，还以为要从头到尾把所有的功能全部展示一遍。不过老师是按照功能点来进行演示的，这让我顿时不那么慌了，加上老师在旁边提醒着我别紧张，总得来说还是挺好的。还是挺感谢的，对这个项目指出了一些不足之处以及一些需要改进的地方这样子，后期也会抽空来对该项目进行一些改进的😊😊。</p>
+<p>最终的项目整体成绩还是令人满意的。也非常感谢老师的指导。</p>
+<p>上个月确实挺辛苦的，一直都在集中火力干 Java。</p>
+<p><img src="/journal/ssm-online-exam/QQ%E6%88%AA%E5%9B%BE20210611212912.png" alt="贡献度" loading="lazy"></p>
+<p>不过……</p>
+<p>明天的英语四级肯定过不了，只能等死啦 😂😂</p>
+<p>———————–✂—————————</p>
+<p>快快点这里 👉 <a target="_blank" rel="noopener" href="https://gitee.com/bestguo2020/ssm_online_exam">点我点我，欢迎来玩耍呀</a></p>
+<p>其实就是我的期末项目哒~</p>
+</div></section><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>BestGuo2020</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="https://www.bestguo.top/journal/ssm-online-exam/" title="期末项目之在线考试系统">https://www.bestguo.top/journal/ssm-online-exam/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><span class="icon iconify" data-icon="ri:creative-commons-line"></span><span class="icon iconify" data-icon="ri:creative-commons-by-line"></span><span class="icon iconify" data-icon="ri:creative-commons-nc-line"></span><span class="icon iconify" data-icon="ri:creative-commons-sa-line"></span></a> 许可协议。</li></ul></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/journal/webui-login/" rel="prev" title="webui 登录界面制作"><span class="icon iconify" data-icon="ri:arrow-left-s-line"></span><span class="post-nav-text">webui 登录界面制作</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/journal/view-pager/" rel="next" title="Android 之 ViewPager2 组件的使用"><span class="post-nav-text">Android 之 ViewPager2 组件的使用</span><span class="icon iconify" data-icon="ri:arrow-right-s-line"></span></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>请诸位理性发言！</span><br><span>请勿发布违反中国大陆地区法律的言论，请勿人身攻击、谩骂、侮辱和煽动式的语言。</span><br></div><div id="waline"></div><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/@waline/client@v2/dist/waline.css"><script>window.CONFIG.waline.config.path = "/journal/ssm-online-exam/"</script><div class="js-Pjax"><script src="/js/comments/waline.js" type="module" defer></script></div></div></main><footer class="sidebar-translate" id="footer"><div class="beian"><a rel="noopener" href="https://beian.miit.gov.cn/" target="_blank">赣 ICP 备 20009988 号</a></div><div class="copyright"><span>&copy; 2019 – 2022 </span><span class="with-love" id="animate"><span class="icon iconify" data-icon="ri:cloud-line"></span></span><span class="author"> BestGuo2020</span></div><div class="powered"><span>由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v6.2.0</span><span class="footer-separator">|</span><span>主题 - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.10.0</span></div><div class="live-time"><span>本站点已正常地运行</span><span id="display_live_time"></span><span class="moe-text"><br/>♬(ノ゜∇゜)ノ♩<br></span><script>function blog_live_time() {
+  setTimeout(blog_live_time, 1000);
+  const start = new Date('2019-01-01T00:00:00');
+  const now = new Date();
+  const timeDiff = (now.getTime() - start.getTime());
+  const msPerMinute = 60 * 1000;
+  const msPerHour = 60 * msPerMinute;
+  const msPerDay = 24 * msPerHour;
+  const passDay = Math.floor(timeDiff / msPerDay);
+  const passHour = Math.floor((timeDiff % msPerDay) / 60 / 60 / 1000);
+  const passMinute = Math.floor((timeDiff % msPerHour) / 60 / 1000);
+  const passSecond = Math.floor((timeDiff % msPerMinute) / 1000);
+  display_live_time.innerHTML = ` ${passDay} 天 ${passHour} 小时 ${passMinute} 分 ${passSecond} 秒`;
+}
+blog_live_time();
+</script></div><div id="busuanzi"><span id="busuanzi_container_site_uv" title="总访客量"><span><span class="icon iconify" data-icon="ri:user-line"></span></span><span id="busuanzi_value_site_uv"></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv" title="总访问量"><span><span class="icon iconify" data-icon="ri:eye-line"></span></span><span id="busuanzi_value_site_pv"></span></span><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div class="footer-support"><span>本网站由</span><a class="footer-support-logo" href="https://www.upyun.com/?utm_source=lianmeng&amp;utm_medium=referral" target="blank" title="又拍云"><img height="30" src="https://cdn.yunyoujun.cn/img/logo/upyun-logo.png" alt="又拍云"></a><span>提供 CDN 加速服务</span></div></footer><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><span class="icon iconify" data-icon="ri:arrow-up-s-line"></span><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a><a class="popup-trigger hty-icon-button icon-search" id="search" href="javascript:;" title="搜索"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:search-line"></span></span></a><script>window.addEventListener("DOMContentLoaded", () => {
+  // Handle and trigger popup window
+  document.querySelector(".popup-trigger").addEventListener("click", () => {
+    document.querySelector(".popup").classList.add("show");
+    setTimeout(() => {
+      document.querySelector(".search-input").focus();
+    }, 100);
+  });
+
+  // Monitor main search box
+  const onPopupClose = () => {
+    document.querySelector(".popup").classList.remove("show");
+  };
+
+  document.querySelector(".popup-btn-close").addEventListener("click", () => {
+    onPopupClose();
+  });
+
+  window.addEventListener("keyup", event => {
+    if (event.key === "Escape") {
+      onPopupClose();
+    }
+  });
+});
+</script><script src="/js/search/local-search.js" defer type="module"></script><div class="popup search-popup"><div class="search-header"><span class="popup-btn-close close-icon hty-icon-button"><span class="icon iconify" data-icon="ri:close-line"></span></span></div><div class="search-input-container"><input class="search-input" id="local-search-input" type="text" placeholder="搜索..." value=""></div><div id="local-search-result"></div></div></div></body></html>
