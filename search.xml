@@ -4,6 +4,25 @@
   
     
     <entry>
+      <title>Gradle 学习小记</title>
+      <link href="/journal/gradle-study/"/>
+      <url>/journal/gradle-study/</url>
+      
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h2 id="一些命令"><a href="#一些命令" class="headerlink" title="一些命令"></a>一些命令</h2><p>编译项目</p><pre class="language-sh" data-language="sh"><code class="language-sh">gradle classes</code></pre><p>运行测试</p><pre class="language-sh" data-language="sh"><code class="language-sh">gradle test</code></pre><p>构建项目</p><pre class="language-sh" data-language="sh"><code class="language-sh">gradle build</code></pre><p>构建项目时跳过测试</p><pre class="language-sh" data-language="sh"><code class="language-sh">gradle build -x test</code></pre><p>清空 build 目录</p><pre class="language-sh" data-language="sh"><code class="language-sh">gradle clean</code></pre><h2 id="修改-maven-下载源"><a href="#修改-maven-下载源" class="headerlink" title="修改 maven 下载源"></a>修改 maven 下载源</h2><p>在 Gradle 安装目录下的 init.d 文件夹下添加以 gradle 为扩展文件名的脚本文件，加载时修改成国内源。文件名为 init.gradle。</p><pre class="language-groovy" data-language="groovy"><code class="language-groovy">allprojects <span class="token punctuation">&#123;</span>repositories <span class="token punctuation">&#123;</span>mavenLocal <span class="token punctuation">(</span><span class="token punctuation">)</span>maven <span class="token punctuation">&#123;</span> name <span class="token string gstring">"Alibaba"</span> <span class="token punctuation">;</span> url <span class="token string gstring">"https://maven.aliyun.com/repository/public"</span> <span class="token punctuation">&#125;</span>maven <span class="token punctuation">&#123;</span> name <span class="token string gstring">"Bstek"</span> <span class="token punctuation">;</span> url <span class="token string gstring">"https://nexus.bsdn.org/content/groups/public/"</span> <span class="token punctuation">&#125;</span>mavenCentral <span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#125;</span>buildscript <span class="token punctuation">&#123;</span>repositories<span class="token punctuation">&#123;</span>maven <span class="token punctuation">&#123;</span> name <span class="token string gstring">"Alibaba"</span> <span class="token punctuation">;</span> url <span class="token string">'https://maven.aliyun.com/repository/public'</span> <span class="token punctuation">&#125;</span>maven <span class="token punctuation">&#123;</span> name <span class="token string gstring">"Bstek"</span> <span class="token punctuation">;</span> url <span class="token string">'https://nexus.bsdn.org/content/groups/public/'</span> <span class="token punctuation">&#125;</span>maven <span class="token punctuation">&#123;</span> name <span class="token string gstring">"M2"</span> <span class="token punctuation">;</span> url <span class="token string">'https://plugins.gradle.org/m2/'</span> <span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span></code></pre><p>mavenLocal：寻找 Maven 本地仓库中的 jar 包。</p><p>mavenCentral：寻找 Maven 国外的镜像仓库中的 jar 包。</p><p>maven：指定仓库地址。</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> Gradle </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>MongoDB 学习笔记</title>
       <link href="/journal/mongodb-crud/"/>
       <url>/journal/mongodb-crud/</url>
