@@ -32,7 +32,7 @@ document.addEventListener("pjax:success", initScrollReveal);
 <meta property="og:description" content="JWT 构成JWT 是一个很长的字符串，看起来如下所示，中间用“.”隔开分为三部分。 eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjdXN0b20gc3ViamVjdCIsImlzcyI6InpoYW5nc2FuIiwiYXVkIjoibm9ybWFsIHVzZXIiLCJuYmYiOjE2NjYxNzAwMjEsImlhdCI6MTY2NjE2OTk5MSwiZXhwIjox">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-10-20T00:41:00.000Z">
-<meta property="article:modified_time" content="2022-10-20T02:17:50.623Z">
+<meta property="article:modified_time" content="2022-10-20T02:22:55.898Z">
 <meta property="article:author" content="BestGuo2020">
 <meta property="article:tag" content="Java">
 <meta property="article:tag" content="JWT">
@@ -57,6 +57,8 @@ IconifyProviders = {
 <pre class="language-none"><code class="language-none">eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjdXN0b20gc3ViamVjdCIsImlzcyI6InpoYW5nc2FuIiwiYXVkIjoibm9ybWFsIHVzZXIiLCJuYmYiOjE2NjYxNzAwMjEsImlhdCI6MTY2NjE2OTk5MSwiZXhwIjoxNjY2MTcwMDUxfQ.QgGH1zo4FXOmG4mIrZDRQ-KaROgLEuKjlL78bGSRg0U</code></pre>
 
 <p>其中分为三部分为“Header”、“Payload”、“Signature”。</p>
+<span id="more"></span>
+
 <h2 id="Header"><a href="#Header" class="headerlink" title="Header"></a>Header</h2><p>头（Header）：eyJhbGciOiJIUzI1NiJ9，是一个 json 对象，描述 JWT 的元数据，包含所使用的签名算法等等。使用 Base64 算法将数据进行加密。可使用 Base64 解密工具解密，解密之后的数据如下。</p>
 <pre class="language-json" data-language="json"><code class="language-json"><span class="token punctuation">&#123;</span><span class="token property">"alg"</span><span class="token operator">:</span><span class="token string">"HS256"</span><span class="token punctuation">&#125;</span></code></pre>
 
