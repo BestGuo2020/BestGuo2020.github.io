@@ -1,396 +1,86 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="BestGuo2020"><meta name="copyright" content="BestGuo2020"><meta name="generator" content="Hexo 6.2.0"><meta name="theme" content="hexo-theme-yun"><title>jvm 入门 | BestGuo 的小窝</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/star-markdown-css@0.4.1/dist/yun/yun-markdown.min.css"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/prism-theme-vars/base.css"><script src="https://fastly.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>function initScrollReveal() {
-  [".post-card",".markdown-body img"].forEach((target)=> {
-    ScrollReveal().reveal(target);
-  })
+.post-block {
+  color: var(--hty-text-color);
+  margin: 0 1rem;
+  padding: 1rem;
+  background-color: var(--post-block-bg-color);
+mobile()
 }
-document.addEventListener("DOMContentLoaded", initScrollReveal);
-document.addEventListener("pjax:success", initScrollReveal);
-</script><link rel="icon" type="image/png" href="/favicon.ico"><link rel="mask-icon" href="/favicon.ico" color="#0078E7"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="preconnect" href="https://fastly.jsdelivr.net/npm/" crossorigin><script id="yun-config">
-    window.Yun = {}
-    window.CONFIG = {"hostname":"www.bestguo.top","root":"/","title":["Best","Guo","的","小","窝"],"version":"1.10.9","mode":"time","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"搜索...","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）"},"anonymous_image":"https://cdn.yunyoujun.cn/img/avatar/none.jpg","say":{"api":"https://el-bot-api.vercel.app/api/words/young"},"local_search":{"path":"/search.xml"},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false,"src":"/js/search/local-search.js"},"fireworks":{"colors":null},"waline":{"config":{"enable":true,"serverURL":"https://comment.bestguo.top","comment":true,"requiredFields":["nick","mail"],"placeholder":"有什么想要对 BestGuo 说的呢，输入正确有效的邮箱有机会收到回复哟😊😊","avatarCDN":"https://seccdn.libravatar.org/avatar/","emoji":["https://unpkg.com/@waline/emojis@1.0.1/weibo/","https://unpkg.com/@waline/emojis@1.0.1/bilibili/","https://unpkg.com/@waline/emojis@1.0.1/qq/","https://unpkg.com/@waline/emojis@1.0.1/tieba/"],"avatar":"monsterid","el":"#waline","lang":"zh-CN"},"cdn":"https://fastly.jsdelivr.net/npm/@waline/client@v2/dist/waline.js","dark":"html.dark"},"vendors":{"host":"https://fastly.jsdelivr.net/npm/","darken":"https://fastly.jsdelivr.net/npm/darken@1.5.0"}};
-  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/hexo-theme-yun.js" type="module"></script><link rel="preconnect" href="https://www.google-analytics.com" crossorigin><script async src="https://www.googletagmanager.com/gtag/js?id=G-907LWSSHLS"></script><script>if (CONFIG.hostname === location.hostname) {
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-907LWSSHLS');
-}</script><script>(function(){
-  var bp = document.createElement('script');
-  var curProtocol = window.location.protocol.split(':')[0];
-  if (curProtocol === 'https') {
-    bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
-  }
-  else {
-    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
-  }
-  var s = document.getElementsByTagName("script")[0];
-  s.parentNode.insertBefore(bp, s);
-})();</script><meta name="description" content="跟着狂神老师入门所总结的笔记。  jvm 是什么jvm 全称叫 java virtual machine ，也叫 Java 虚拟机 ，Java 虚拟机是一个使用 c++ 编写的，给 Java 程序运行的一个环境 。它运行于操作系统之上 。 jvm 有很多种，目前我所使用的 jvm 是 HotSpot 。除了 Hotspot ，还有 Microsoft JDK，Open JDK 等等等等 怎么说呢">
-<meta property="og:type" content="article">
-<meta property="og:title" content="jvm 入门">
-<meta property="og:url" content="https://www.bestguo.top/journal/jvm-getting-start/index.html">
-<meta property="og:site_name" content="BestGuo 的小窝">
-<meta property="og:description" content="跟着狂神老师入门所总结的笔记。  jvm 是什么jvm 全称叫 java virtual machine ，也叫 Java 虚拟机 ，Java 虚拟机是一个使用 c++ 编写的，给 Java 程序运行的一个环境 。它运行于操作系统之上 。 jvm 有很多种，目前我所使用的 jvm 是 HotSpot 。除了 Hotspot ，还有 Microsoft JDK，Open JDK 等等等等 怎么说呢">
-<meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://www.bestguo.top/journal/jvm-getting-start/image-20210826100704331.png">
-<meta property="og:image" content="https://www.bestguo.top/journal/jvm-getting-start/20170926221307_4062.png">
-<meta property="og:image" content="https://img-blog.csdnimg.cn/20201217213314510.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NvZGV5YW5iYW8=,size_16,color_FFFFFF,t_70">
-<meta property="og:image" content="https://www.bestguo.top/journal/jvm-getting-start/a42e7d020c5069a4850fa8d25010ac6a.jpg">
-<meta property="og:image" content="https://www.bestguo.top/journal/jvm-getting-start/heap.png">
-<meta property="og:image" content="https://www.bestguo.top/journal/jvm-getting-start/e2djsndsin29383">
-<meta property="og:image" content="https://www.bestguo.top/journal/jvm-getting-start/2fb3up3j2ee.png">
-<meta property="og:image" content="https://www.bestguo.top/journal/jvm-getting-start/pem3ncyobou.png">
-<meta property="article:published_time" content="2021-08-26T01:08:01.000Z">
-<meta property="article:modified_time" content="2022-05-25T10:47:49.008Z">
-<meta property="article:author" content="BestGuo2020">
-<meta property="article:tag" content="jvm">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://www.bestguo.top/journal/jvm-getting-start/image-20210826100704331.png"><script>(function() {
-  if (CONFIG.mode !== 'auto') return
-  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-  const setting = localStorage.getItem('darken-mode') || 'auto'
-  if (setting === 'dark' || (prefersDark && setting !== 'light'))
-    document.documentElement.classList.toggle('dark', true)
-})()</script></head><body><script src="https://code.iconify.design/2/2.1.1/iconify.min.js"></script><script>// Define global variable
-IconifyProviders = {
-  // Empty prefix: overwrite default API provider configuration
-  '': {
-    // Use custom API first, use Iconify public API as backup
-    resources: [
-        'https://api.iconify.design',
-    ],
-    // Wait for 1 second before switching API hosts
-    rotate: 1000,
-  },
-};</script><script defer src="https://fastly.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js" type="module"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js" type="module"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><span class="icon iconify" data-icon="ri:list-ordered"></span></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><span class="icon iconify" data-icon="ri:passport-line"></span></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="BestGuo2020"><img width="96" loading="lazy" src="/images/avatar.png" alt="BestGuo2020"><span class="site-author-status" title="在找工作">👨‍💻</span></a><div class="site-author-name"><a href="/about/">BestGuo2020</a></div><a class="site-name" href="/about/site.html">BestGuo 的小窝</a><sub class="site-subtitle">善良、勇敢、可爱</sub><div class="site-description">一个人的世界是如此的安静</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="首页"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:home-4-line"></span></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:archive-line"></span></span><span class="site-state-item-count">79</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:folder-2-line"></span></span><span class="site-state-item-count">23</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="site-state-item-count">49</span></a></div><a class="site-state-item hty-icon-button" href="/albums/" title="相册集"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:gallery-line"></span></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://wpa.qq.com/msgrd?v=3&amp;uin=1540113012&amp;site=qq&amp;menu=yes" title="QQ：xiaohehe2021" target="_blank" style="color:#12B7F5"><span class="icon iconify" data-icon="ri:qq-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/bestguo2020" title="GitHub：BestGuo2020" target="_blank" style="color:#8251e6"><span class="icon iconify" data-icon="ri:github-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/184681623" title="哔哩哔哩: 我叫人员外婆" target="_blank" style="color:#FF8EB3"><span class="icon iconify" data-icon="ri:bilibili-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:bestguo2020@foxmail.com" title="E-Mail" target="_blank" style="color:#8E71C1"><span class="icon iconify" data-icon="ri:mail-line"></span></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><span class="icon iconify" data-icon="ri:contrast-2-line"></span></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#jvm-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">1.</span> <span class="toc-text">jvm 是什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A2%E7%B4%A2-jvm-%E7%9A%84%E5%86%85%E9%83%A8%E6%9E%84%E9%80%A0"><span class="toc-number">2.</span> <span class="toc-text">探索 jvm 的内部构造</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8"><span class="toc-number">2.1.</span> <span class="toc-text">类加载器</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%B4%BE%E6%9C%BA%E5%88%B6"><span class="toc-number">2.1.1.</span> <span class="toc-text">双亲委派机制</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B2%99%E7%AE%B1%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6"><span class="toc-number">2.1.2.</span> <span class="toc-text">沙箱安全机制</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Native-%E5%92%8C%E6%9C%AC%E5%9C%B0%E6%96%B9%E6%B3%95%E6%A0%88"><span class="toc-number">2.2.</span> <span class="toc-text">Native 和本地方法栈</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#native"><span class="toc-number">2.2.1.</span> <span class="toc-text">native</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9C%AC%E5%9C%B0%E6%96%B9%E6%B3%95%E6%A0%88"><span class="toc-number">2.2.2.</span> <span class="toc-text">本地方法栈</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PC-%E5%AF%84%E5%AD%98%E5%99%A8"><span class="toc-number">2.3.</span> <span class="toc-text">PC 寄存器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E5%8C%BA"><span class="toc-number">2.4.</span> <span class="toc-text">方法区</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%88"><span class="toc-number">2.5.</span> <span class="toc-text">栈</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A0%86"><span class="toc-number">2.6.</span> <span class="toc-text">堆</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E8%A7%84%E5%88%99%EF%BC%88GC%EF%BC%89"><span class="toc-number">2.6.1.</span> <span class="toc-text">垃圾回收规则（GC）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA%E7%9A%84%E5%8E%9F%E5%9B%A0"><span class="toc-number">2.6.2.</span> <span class="toc-text">内存溢出的原因</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">2.6.3.</span> <span class="toc-text">如何解决内存溢出的问题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%AE%97%E6%B3%95"><span class="toc-number">2.6.4.</span> <span class="toc-text">垃圾回收算法</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%A4%8D%E5%88%B6%E6%B3%95"><span class="toc-number">2.6.4.1.</span> <span class="toc-text">复制法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%A0%87%E8%AE%B0%E6%B8%85%E9%99%A4%E6%B3%95"><span class="toc-number">2.6.4.2.</span> <span class="toc-text">标记清除法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%A0%87%E8%AE%B0%E5%8E%8B%E7%BC%A9%E6%B3%95"><span class="toc-number">2.6.4.3.</span> <span class="toc-text">标记压缩法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%BC%95%E7%94%A8%E8%AE%A1%E6%95%B0%E6%B3%95"><span class="toc-number">2.6.4.4.</span> <span class="toc-text">引用计数法</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%89%E7%A7%8D%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E7%AE%97%E6%B3%95%E7%9A%84%E6%AF%94%E8%BE%83"><span class="toc-number">2.6.5.</span> <span class="toc-text">三种垃圾回收算法的比较</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-number">3.</span> <span class="toc-text">参考资料</span></a></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article" style="--smc-primary:#0078E7;"><link itemprop="mainEntityOfPage" href="https://www.bestguo.top/journal/jvm-getting-start/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="BestGuo2020"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="BestGuo 的小窝"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">jvm 入门</h1><div class="post-meta"><div class="post-time"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:calendar-line"></span></span> <time title="创建时间：2021-08-26 09:08:01" itemprop="dateCreated datePublished" datetime="2021-08-26T09:08:01+08:00">2021-08-26</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:calendar-2-line"></span></span> <time title="修改时间：2022-05-25 18:47:49" itemprop="dateModified" datetime="2022-05-25T18:47:49+08:00">2022-05-25</time></div><span class="post-busuanzi"><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读次数"><span class="icon iconify" data-icon="ri:eye-line"></span> <span id="busuanzi_value_page_pv"></span></span></span><span class="post-meta-divider">-</span><a href="#comment"><span class="post-meta-item-icon" title="评论数"><span class="icon iconify" data-icon="ri:chat-3-line"></span> <span class="waline-comment-count" id="/journal/jvm-getting-start/"></span></span></a><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><span class="icon iconify" data-icon="ri:folder-line"></span></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/Java-%E9%83%A8%E5%88%86/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">Java 部分</span></a></span> > <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/Java-%E9%83%A8%E5%88%86/%E6%B7%B1%E5%85%A5-Java-%E7%9A%84%E5%9C%B0%E4%B8%8B%E4%B8%96%E7%95%8C/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">深入 Java 的地下世界</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/jvm/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">jvm</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body"><blockquote>
-<p>跟着狂神老师入门所总结的笔记。</p>
-</blockquote>
-<h2 id="jvm-是什么"><a href="#jvm-是什么" class="headerlink" title="jvm 是什么"></a>jvm 是什么</h2><p>jvm 全称叫 java virtual machine ，也叫 Java 虚拟机 ，Java 虚拟机是一个使用 c++ 编写的，给 Java 程序运行的一个环境 。它运行于操作系统之上 。</p>
-<p>jvm 有很多种，目前我所使用的 jvm 是 HotSpot 。除了 Hotspot ，还有 Microsoft JDK，Open JDK 等等等等</p>
-<p>怎么说呢？jvm 是一种模型，一种规范 。而 HotSpot 、Microsoft JDK，Open  JDK 是一种实现 。</p>
-<span id="more"></span>
-
-<h2 id="探索-jvm-的内部构造"><a href="#探索-jvm-的内部构造" class="headerlink" title="探索 jvm 的内部构造"></a>探索 jvm 的内部构造</h2><p>在一个 jvm 中 ，有这些部件，分别是“类加载器”、“栈”、“堆”、“方法区”、“程序计数器”、”本地方法栈“、“执行引擎”、“本地方法接口”和“本地方法库”。</p>
-<p><img src="/journal/jvm-getting-start/image-20210826100704331.png" alt="image-20210826100704331" loading="lazy"></p>
-<p>jvm 的大致架构如图所示 。</p>
-<!-- more -->
-
-<h3 id="类加载器"><a href="#类加载器" class="headerlink" title="类加载器"></a>类加载器</h3><p>一个 class 文件的加载，首先是需要经过加载器 ClassLoader 进行加载，当加载完成之后，放到了方法区。如果要创建一个实例对象，就从方法区调取，将该实例对象存入堆中 ，然后通过引用来获取对象。</p>
-<p><img src="/journal/jvm-getting-start/20170926221307_4062.png" alt="img" loading="lazy"></p>
-<p>类的加载并不是那么的简单，它有一套机制，叫“双亲委派机制” 。在 Java 中，类的加载器分为 4 类，即“启动类（根）加载器”、“扩展类加载器”、“应用程序（系统类）加载器”、“用户自定义加载器” 。</p>
-<p>其中，前三个加载器非常重要：</p>
-<p>根加载器又叫 Bootstrap 加载器 ：主要是加载 rt.jar 里面的类 ，然后加载到类加载器中。</p>
-<p>扩展加载器</p>
-<p>这里有一个简单的实验，旁边的注释是运行的结果</p>
-<pre class="language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Car</span> <span class="token punctuation">&#123;</span>
-
-    <span class="token keyword">public</span> <span class="token keyword">int</span> id<span class="token punctuation">;</span>
-
-    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token class-name">Car</span> car <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Car</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token class-name">Class</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span> <span class="token keyword">extends</span> <span class="token class-name">Car</span><span class="token punctuation">></span></span> aClass <span class="token operator">=</span> car<span class="token punctuation">.</span><span class="token function">getClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token class-name">ClassLoader</span><span class="token punctuation">.</span><span class="token function">getSystemClassLoader</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// sun.misc.Launcher$AppClassLoader@18b4aac2 </span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>aClass<span class="token punctuation">.</span><span class="token function">getClassLoader</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// sun.misc.Launcher$AppClassLoader@18b4aac2</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>aClass<span class="token punctuation">.</span><span class="token function">getClassLoader</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getParent</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// sun.misc.Launcher$ExtClassLoader@7ea987ac</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>aClass<span class="token punctuation">.</span><span class="token function">getClassLoader</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getParent</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getParent</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// null</span>
-    <span class="token punctuation">&#125;</span>
-
-<span class="token punctuation">&#125;</span></code></pre>
-
-<p>getSystemClassLoader()：是获取应用程序加载器，也叫系统加载器。如果应用程序中没有自定义过自己的类加载器，一般情况下这个就是程序中默认的类加载器。</p>
-<p>getClassLoader()：获取当前类的加载器，此时的加载器是 AppClassLoader 。</p>
-<p>getParent()：获取父加载器，此时的父加载器是 ExtClassLoader ，叫扩展类加载器。如果再调用父加载器则返回的是 null 。返回为 null 的原因是 Bootstrap 类加载器，是用 C++ 实现的，是虚拟机自身的一部分，如果获取它的对象，将会返回 null 。</p>
-<blockquote>
-<p>注意，这里所谓的父加载器和当前的加载器，不是继承关系 。</p>
-</blockquote>
-<h4 id="双亲委派机制"><a href="#双亲委派机制" class="headerlink" title="双亲委派机制"></a>双亲委派机制</h4><p>这里有一个实验，假如我在自己新建的工程中新建一个 <code>java.lang.String</code> 类 。这其实是不会冲突的，然后我们再 String 类中创建一个 main 方法，然后运行该类，看看会发生什么事情。</p>
-<pre class="language-java" data-language="java"><code class="language-java"><span class="token keyword">package</span> <span class="token namespace">java<span class="token punctuation">.</span>lang</span><span class="token punctuation">;</span>
-
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">String</span> <span class="token punctuation">&#123;</span>
-    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-		<span class="token keyword">int</span> a <span class="token operator">=</span> <span class="token number">1</span> <span class="token operator">/</span> <span class="token number">0</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span>
-</code></pre>
-
-<p>结果，报了一个很是令人不理解的错误。说我的 String 类中居然没有这个方法，可是我明明有 main 方法呀，这是什么鬼！</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash">错误: 在类 java.lang.String 中找不到 main 方法, 请将 main 方法定义为:
-   public static void main<span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span>
-否则 JavaFX 应用程序类必须扩展javafx.application.Application</code></pre>
-
-<p>出现这个问题，就是双亲委派机制造成的，说白了，双亲委派机制就是保证 Java 中内置的一些代码保证是安全的 ，这也是类加载的一个过程。</p>
-<blockquote>
-<p>注意，这里所谓的父加载器和当前的加载器，不是继承关系 。</p>
-</blockquote>
-<p>假设，我们的 <code>java.lang.String</code> 要被加载时，在不考虑我们自定义类加载器，首先会在 AppClassLoader 中检查是否加载过，如果有那就不用再加载了。</p>
-<p>如果没有，那么会拿到父加载器，然后调用父加载器的 loadClass 方法。父加载器中同理也会先检查自己是否已经加载过，如果还没有再往上，直到到达 Bootstrap 类加载器之前，都是在检查是否加载过，并不会选择自己去加载。直到 Bootstrap 类加载器，已经没有父加载器了，这时候开始考虑自己是否能加载了。</p>
-<blockquote>
-<p>此 Bootstrap 非彼 Bootstrap</p>
-</blockquote>
-<p>然后就开始向下找。通过根加载器发现 rt.jar 中发现了 <code>java.lang.String</code> ，找到了之后就不会向下继续开始找了。如果没找到，他就在扩展加载器中加载，如果最后在应用程序加载器中还没找到（不考虑自定义类加载器），那就会抛出 <code>ClassNotFoundException</code> 异常。</p>
-<p>类加载时的运行图如下图所示</p>
-<p><img src="https://img-blog.csdnimg.cn/20201217213314510.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2NvZGV5YW5iYW8=,size_16,color_FFFFFF,t_70" alt="类加载的过程" loading="lazy"></p>
-<p>加载过程的相关代码如下所示</p>
-<pre class="language-java" data-language="java"><code class="language-java"><span class="token keyword">protected</span> <span class="token class-name">Class</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">></span></span> <span class="token function">loadClass</span><span class="token punctuation">(</span><span class="token class-name">String</span> name<span class="token punctuation">,</span> <span class="token keyword">boolean</span> resolve<span class="token punctuation">)</span> <span class="token keyword">throws</span> <span class="token class-name">ClassNotFoundException</span> <span class="token punctuation">&#123;</span>
-    <span class="token keyword">synchronized</span> <span class="token punctuation">(</span><span class="token function">getClassLoadingLock</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token comment">// 首先检查这个类是否已经加载</span>
-        <span class="token class-name">Class</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">></span></span> c <span class="token operator">=</span> <span class="token function">findLoadedClass</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">if</span> <span class="token punctuation">(</span>c <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-            <span class="token keyword">long</span> t0 <span class="token operator">=</span> <span class="token class-name">System</span><span class="token punctuation">.</span><span class="token function">nanoTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token keyword">try</span> <span class="token punctuation">&#123;</span>
-                <span class="token keyword">if</span> <span class="token punctuation">(</span>parent <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-                    c <span class="token operator">=</span> parent<span class="token punctuation">.</span><span class="token function">loadClass</span><span class="token punctuation">(</span>name<span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 如果有父加载器就加载</span>
-                <span class="token punctuation">&#125;</span> <span class="token keyword">else</span> <span class="token punctuation">&#123;</span>
-                    c <span class="token operator">=</span> <span class="token function">findBootstrapClassOrNull</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment">// 没有找到根启动器（Bootstrap）</span>
-                <span class="token punctuation">&#125;</span>
-            <span class="token punctuation">&#125;</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">ClassNotFoundException</span> e<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-                <span class="token comment">// ClassNotFoundException thrown if class not found</span>
-                <span class="token comment">// from the non-null parent class loader</span>
-            <span class="token punctuation">&#125;</span>
-
-            <span class="token keyword">if</span> <span class="token punctuation">(</span>c <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-                <span class="token comment">// If still not found, then invoke findClass in order</span>
-                <span class="token comment">// to find the class.</span>
-                <span class="token keyword">long</span> t1 <span class="token operator">=</span> <span class="token class-name">System</span><span class="token punctuation">.</span><span class="token function">nanoTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                c <span class="token operator">=</span> <span class="token function">findClass</span><span class="token punctuation">(</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-                <span class="token comment">// this is the defining class loader; record the stats</span>
-                <span class="token class-name"><span class="token namespace">sun<span class="token punctuation">.</span>misc<span class="token punctuation">.</span></span>PerfCounter</span><span class="token punctuation">.</span><span class="token function">getParentDelegationTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">addTime</span><span class="token punctuation">(</span>t1 <span class="token operator">-</span> t0<span class="token punctuation">)</span><span class="token punctuation">;</span>
-                <span class="token class-name"><span class="token namespace">sun<span class="token punctuation">.</span>misc<span class="token punctuation">.</span></span>PerfCounter</span><span class="token punctuation">.</span><span class="token function">getFindClassTime</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">addElapsedTimeFrom</span><span class="token punctuation">(</span>t1<span class="token punctuation">)</span><span class="token punctuation">;</span>
-                <span class="token class-name"><span class="token namespace">sun<span class="token punctuation">.</span>misc<span class="token punctuation">.</span></span>PerfCounter</span><span class="token punctuation">.</span><span class="token function">getFindClasses</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">increment</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token punctuation">&#125;</span>
-        <span class="token punctuation">&#125;</span>
-        <span class="token keyword">if</span> <span class="token punctuation">(</span>resolve<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-            <span class="token function">resolveClass</span><span class="token punctuation">(</span>c<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">&#125;</span>
-        <span class="token keyword">return</span> c<span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span></code></pre>
-
-<h4 id="沙箱安全机制"><a href="#沙箱安全机制" class="headerlink" title="沙箱安全机制"></a><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_30336433/article/details/83268945">沙箱安全机制</a></h4><p>👆 参见，Java 中的安全沙箱模型</p>
-<h3 id="Native-和本地方法栈"><a href="#Native-和本地方法栈" class="headerlink" title="Native 和本地方法栈"></a>Native 和本地方法栈</h3><h4 id="native"><a href="#native" class="headerlink" title="native"></a>native</h4><p>你或许有看过这种“奇葩”的写法，比如打开一个 Object 类。看起来很像接口，没有方法体，却又没有报错。</p>
-<pre class="language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Object</span> <span class="token punctuation">&#123;</span>
-
-    <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">native</span> <span class="token keyword">void</span> <span class="token function">registerNatives</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token keyword">static</span> <span class="token punctuation">&#123;</span>
-        <span class="token function">registerNatives</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-    
-    <span class="token keyword">public</span> <span class="token keyword">final</span> <span class="token keyword">native</span> <span class="token class-name">Class</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token operator">?</span><span class="token punctuation">></span></span> <span class="token function">getClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    
-    <span class="token keyword">public</span> <span class="token keyword">native</span> <span class="token keyword">int</span> <span class="token function">hashCode</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    
-    <span class="token keyword">public</span> <span class="token keyword">final</span> <span class="token keyword">native</span> <span class="token keyword">void</span> <span class="token function">notify</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    
-    <span class="token comment">//.......</span>
-    
-<span class="token punctuation">&#125;</span></code></pre>
-
-<p>这，就是本地方法。不过我们也可以自己写一个这样的方法，不过我们自己写的是没有用的。调用它会报错。</p>
-<pre class="language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">native</span> <span class="token keyword">void</span> <span class="token function">helloWorld</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
-
-<p>如果方法带了 native 关健字，就没有方法体，说明 Java 的作用范围达不到了。进入本地方法栈，调用 JNI（本地方法本地接口），从而可以调用 C 、C++ 底层的代码。 </p>
-<p>JNI 作用：扩展 Java 的使用，融合不同的编程语言为 Java 所用 。在 Java 诞生的时候，当时 C 、C++ 横行，那时想要立足就必须要有 C 、C++ 的能力，于是就有了 Native 关键字。</p>
-<h4 id="本地方法栈"><a href="#本地方法栈" class="headerlink" title="本地方法栈"></a>本地方法栈</h4><p>它的具体做法是在 Native Method Stack（本地方法栈）中登记 native 方法，在执行引擎执行的时候，加载本地方法库中的方法。</p>
-<h3 id="PC-寄存器"><a href="#PC-寄存器" class="headerlink" title="PC 寄存器"></a>PC 寄存器</h3><p>程序计数器：Program Counter Register</p>
-<p>每个线程都有一个程序计数器，是线程私有的，就是一个指针，指向方法区中的方法字节码（用来存储指向像一条指令的地址，也即将要执行的指令代码），在执行引擎读取下一条指令，是一个非常小的内存空间，几乎可以忽略不计 。</p>
-<h3 id="方法区"><a href="#方法区" class="headerlink" title="方法区"></a>方法区</h3><p>方法区是被所有线程共享的，所有字段和方法字节码（指令），以及一些特殊方法，如构造函数，接口代码也在此定义。</p>
-<p>也就是说，所有定义的方法的信息都保存在该区域，此区域属于共享区间。</p>
-<p><strong>静态变量（static）、常量（final）、类（Class）信息(构造方法、接口定义)、运行时的常量池</strong>存在方法区中，但是实例变量存在堆内存中，和方法区无关 。</p>
-<h3 id="栈"><a href="#栈" class="headerlink" title="栈"></a>栈</h3><p>栈内存，主管程序的运行，栈的生命周期和线程同步。栈遵循着 FILO (First In Last Out) 的原则。</p>
-<p>线程结束，栈内存也就是释放，对于栈来说，不存在垃圾回收问题。</p>
-<p>如果栈满了，就会爆出一个 StackOverflowError 的错误 ，虚拟机被迫停止运行。</p>
-<p><strong>栈帧是什么？</strong></p>
-<p>栈帧是 Java 虚拟机中栈的组成元素，栈帧由三部分组成：<strong>局部变量区、操作数栈、帧数据区</strong>。局部变量区和操作数栈的大小要视对应的方法而定，他们是按字长计算的。但调用一个方法时，它从类型信息中得到此方法局部变量区和操作数栈大小，并据此分配栈内存，然后压入 Java 栈。</p>
-<p>局部变量区：存放了基本数据类型、对象引用和 returnAddress 类型（指向一条字节码指令的地址）。</p>
-<p>操作数栈：Java 没有寄存器，所有参数传递都是使用操作数栈。</p>
-<p>帧数据区：除了局部变量区和操作数栈外，Java 栈帧还需要一些数据来支持常量池解析、正常方法返回以及异常派发机制。这些数据都保存在 Java 栈帧的帧数据区中。当 JVM 执行到需要常量池数据的指令时，它都会通过帧数据区中指向常量池的指针来访问它。</p>
-<p>除了处理常量池解析外，帧里的数据还要处理 Java 方法的正常结束和异常终止。如果是通过 return 正常结束，则当前栈帧从 Java 栈中弹出，恢复发起调用的方法的栈。如果方法又返回值，JVM 会把返回值压入到发起调用方法的操作数栈。</p>
-<h3 id="堆"><a href="#堆" class="headerlink" title="堆"></a>堆</h3><p>一个 JVM 只有一个堆内存，堆内存可以人为的去分配。类加载器读取了类文件后，将对象实例（对象实例中包含成员方法、成员变量）、常量保存到堆中 。</p>
-<p>堆内存中还需要细分为三个区域。</p>
-<ul>
-<li><p>新生区</p>
-<ul>
-<li>Eden Space（伊甸园）<ul>
-<li>所有的对象都是从“伊甸园”创建出来的。</li>
-</ul>
-</li>
-<li>幸存区 0 区</li>
-<li>幸存区 1 区</li>
-</ul>
-</li>
-<li><p>老年区</p>
-</li>
-<li><p>永久区：该区域常驻内存。用来存放 JDK 自身携带的 Class 对象。Interface 元数据，存储 Java 运行时的一些环境或类信息，永久区域不存在垃圾回收。</p>
-<p>永久区可能造成的内存溢出：加载很多第三方的 jar 包。</p>
-<p>在不同版本的 jdk ，各种命名都不一样。</p>
-<ul>
-<li>jdk 1.6 之前，叫永久代，常量池是在方法区中。</li>
-<li>jdk 1.7 永久代开始退化，常量池在堆中。</li>
-<li>jdk 1.8 之后：无永久代，常量池在元空间中。</li>
-</ul>
-</li>
-</ul>
-<h4 id="垃圾回收规则（GC）"><a href="#垃圾回收规则（GC）" class="headerlink" title="垃圾回收规则（GC）"></a>垃圾回收规则（GC）</h4><p>所有的对象都是从新生区的“伊甸园”中创建出来的，假设“伊甸园”、“幸存区 0 区”、“幸存区 1 区” 和 “老年区”分别都只能保存 10 个对象。如果伊甸园区的对象满了，就会触发垃圾回收（轻GC）。</p>
-<p>如果 Java 栈中有引用堆中的对象，那么就不会被清除 ，并且进入幸存者区（可能是 0 区，也可能是 1 区）；如果对象未被引用，则会被垃圾回收器（轻GC）给回收掉，此时这些在幸存者区的对象在左右横跳。</p>
-<p><img src="/journal/jvm-getting-start/a42e7d020c5069a4850fa8d25010ac6a.jpg" alt="img" loading="lazy"></p>
-<p>如果新生区满了，即这里面的三个区都满了，则又会触发一次垃圾回收，通过垃圾回收器（重GC）将在新生区存活的对象放到老年区中。</p>
-<p><img src="/journal/jvm-getting-start/heap.png" alt="img" loading="lazy"></p>
-<p>如果新生区和老年区都满了，那么就会报严重的内存溢出错误。</p>
-<h4 id="内存溢出的原因"><a href="#内存溢出的原因" class="headerlink" title="内存溢出的原因"></a>内存溢出的原因</h4><p>造成溢出的原因是因为新生区和老年区都满了，则会报错严重的内存溢出错误。</p>
-<p>下面有一个实验来测试堆内存溢出的错误 。</p>
-<pre class="language-java" data-language="java"><code class="language-java"><span class="token keyword">import</span> <span class="token namespace">java<span class="token punctuation">.</span>util<span class="token punctuation">.</span></span><span class="token class-name">Random</span><span class="token punctuation">;</span>
-
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Hello</span> <span class="token punctuation">&#123;</span>
-
-    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token class-name">String</span> str <span class="token operator">=</span> <span class="token string">"asdfghkfofksodffdsfdsfdsfsdfdf"</span><span class="token punctuation">;</span>
-        <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-            str <span class="token operator">+=</span> str<span class="token punctuation">.</span><span class="token function">concat</span><span class="token punctuation">(</span><span class="token string">"asdfghkfofksodffdsfdsfdsfsdfdf"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">concat</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Random</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">nextInt</span><span class="token punctuation">(</span><span class="token number">888888888</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">""</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">&#125;</span>
-    <span class="token punctuation">&#125;</span>
-
-<span class="token punctuation">&#125;</span></code></pre>
-
-<p>运行几秒钟 ，很快就爆出了内存溢出的错误。爆出的错误的原因是堆内存溢出的错误。</p>
-<pre class="language-none"><code class="language-none">Exception in thread &quot;main&quot; java.lang.OutOfMemoryError: Java heap space
-	at java.util.Arrays.copyOf(Arrays.java:3332)
-	at java.lang.String.concat(String.java:2032)
-	at Hello.main(Hello.java:8)</code></pre>
-
-<p>如果我们将堆内存大小调整到 10M，看看是怎么报错的，在运行之前加入这个参数 <code>-Xmx10m -Xms10m -XX:+PrintGCDetails</code> ，在运行的结果后面，有标注堆内存的三个区，其中 PSYoungGen 是新生区、ParOldGen 是老年区、Metaspace 叫元空间 。</p>
-<blockquote>
-<p>运行时的参数解释</p>
-<ul>
-<li>-Xms 设置 jvm 初始化对内存分配大小 ，默认是最大分配内存的 1/64</li>
-<li>-Xmx 设置 jvm 最大分配的内存大小，默认是物理内存的 1/4</li>
-<li>-XX:+PrintGCDetails 该参数是打印 GC 的垃圾回收器回收时的内存状态。</li>
-<li>-XX:+HeapDumpOnOutOfMemoryError 将“内存溢出错误”的状态转储到文件中。当然，HeapDumpOn 后面可以导出其它的错误。</li>
-</ul>
-</blockquote>
-<details>
-    <summary>点击查看运行结果</summary>
-<pre>
-[GC (Allocation Failure) [PSYoungGen: 2048K->496K(2560K)] 2048K->724K(9728K), 0.0340698 secs] [Times: user=0.00 sys=0.00, real=0.06 secs] 
-[GC (Allocation Failure) [PSYoungGen: 2441K->512K(2560K)] 2670K->1040K(9728K), 0.0120401 secs] [Times: user=0.00 sys=0.00, real=0.01 secs] 
-[GC (Allocation Failure) [PSYoungGen: 2482K->512K(2560K)] 3010K->1591K(9728K), 0.0015323 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] 
-[Full GC (Ergonomics) [PSYoungGen: 2206K->0K(2560K)] [ParOldGen: 6594K->3920K(7168K)] 8801K->3920K(9728K), [Metaspace: 3053K->3053K(1056768K)], 0.0076374 secs] [Times: user=0.00 sys=0.00, real=0.01 secs] 
-[GC (Allocation Failure) [PSYoungGen: 20K->32K(2560K)] 6146K->6158K(9728K), 0.0006039 secs] [Times: user=0.03 sys=0.00, real=0.00 secs] 
-[GC (Allocation Failure) [PSYoungGen: 32K->32K(2560K)] 6158K->6158K(9728K), 0.0005377 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] 
-[Full GC (Allocation Failure) [PSYoungGen: 32K->0K(2560K)] [ParOldGen: 6126K->3919K(7168K)] 6158K->3919K(9728K), [Metaspace: 3053K->3053K(1056768K)], 0.0061232 secs] [Times: user=0.00 sys=0.00, real=0.01 secs] 
-[GC (Allocation Failure) [PSYoungGen: 40K->32K(1536K)] 6166K->6157K(8704K), 0.0015948 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] 
-[GC (Allocation Failure) [PSYoungGen: 32K->32K(2048K)] 6157K->6157K(9216K), 0.0005505 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] 
-[Full GC (Allocation Failure) [PSYoungGen: 32K->0K(2048K)] [ParOldGen: 6125K->2816K(7168K)] 6157K->2816K(9216K), [Metaspace: 3053K->3053K(1056768K)], 0.0071274 secs] [Times: user=0.03 sys=0.00, real=0.01 secs] 
-[GC (Allocation Failure) [PSYoungGen: 20K->0K(2048K)] 5043K->5022K(9216K), 0.0004772 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] 
-[GC (Allocation Failure) [PSYoungGen: 0K->0K(2048K)] 5022K->5022K(9216K), 0.0004349 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] 
-[Full GC (Allocation Failure) [PSYoungGen: 0K->0K(2048K)] [ParOldGen: 5022K->5022K(7168K)] 5022K->5022K(9216K), [Metaspace: 3053K->3053K(1056768K)], 0.0028990 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] 
-[GC (Allocation Failure) [PSYoungGen: 0K->0K(2048K)] 5022K->5022K(9216K), 0.0004763 secs] [Times: user=0.00 sys=0.00, real=0.00 secs] 
-[Full GC (Allocation Failure) [PSYoungGen: 0K->0K(2048K)] [ParOldGen: 5022K->5005K(7168K)] 5022K->5005K(9216K), [Metaspace: 3053K->3053K(1056768K)], 0.0087491 secs] [Times: user=0.03 sys=0.00, real=0.01 secs] 
-Heap
- PSYoungGen      total 2048K, used 40K [0x00000000ffd00000, 0x0000000100000000, 0x0000000100000000)
-  eden space 1024K, 3% used [0x00000000ffd00000,0x00000000ffd0a2f8,0x00000000ffe00000)
-  from space 1024K, 0% used [0x00000000fff00000,0x00000000fff00000,0x0000000100000000)
-  to   space 1024K, 0% used [0x00000000ffe00000,0x00000000ffe00000,0x00000000fff00000)
- ParOldGen       total 7168K, used 5034K [0x00000000ff600000, 0x00000000ffd00000, 0x00000000ffd00000)
-  object space 7168K, 70% used [0x00000000ff600000,0x00000000ffaea8f8,0x00000000ffd00000)
- Metaspace       used 3257K, capacity 4496K, committed 4864K, reserved 1056768K
-  class space    used 353K, capacity 388K, committed 512K, reserved 1048576K
-Exception in thread "main" java.lang.OutOfMemoryError: Java heap space
-    at java.util.Arrays.copyOf(Arrays.java:3332)
-    at java.lang.String.concat(String.java:2032)
-    at Hello.main(Hello.java:8)
-</pre>
-</details>
-
-<h4 id="如何解决内存溢出的问题"><a href="#如何解决内存溢出的问题" class="headerlink" title="如何解决内存溢出的问题"></a>如何解决内存溢出的问题</h4><ul>
-<li>尝试扩大堆内存大小</li>
-<li>如果扩充堆内存大小还是会有内存错误，可以使用内存快照分析工具对内存溢出产生的原因进行分析。比如 JProfiler 、MAT 等等，使用内存分析工具可以知道我们内存溢出的根本原因，也就是说，是第几行的代码导致内存溢出。</li>
-</ul>
-<h4 id="垃圾回收算法"><a href="#垃圾回收算法" class="headerlink" title="垃圾回收算法"></a>垃圾回收算法</h4><p>在 Java 中，垃圾回收机制有 4 种 ，分别是“复制法”、“标记压缩法”、“标记清除法”、“引用计数法”。</p>
-<h5 id="复制法"><a href="#复制法" class="headerlink" title="复制法"></a>复制法</h5><p>复制算法的核心就是，将原有的内存空间一分为二，每次只用其中的一块，在垃圾回收时，将正在使用的对象复制到另外一个内存空间中，然后将该内存空间清空，交换两个内存的角色，完成垃圾回收。</p>
-<ol>
-<li>每次 GC 都会将 Eden 区存活的对象移到幸存区中，—旦 Eden 区被 GC 后，Eden 区存活的都在幸存区，即 Eden 区是空的。</li>
-<li>然后在幸存区，这些存活的对象在 from 区（可能是幸存 0 区是，也有可能是幸存 1 区，不过这已经不重要了），如果 to 区是空的，幸存的对象就会到 to 区，然后就这样一直循环 15 次 。</li>
-<li>如果幸存区的对象经历了 15 次的“拷打”，那么这些幸存的对象就保存到老年区。</li>
-</ol>
-<p>由于是将原有的内存一分为二，所以复制法非常适合新生区的对象。</p>
-<p><img src="/journal/jvm-getting-start/e2djsndsin29383" alt="在这里插入图片描述" loading="lazy"></p>
-<p>优缺点：</p>
-<ul>
-<li>优点：在垃圾对象多的情况下，效率较高。清理后，内存无碎片。</li>
-<li>缺点：在垃圾对象少的情况下，不适用，浪费内存。</li>
-</ul>
-<h5 id="标记清除法"><a href="#标记清除法" class="headerlink" title="标记清除法"></a>标记清除法</h5><p>标记清除顾名思义是一种分两阶段对对象进行垃圾回收的算法。</p>
-<p>第一阶段：标记。从根结点出发遍历对象，对访问过的对象打上标记，表示该对象可达。</p>
-<p>第二阶段：清除。对那些没有标记的对象进行回收，这样使得不能利用的空间能够重新被利用。</p>
-<p><img src="/journal/jvm-getting-start/2fb3up3j2ee.png" alt="img" loading="lazy"></p>
-<p>优点：不会损失50%的空间、可解决循环引用的问题</p>
-<p>缺点：效率不高、会产生大量不连续的内存碎片</p>
-<h5 id="标记压缩法"><a href="#标记压缩法" class="headerlink" title="标记压缩法"></a>标记压缩法</h5><p>标记压缩法，就是执行了标记清除之后，再将碎片化的内存空间进行移动，最终变成连续的空间。</p>
-<p><img src="/journal/jvm-getting-start/pem3ncyobou.png" alt="img" loading="lazy"></p>
-<p>优点：不会损失50%的空间、回收后空间连续</p>
-<p>缺点：效率不高</p>
-<p>其中，标记清除法和标记压缩法主要是在老年区中。</p>
-<h5 id="引用计数法"><a href="#引用计数法" class="headerlink" title="引用计数法"></a>引用计数法</h5><blockquote>
-<p>java 虚拟机不采用这种垃圾回收算法，Python 采用的是这种算法</p>
-</blockquote>
-<p>引用计数法，实际上是通过在对象头中分配一个空间来保存该对象被引用的次数。如果该对象被其它对象引用，则它的引用计数加 1，如果删除对该对象的引用，那么它的引用计数就减 1，当该对象的引用计数为 0 时，那么该对象就会被回收。</p>
-<p>比如我创建了一个 String 对象 ，创建完成之后，p 指向我们刚刚创建的对象。此时计数器是 1 。</p>
-<pre class="language-java" data-language="java"><code class="language-java"><span class="token class-name">String</span> p <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">String</span><span class="token punctuation">(</span><span class="token string">"abc"</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
-
-<p>如果我们将 p 指向新创建的对象，此时 <code>new String(&quot;abc&quot;)</code> 的计数器是 0 ，就要被 GC 处理掉。</p>
-<pre class="language-java" data-language="java"><code class="language-java">p <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">String</span><span class="token punctuation">(</span><span class="token string">"bdc"</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
-
-<p>当对象的引用计数为0时，垃圾回收就发生了。这跟前面三种垃圾收集算法不同，前面三种垃圾收集都是在为新对象分配内存空间时由于内存空间不足而触发的，而且垃圾收集是针对整个堆中的所有对象进行的。而引用计数垃圾收集机制不一样，它只是在引用计数变化为0时即刻发生，而且只针对某一个对象以及它所依赖的其它对象。所以，我们一般也称呼引用计数垃圾收集为<strong>直接</strong>的垃圾收集机制，而前面三种都属于<strong>间接</strong>的垃圾收集机制。</p>
-<h4 id="三种垃圾回收算法的比较"><a href="#三种垃圾回收算法的比较" class="headerlink" title="三种垃圾回收算法的比较"></a>三种垃圾回收算法的比较</h4><p>内存效率：复制算法 &gt; 标记清除算法 &gt; 标记压缩算法（时间复杂度）</p>
-<p>内存整齐度：复制算法 = 标记压缩算法 &gt; 标记清除算法</p>
-<p>内存利用率：标记压缩算法 = 标记清除算法 &gt; 复制算法</p>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ol>
-<li>深入理解Java类加载：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/czwbig/p/11127222.html">https://www.cnblogs.com/czwbig/p/11127222.html</a></li>
-<li>沙箱安全机制：<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_30336433/article/details/83268945">https://blog.csdn.net/qq_30336433/article/details/83268945</a></li>
-<li>通俗易懂的双亲委派机制：<a target="_blank" rel="noopener" href="https://blog.csdn.net/codeyanbao/article/details/82875064">https://blog.csdn.net/codeyanbao/article/details/82875064</a></li>
-<li>JVM之虚拟机栈详解：<a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903983400632327">https://juejin.cn/post/6844903983400632327</a></li>
-<li>JVM垃圾回收之复制算法：<a target="_blank" rel="noopener" href="https://blog.csdn.net/yanghenan19870513/article/details/92803409">https://blog.csdn.net/yanghenan19870513/article/details/92803409</a></li>
-<li>垃圾回收算法详解：<a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_37860933/article/details/82154989">https://blog.csdn.net/m0_37860933/article/details/82154989</a></li>
-<li>引用计数算法：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/1d5fa7f6035c">https://www.jianshu.com/p/1d5fa7f6035c</a></li>
-</ol>
-</div></section><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>BestGuo2020</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="https://www.bestguo.top/journal/jvm-getting-start/" title="jvm 入门">https://www.bestguo.top/journal/jvm-getting-start/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><span class="icon iconify" data-icon="ri:creative-commons-line"></span><span class="icon iconify" data-icon="ri:creative-commons-by-line"></span><span class="icon iconify" data-icon="ri:creative-commons-nc-line"></span><span class="icon iconify" data-icon="ri:creative-commons-sa-line"></span></a> 许可协议。</li></ul></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/journal/vue-getting-start/" rel="prev" title="Vue 基础语法复习小记"><span class="icon iconify" data-icon="ri:arrow-left-s-line"></span><span class="post-nav-text">Vue 基础语法复习小记</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/journal/spring-cloud-totoral/" rel="next" title="初见微服务和Spring Cloud"><span class="post-nav-text">初见微服务和Spring Cloud</span><span class="icon iconify" data-icon="ri:arrow-right-s-line"></span></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>请诸位理性发言！</span><br><span>请勿发布违反中国大陆地区法律的言论，请勿人身攻击、谩骂、侮辱和煽动式的语言。</span><br></div><div id="waline"></div><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/@waline/client@v2/dist/waline.css"><script>window.CONFIG.waline.config.path = "/journal/jvm-getting-start/"</script><div class="js-Pjax"><script src="/js/comments/waline.js" type="module" defer></script></div></div></main><footer class="sidebar-translate" id="footer"><div class="beian"><a rel="noopener" href="https://beian.miit.gov.cn/" target="_blank">赣 ICP 备 20009988 号</a></div><div class="copyright"><span>&copy; 2019 – 2023 </span><span class="with-love" id="animate"><span class="icon iconify" data-icon="ri:cloud-line"></span></span><span class="author"> BestGuo2020</span></div><div class="powered"><span>由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v6.2.0</span><span class="footer-separator">|</span><span>主题 - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.10.9</span></div><div class="live-time"><span>本站点已正常地运行</span><span id="display_live_time"></span><span class="moe-text"><br/>♬(ノ゜∇゜)ノ♩<br></span><script>function blog_live_time() {
-  setTimeout(blog_live_time, 1000);
-  const start = new Date('2019-01-01T00:00:00');
-  const now = new Date();
-  const timeDiff = (now.getTime() - start.getTime());
-  const msPerMinute = 60 * 1000;
-  const msPerHour = 60 * msPerMinute;
-  const msPerDay = 24 * msPerHour;
-  const passDay = Math.floor(timeDiff / msPerDay);
-  const passHour = Math.floor((timeDiff % msPerDay) / 60 / 60 / 1000);
-  const passMinute = Math.floor((timeDiff % msPerHour) / 60 / 1000);
-  const passSecond = Math.floor((timeDiff % msPerMinute) / 1000);
-  display_live_time.innerHTML = ` ${passDay} 天 ${passHour} 小时 ${passMinute} 分 ${passSecond} 秒`;
+.post-body {
+  padding: 0 5rem;
+tablet()
+mobile()
 }
-blog_live_time();
-</script></div><div id="busuanzi"><span id="busuanzi_container_site_uv" title="总访客量"><span><span class="icon iconify" data-icon="ri:user-line"></span></span><span id="busuanzi_value_site_uv"></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv" title="总访问量"><span><span class="icon iconify" data-icon="ri:eye-line"></span></span><span id="busuanzi_value_site_pv"></span></span><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div class="footer-support"><span>本网站由</span><a class="footer-support-logo" href="https://www.upyun.com/?utm_source=lianmeng&amp;utm_medium=referral" target="blank" title="又拍云"><img height="30" src="https://cdn.yunyoujun.cn/img/logo/upyun-logo.png" alt="又拍云"></a><span>提供 CDN 加速服务</span></div></footer></div><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><span class="icon iconify" data-icon="ri:arrow-up-s-line"></span><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a><a class="popup-trigger hty-icon-button icon-search" id="search" href="javascript:;" title="搜索"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:search-line"></span></span></a><script>window.addEventListener("DOMContentLoaded", () => {
-  // Handle and trigger popup window
-  document.querySelector(".popup-trigger").addEventListener("click", () => {
-    document.querySelector(".popup").classList.add("show");
-    setTimeout(() => {
-      document.querySelector(".search-input").focus();
-    }, 100);
-  });
-
-  // Monitor main search box
-  const onPopupClose = () => {
-    document.querySelector(".popup").classList.remove("show");
-  };
-
-  document.querySelector(".popup-btn-close").addEventListener("click", () => {
-    onPopupClose();
-  });
-
-  window.addEventListener("keyup", event => {
-    if (event.key === "Escape") {
-      onPopupClose();
-    }
-  });
-});
-</script><script src="https://fastly.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js"></script><script src="/js/search/local-search.js" defer type="module"></script><div class="popup search-popup"><div class="search-header"><span class="popup-btn-close close-icon hty-icon-button"><span class="icon iconify" data-icon="ri:close-line"></span></span></div><div class="search-input-container"><input class="search-input" id="local-search-input" type="text" placeholder="搜索..." value=""></div><div class="search-result-container"></div></div></body></html>
+.post-meta {
+  font-size: 14px;
+  color: var(--hty-secondary-text-color);
+}
+.post-meta .icon {
+  margin-bottom: -1px;
+}
+.post-description {
+  font-weight: normal;
+  padding: 0.5rem;
+}
+.post-author {
+  display: flex;
+  justify-content: center;
+}
+.post-author .author-avatar {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 0;
+}
+.post-author .author-avatar img {
+  border-radius: 50%;
+  height: 1rem;
+  width: 1rem;
+  padding: 2px;
+  border: 2px solid #d3d3d3;
+}
+.post-author .author-name {
+  margin-left: 0.5rem;
+  font-size: 1rem;
+}
+.post-meta-item-icon {
+  display: inline-block;
+  color: var(--text-color, --hty-secondary-text-color);
+}
+.post-meta-divider {
+  height: 25px;
+  color: var(--hty-secondary-text-color);
+  margin: 0 0.5rem;
+}
+.post-eof {
+  margin: 50px auto;
+  width: 50%;
+  height: 1px;
+  background: $blue;
+  opacity: 0.1;
+}
+.post-copyright {
+  font-size: 0.9rem;
+  margin: 0.5rem 5rem 1rem 5rem;
+  padding: 0.5rem 1rem;
+  border-left: 4px solid #ff5252;
+  background-color: var(--hty-bg-color);
+  list-style: none;
+  word-break: break-all;
+  position: relative;
+  overflow: hidden;
+mobile()
+}
+.post-copyright::after {
+  position: absolute;
+  color: #fff;
+  background: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 496 512'%3E%3Cpath fill='gray' d='M245.8 214.9l-33.2 17.3c-9.4-19.6-25.2-20-27.4-20-22.2 0-33.3 14.6-33.3 43.9 0 23.5 9.2 43.8 33.3 43.8 14.4 0 24.6-7 30.5-21.3l30.6 15.5a73.2 73.2 0 01-65.1 39c-22.6 0-74-10.3-74-77 0-58.7 43-77 72.6-77 30.8-.1 52.7 11.9 66 35.8zm143 0l-32.7 17.3c-9.5-19.8-25.7-20-27.9-20-22.1 0-33.2 14.6-33.2 43.9 0 23.5 9.2 43.8 33.2 43.8 14.5 0 24.7-7 30.5-21.3l31 15.5c-2 3.8-21.3 39-65 39-22.7 0-74-9.9-74-77 0-58.7 43-77 72.6-77C354 179 376 191 389 214.8zM247.7 8C104.7 8 0 123 0 256c0 138.4 113.6 248 247.6 248C377.5 504 496 403 496 256 496 118 389.4 8 247.6 8zm.8 450.8c-112.5 0-203.7-93-203.7-202.8 0-105.5 85.5-203.3 203.8-203.3A201.7 201.7 0 01451.3 256c0 121.7-99.7 202.9-202.9 202.9z'/%3E%3C/svg%3E");
+  content: ' ';
+  height: 10rem;
+  width: 10rem;
+  right: -2rem;
+  top: -2rem;
+  opacity: 0.1;
+}
+.tag-name {
+  padding: 0 0.1rem;
+}

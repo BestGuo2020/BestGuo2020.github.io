@@ -1,422 +1,86 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="BestGuo2020"><meta name="copyright" content="BestGuo2020"><meta name="generator" content="Hexo 6.2.0"><meta name="theme" content="hexo-theme-yun"><title>Android 入门篇之 Fragment | BestGuo 的小窝</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/star-markdown-css@0.4.1/dist/yun/yun-markdown.min.css"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/prism-theme-vars/base.css"><script src="https://fastly.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>function initScrollReveal() {
-  [".post-card",".markdown-body img"].forEach((target)=> {
-    ScrollReveal().reveal(target);
-  })
+.post-block {
+  color: var(--hty-text-color);
+  margin: 0 1rem;
+  padding: 1rem;
+  background-color: var(--post-block-bg-color);
+mobile()
 }
-document.addEventListener("DOMContentLoaded", initScrollReveal);
-document.addEventListener("pjax:success", initScrollReveal);
-</script><link rel="icon" type="image/png" href="/favicon.ico"><link rel="mask-icon" href="/favicon.ico" color="#0078E7"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="preconnect" href="https://fastly.jsdelivr.net/npm/" crossorigin><script id="yun-config">
-    window.Yun = {}
-    window.CONFIG = {"hostname":"www.bestguo.top","root":"/","title":["Best","Guo","的","小","窝"],"version":"1.10.9","mode":"time","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"搜索...","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）"},"anonymous_image":"https://cdn.yunyoujun.cn/img/avatar/none.jpg","say":{"api":"https://el-bot-api.vercel.app/api/words/young"},"local_search":{"path":"/search.xml"},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false,"src":"/js/search/local-search.js"},"fireworks":{"colors":null},"waline":{"config":{"enable":true,"serverURL":"https://comment.bestguo.top","comment":true,"requiredFields":["nick","mail"],"placeholder":"有什么想要对 BestGuo 说的呢，输入正确有效的邮箱有机会收到回复哟😊😊","avatarCDN":"https://seccdn.libravatar.org/avatar/","emoji":["https://unpkg.com/@waline/emojis@1.0.1/weibo/","https://unpkg.com/@waline/emojis@1.0.1/bilibili/","https://unpkg.com/@waline/emojis@1.0.1/qq/","https://unpkg.com/@waline/emojis@1.0.1/tieba/"],"avatar":"monsterid","el":"#waline","lang":"zh-CN"},"cdn":"https://fastly.jsdelivr.net/npm/@waline/client@v2/dist/waline.js","dark":"html.dark"},"vendors":{"host":"https://fastly.jsdelivr.net/npm/","darken":"https://fastly.jsdelivr.net/npm/darken@1.5.0"}};
-  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/hexo-theme-yun.js" type="module"></script><link rel="preconnect" href="https://www.google-analytics.com" crossorigin><script async src="https://www.googletagmanager.com/gtag/js?id=G-907LWSSHLS"></script><script>if (CONFIG.hostname === location.hostname) {
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-907LWSSHLS');
-}</script><script>(function(){
-  var bp = document.createElement('script');
-  var curProtocol = window.location.protocol.split(':')[0];
-  if (curProtocol === 'https') {
-    bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
-  }
-  else {
-    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
-  }
-  var s = document.getElementsByTagName("script")[0];
-  s.parentNode.insertBefore(bp, s);
-})();</script><meta name="description" content="注意：建议在白天模式下看！  在学习完 Fragment 之后，其实这个组件也是非常之常见的。QQ、微信、B站等等 app 绝大多数都使用了到了 Fragment，然后结合底部的导航按钮来跳转到不同的 Fragment 的。一看到效果就能很好的想出它的运用场景。 同时也知道 Fragment 的重要性。难度还是有点，不过比起将要学的 ConstraintLayout 还是要容易一些（我个人感觉，">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Android 入门篇之 Fragment">
-<meta property="og:url" content="https://www.bestguo.top/journal/fragment-component/index.html">
-<meta property="og:site_name" content="BestGuo 的小窝">
-<meta property="og:description" content="注意：建议在白天模式下看！  在学习完 Fragment 之后，其实这个组件也是非常之常见的。QQ、微信、B站等等 app 绝大多数都使用了到了 Fragment，然后结合底部的导航按钮来跳转到不同的 Fragment 的。一看到效果就能很好的想出它的运用场景。 同时也知道 Fragment 的重要性。难度还是有点，不过比起将要学的 ConstraintLayout 还是要容易一些（我个人感觉，">
-<meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://www.bestguo.top/journal/fragment-component/1604195-20200303165929247-1414515511.png">
-<meta property="og:image" content="https://www.bestguo.top/journal/fragment-component/1688279-e513845a80659860.png">
-<meta property="og:image" content="https://www.bestguo.top/images/Android/fragment/0janp-atem6.gif">
-<meta property="og:image" content="https://www.bestguo.top/images/Android/fragment/7dsfo-u8g68.gif">
-<meta property="og:image" content="https://www.bestguo.top/images/Android/fragment/i8zig-blfoa.gif">
-<meta property="og:image" content="https://www.bestguo.top/images/Android/fragment/lfwfn-vtb64.gif">
-<meta property="og:image" content="https://www.bestguo.top/images/Android/fragment/kqlip-yosnh.gif">
-<meta property="og:image" content="https://www.bestguo.top/images/Android/fragment/QQ%E6%88%AA%E5%9B%BE20210314173826.jpg">
-<meta property="og:image" content="https://www.bestguo.top/images/Android/fragment/i99qy-pxm85.gif">
-<meta property="article:published_time" content="2021-03-13T16:21:10.000Z">
-<meta property="article:modified_time" content="2022-05-25T10:47:48.919Z">
-<meta property="article:author" content="BestGuo2020">
-<meta property="article:tag" content="Android">
-<meta property="article:tag" content="Java">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://www.bestguo.top/journal/fragment-component/1604195-20200303165929247-1414515511.png"><script>(function() {
-  if (CONFIG.mode !== 'auto') return
-  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-  const setting = localStorage.getItem('darken-mode') || 'auto'
-  if (setting === 'dark' || (prefersDark && setting !== 'light'))
-    document.documentElement.classList.toggle('dark', true)
-})()</script></head><body><script src="https://code.iconify.design/2/2.1.1/iconify.min.js"></script><script>// Define global variable
-IconifyProviders = {
-  // Empty prefix: overwrite default API provider configuration
-  '': {
-    // Use custom API first, use Iconify public API as backup
-    resources: [
-        'https://api.iconify.design',
-    ],
-    // Wait for 1 second before switching API hosts
-    rotate: 1000,
-  },
-};</script><script defer src="https://fastly.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js" type="module"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js" type="module"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><span class="icon iconify" data-icon="ri:list-ordered"></span></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><span class="icon iconify" data-icon="ri:passport-line"></span></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="BestGuo2020"><img width="96" loading="lazy" src="/images/avatar.png" alt="BestGuo2020"><span class="site-author-status" title="在找工作">👨‍💻</span></a><div class="site-author-name"><a href="/about/">BestGuo2020</a></div><a class="site-name" href="/about/site.html">BestGuo 的小窝</a><sub class="site-subtitle">善良、勇敢、可爱</sub><div class="site-description">一个人的世界是如此的安静</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="首页"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:home-4-line"></span></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:archive-line"></span></span><span class="site-state-item-count">79</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:folder-2-line"></span></span><span class="site-state-item-count">23</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="site-state-item-count">49</span></a></div><a class="site-state-item hty-icon-button" href="/albums/" title="相册集"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:gallery-line"></span></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://wpa.qq.com/msgrd?v=3&amp;uin=1540113012&amp;site=qq&amp;menu=yes" title="QQ：xiaohehe2021" target="_blank" style="color:#12B7F5"><span class="icon iconify" data-icon="ri:qq-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/bestguo2020" title="GitHub：BestGuo2020" target="_blank" style="color:#8251e6"><span class="icon iconify" data-icon="ri:github-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/184681623" title="哔哩哔哩: 我叫人员外婆" target="_blank" style="color:#FF8EB3"><span class="icon iconify" data-icon="ri:bilibili-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:bestguo2020@foxmail.com" title="E-Mail" target="_blank" style="color:#8E71C1"><span class="icon iconify" data-icon="ri:mail-line"></span></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><span class="icon iconify" data-icon="ri:contrast-2-line"></span></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E6%83%85%E6%A6%82%E8%A6%81"><span class="toc-number">1.</span> <span class="toc-text">前情概要</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Fragment-%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="toc-number">1.1.</span> <span class="toc-text">Fragment 生命周期</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Fragment-%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E7%9A%84%E5%BD%B1%E5%93%8D"><span class="toc-number">1.2.</span> <span class="toc-text">Fragment 的生命周期的影响</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E5%8D%95%E7%A4%BA%E4%BE%8B"><span class="toc-number">2.</span> <span class="toc-text">简单示例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%98%E6%94%BE-Fragment-%E7%9A%84-Acitvity"><span class="toc-number">2.1.</span> <span class="toc-text">存放 Fragment 的 Acitvity</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AFragment"><span class="toc-number">2.2.</span> <span class="toc-text">AFragment</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BFragment"><span class="toc-number">2.3.</span> <span class="toc-text">BFragment</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%90%E8%A1%8C%E6%95%88%E6%9E%9C"><span class="toc-number">2.4.</span> <span class="toc-text">运行效果</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="toc-number">3.</span> <span class="toc-text">生命周期</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9E%E9%80%80%E9%97%AE%E9%A2%98"><span class="toc-number">4.</span> <span class="toc-text">回退问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9E%E9%80%80%E5%88%B0%E4%B8%8A%E4%B8%80%E4%B8%AA"><span class="toc-number">4.1.</span> <span class="toc-text">回退到上一个</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%B7%B3%E8%BD%AC%E4%B8%8D%E9%94%80%E6%AF%81"><span class="toc-number">4.1.1.</span> <span class="toc-text">跳转不销毁</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E4%BC%A0%E9%80%92"><span class="toc-number">5.</span> <span class="toc-text">数据传递</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%8E-Activity-%E4%BC%A0%E9%80%92%E5%88%B0-Fragment"><span class="toc-number">5.1.</span> <span class="toc-text">从 Activity 传递到 Fragment</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%8E-Fragment-%E4%BC%A0%E9%80%92%E5%88%B0-Activity"><span class="toc-number">5.2.</span> <span class="toc-text">从 Fragment 传递到 Activity</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%8E%E8%AE%B0"><span class="toc-number">6.</span> <span class="toc-text">后记</span></a></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article" style="--smc-primary:#0078E7;"><link itemprop="mainEntityOfPage" href="https://www.bestguo.top/journal/fragment-component/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="BestGuo2020"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="BestGuo 的小窝"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">Android 入门篇之 Fragment</h1><div class="post-meta"><div class="post-time"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:calendar-line"></span></span> <time title="创建时间：2021-03-14 00:21:10" itemprop="dateCreated datePublished" datetime="2021-03-14T00:21:10+08:00">2021-03-14</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:calendar-2-line"></span></span> <time title="修改时间：2022-05-25 18:47:48" itemprop="dateModified" datetime="2022-05-25T18:47:48+08:00">2022-05-25</time></div><span class="post-busuanzi"><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读次数"><span class="icon iconify" data-icon="ri:eye-line"></span> <span id="busuanzi_value_page_pv"></span></span></span><span class="post-meta-divider">-</span><a href="#comment"><span class="post-meta-item-icon" title="评论数"><span class="icon iconify" data-icon="ri:chat-3-line"></span> <span class="waline-comment-count" id="/journal/fragment-component/"></span></span></a><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><span class="icon iconify" data-icon="ri:folder-line"></span></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/Android-%E5%BC%80%E5%8F%91%E7%9A%84%E5%AD%A6%E4%B9%A0%E5%8E%86%E7%A8%8B/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">Android 开发的学习历程</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/Android/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">Android</span></a><a class="tag-item" href="/tags/Java/" style="--text-color:#ff9900"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">Java</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body"><blockquote>
-<p>注意：建议在白天模式下看！</p>
-</blockquote>
-<p>在学习完 Fragment 之后，其实这个组件也是非常之常见的。QQ、微信、B站等等 app 绝大多数都使用了到了 Fragment，然后结合底部的导航按钮来跳转到不同的 Fragment 的。一看到效果就能很好的想出它的运用场景。</p>
-<p>同时也知道 Fragment 的重要性。难度还是有点，不过比起将要学的 <code>ConstraintLayout</code> 还是要容易一些（我个人感觉，确信）</p>
-<p>不过，今天一口气看了 5 集的进击的巨人。进击的巨人第二季实在是太燃了。毕竟是第一次看嘛，看完才会有动力学习嘛。</p>
-<span id="more"></span>
-
-<h2 id="前情概要"><a href="#前情概要" class="headerlink" title="前情概要"></a>前情概要</h2><p>Fragment，本意叫碎片、片段之意。它的出现是为了适应平板电脑等大屏设备上，不过也确实是这样，但是不知道为什么，好像兼容 Android 平板的应用其实很少耶，反而这些开发者更喜欢 iPad 的平板。就感觉 Android 平板的生态似乎被抛弃了一样。</p>
-<h3 id="Fragment-生命周期"><a href="#Fragment-生命周期" class="headerlink" title="Fragment 生命周期"></a>Fragment 生命周期</h3><p>Fragment 也有自己的生命周期，他的生命周期如下所示。不同的是，它不能单独存在，必须要“寄生”在 Activity 之中。</p>
-<p><img src="/journal/fragment-component/1604195-20200303165929247-1414515511.png" alt="Fragment的生命周期" loading="lazy"></p>
-<h3 id="Fragment-的生命周期的影响"><a href="#Fragment-的生命周期的影响" class="headerlink" title="Fragment 的生命周期的影响"></a>Fragment 的生命周期的影响</h3><p>Fragment 的生命周期会受到 Activity 生命周期的影响，如下图所示。Activity 创建了，我 Fragment 也开始做创建相关的动作。这样咋一眼看还真的像是一种“寄生”的关系耶。</p>
-<p><img src="/journal/fragment-component/1688279-e513845a80659860.png" loading="lazy"></p>
-<p>不过这样看起来似乎看不出什么东西来，可以重写这些方法来看看 Fragment 是如何执行的。这个还是到后面再来看看吧。</p>
-<p>先来学习学习简单的应用，从 AFragment 到 BFragment。来看看是怎样的效果吧</p>
-<h2 id="简单示例"><a href="#简单示例" class="headerlink" title="简单示例"></a>简单示例</h2><p>首先，建立一个 ContainerActivity 用于放置 Fragment。</p>
-<p>然后，建立 AFragment 和 BFragment 的类。AFragment 和 BFragment 都需要继承自 Fragment 类。搞了两张洛天依的画像。哈哈哈</p>
-<h3 id="存放-Fragment-的-Acitvity"><a href="#存放-Fragment-的-Acitvity" class="headerlink" title="存放 Fragment 的 Acitvity"></a>存放 Fragment 的 Acitvity</h3><p>设置好布局文件</p>
-<pre class="language-markup" data-language="markup"><code class="language-markup"><span class="token prolog">&lt;?xml version="1.0" encoding="utf-8"?></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>RelativeLayout</span>
-    <span class="token attr-name"><span class="token namespace">xmlns:</span>android</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://schemas.android.com/apk/res/android<span class="token punctuation">"</span></span>
-    <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>match_parent<span class="token punctuation">"</span></span>
-    <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>match_parent<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
-
-    <span class="token comment">&lt;!-- 用于放置子布局的 --></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>FrameLayout</span>
-        <span class="token attr-name"><span class="token namespace">android:</span>id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@+id/frag_layout<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>match_parent<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>match_parent<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>orientation</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>vertical<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>Button</span>
-        <span class="token attr-name"><span class="token namespace">android:</span>id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@+id/change_fragment<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>match_parent<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>50dp<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>改变 Fragment<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>textAllCaps</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>false<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>layout_alignParentTop</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>true<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
-
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>RelativeLayout</span><span class="token punctuation">></span></span></code></pre>
-
-<h3 id="AFragment"><a href="#AFragment" class="headerlink" title="AFragment"></a>AFragment</h3><p>AFragment 的 java 代码如下</p>
-<pre class="language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">AFragment</span> <span class="token keyword">extends</span> <span class="token class-name">Fragment</span> <span class="token punctuation">&#123;</span>
-
-    <span class="token keyword">private</span> <span class="token class-name">TextView</span> fragA<span class="token punctuation">;</span>
-    <span class="token keyword">private</span> <span class="token class-name">Button</span> changeText<span class="token punctuation">,</span> changeFragment<span class="token punctuation">,</span> changeOuterText<span class="token punctuation">;</span>
-    <span class="token keyword">private</span> <span class="token class-name">BFragment</span> bFragment<span class="token punctuation">;</span>
-
-    <span class="token annotation punctuation">@Nullable</span>
-    <span class="token annotation punctuation">@Override</span>
-    <span class="token keyword">public</span> <span class="token class-name">View</span> <span class="token function">onCreateView</span><span class="token punctuation">(</span><span class="token class-name">LayoutInflater</span> inflater<span class="token punctuation">,</span> <span class="token annotation punctuation">@Nullable</span> <span class="token class-name">ViewGroup</span> container<span class="token punctuation">,</span> <span class="token class-name">Bundle</span> savedInstanceState<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token class-name">Log</span><span class="token punctuation">.</span><span class="token function">d</span><span class="token punctuation">(</span><span class="token string">"onCreateView"</span><span class="token punctuation">,</span> <span class="token string">"-------isRunning------"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">return</span> inflater<span class="token punctuation">.</span><span class="token function">inflate</span><span class="token punctuation">(</span><span class="token class-name">R</span><span class="token punctuation">.</span>layout<span class="token punctuation">.</span>fragment_a<span class="token punctuation">,</span> container<span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span></code></pre>
-
-<p>AFragment 的 fragment_a.xml 布局文件如下</p>
-<pre class="language-markup" data-language="markup"><code class="language-markup"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>LinearLayout</span>
-    <span class="token attr-name"><span class="token namespace">xmlns:</span>android</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://schemas.android.com/apk/res/android<span class="token punctuation">"</span></span>
-    <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>match_parent<span class="token punctuation">"</span></span>
-    <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>match_parent<span class="token punctuation">"</span></span>
-    <span class="token attr-name"><span class="token namespace">android:</span>background</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@drawable/lty_a<span class="token punctuation">"</span></span>
-    <span class="token attr-name"><span class="token namespace">android:</span>orientation</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>vertical<span class="token punctuation">"</span></span>
-    <span class="token attr-name"><span class="token namespace">android:</span>gravity</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>center<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
-
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>TextView</span>
-        <span class="token attr-name"><span class="token namespace">android:</span>id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@+id/frag_a<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wrap_content<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wrap_content<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>我是 FragmentA<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>textSize</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>20sp<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>textColor</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@color/colorBlack<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
-    
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>LinearLayout</span><span class="token punctuation">></span></span></code></pre>
-
-<h3 id="BFragment"><a href="#BFragment" class="headerlink" title="BFragment"></a>BFragment</h3><p>BFragment 的 java 代码如下</p>
-<pre class="language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">BFragment</span> <span class="token keyword">extends</span> <span class="token class-name">Fragment</span> <span class="token punctuation">&#123;</span>
-
-    <span class="token annotation punctuation">@Nullable</span>
-    <span class="token annotation punctuation">@Override</span>
-    <span class="token keyword">public</span> <span class="token class-name">View</span> <span class="token function">onCreateView</span><span class="token punctuation">(</span><span class="token class-name">LayoutInflater</span> inflater<span class="token punctuation">,</span> <span class="token annotation punctuation">@Nullable</span> <span class="token class-name">ViewGroup</span> container<span class="token punctuation">,</span> <span class="token class-name">Bundle</span> savedInstanceState<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token comment">// 将自定义的布局添加到 view 中</span>
-        <span class="token class-name">View</span> view <span class="token operator">=</span> inflater<span class="token punctuation">.</span><span class="token function">inflate</span><span class="token punctuation">(</span><span class="token class-name">R</span><span class="token punctuation">.</span>layout<span class="token punctuation">.</span>fragment_b<span class="token punctuation">,</span> container<span class="token punctuation">,</span> <span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">return</span> view<span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span></code></pre>
-
-<p>BFragment 的 fragment_b.xml 布局文件如下</p>
-<pre class="language-markup" data-language="markup"><code class="language-markup"><span class="token prolog">&lt;?xml version="1.0" encoding="utf-8"?></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>LinearLayout</span>
-    <span class="token attr-name"><span class="token namespace">xmlns:</span>android</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://schemas.android.com/apk/res/android<span class="token punctuation">"</span></span>
-    <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>match_parent<span class="token punctuation">"</span></span>
-    <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>match_parent<span class="token punctuation">"</span></span>
-    <span class="token attr-name"><span class="token namespace">android:</span>background</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@drawable/lty_b<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
-
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>TextView</span>
-        <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>match_parent<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>match_parent<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>我是 FragmentB<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>textSize</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>20sp<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>gravity</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>center<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>textColor</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@color/colorBlack<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
-
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>LinearLayout</span><span class="token punctuation">></span></span></code></pre>
-
-<p>创建完 BFragment 就可以在 ContainerActivity 中来放置 Fragment 了，ContainerActivity.java 代码如下。</p>
-<pre class="language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">ContainerActivity</span> <span class="token keyword">extends</span> <span class="token class-name">AppCompatActivity</span> <span class="token punctuation">&#123;</span>
-
-    <span class="token keyword">private</span> <span class="token class-name">Fragment</span> aFragment<span class="token punctuation">,</span> bFragment<span class="token punctuation">;</span>
-    <span class="token keyword">private</span> <span class="token class-name">Button</span> button<span class="token punctuation">;</span>
-
-    <span class="token annotation punctuation">@Override</span>
-    <span class="token keyword">protected</span> <span class="token keyword">void</span> <span class="token function">onCreate</span><span class="token punctuation">(</span><span class="token annotation punctuation">@Nullable</span> <span class="token class-name">Bundle</span> savedInstanceState<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token function">onCreate</span><span class="token punctuation">(</span>savedInstanceState<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token function">setContentView</span><span class="token punctuation">(</span><span class="token class-name">R</span><span class="token punctuation">.</span>layout<span class="token punctuation">.</span>activity_container<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-        <span class="token comment">// 得到按钮，用于点击跳转到Bfragment</span>
-        button <span class="token operator">=</span> <span class="token function">findViewById</span><span class="token punctuation">(</span><span class="token class-name">R</span><span class="token punctuation">.</span>id<span class="token punctuation">.</span>change_fragment<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-        button<span class="token punctuation">.</span><span class="token function">setOnClickListener</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">View<span class="token punctuation">.</span>OnClickListener</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-            <span class="token annotation punctuation">@Override</span>
-            <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onClick</span><span class="token punctuation">(</span><span class="token class-name">View</span> v<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-                <span class="token function">getFragmentManager</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">beginTransaction</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span><span class="token class-name">R</span><span class="token punctuation">.</span>id<span class="token punctuation">.</span>frag_layout<span class="token punctuation">,</span> bFragment<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">commitAllowingStateLoss</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token punctuation">&#125;</span>
-        <span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-        <span class="token comment">// 加载 AFragment</span>
-        aFragment <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">AFragment</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token comment">// 加载 BFragment</span>
-        bFragment <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">BFragment</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token comment">// 添加 Fragment，add 方法需要添加两个参数，一个需要</span>
-        <span class="token function">getFragmentManager</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">beginTransaction</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token class-name">R</span><span class="token punctuation">.</span>id<span class="token punctuation">.</span>frag_layout<span class="token punctuation">,</span> aFragment<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">commitAllowingStateLoss</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span></code></pre>
-
-<h3 id="运行效果"><a href="#运行效果" class="headerlink" title="运行效果"></a>运行效果</h3><p>运行的效果如下</p>
-<p><img src="/images/Android/fragment/0janp-atem6.gif" loading="lazy"></p>
-<p>效果上面，从 AFragment 跳到 BFragment。</p>
-<h2 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h2><p>在此之前，用一张图来展示了 Fragment 的生命周期。接下来，通过输出来直观的看到 Fragment 的生命周期。了解生命周期的目的就在于，能够何时在某个过程中来执行哪些关键性的代码。这个其实是非常重要的。</p>
-<p>我们就利用简单例子中的 AFragment 类中的代码，测试它的生命周期，重写了它的全部关于生命周期相关的代码。</p>
-<p>当我们进入的时候，执行了以下方法。</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash">D/fragment: -------onAttach running-------
-D/fragment: -------onCreate running-------
-D/fragment: -------onCreateView isRunning------
-D/fragment: -------onViewCreated isRunning------
-D/fragment: -------onActivityCreated running-------
-D/fragment: -------onStart isRunning------
-D/fragment: -------onResume isRunning------</code></pre>
-
-<p>当熄屏、按下 Home 键、切换到其它程序时，执行了以下方法。</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash">D/fragment: -------onPause isRunning------
-D/fragment: -------onStop isRunning------</code></pre>
-
-<p>当亮屏的时候、回到原来的程序时，执行了以下方法。</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash">D/fragment: -------onStart isRunning------
-D/fragment: -------onResume isRunning------</code></pre>
-
-<p>当到 BFragment 的时候，执行了以下方法。由于点击了按钮，调用了 replace 方法，导致 AFragment 的 View 已经破坏了。如果返回到 AFragment，它将不是原来的 AFragment，而是新的 Fragment 吧。</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash">D/fragment: -------onPause isRunning------
-D/fragment: -------onStop isRunning------
-D/fragment: -------onDestroyView isRunning------</code></pre>
-
-<p>当返回到 AFragment 的时候，执行了以下方法。此时执行了 onCreateView 方法，也就是说 AFragment 的 View 是重新创建的。</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash">D/fragment: -------onCreateView isRunning------
-D/fragment: -------onActivityCreated running--------
-D/fragment: -------onViewCreated isRunning------
-D/fragment: -------onStart isRunning------
-D/fragment: -------onResume isRunning------</code></pre>
-
-<p>当退出了这个 Activity 的时候，执行了以下方法。</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash">D/fragment: -------onPause isRunning------
-D/fragment: -------onStop isRunning------
-D/fragment: -------onDestroyView isRunning------
-D/fragment: -------onDestroy isRunning------
-D/fragment: -------onDetach isRunning------</code></pre>
-
-<p>当有来电时，执行了以下方法。</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash">D/fragment: -------onPause isRunning------</code></pre>
-
-<p>当挂机时，执行了以下方法。</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash">D/fragment: -------onResume isRunning------</code></pre>
-
-<h2 id="回退问题"><a href="#回退问题" class="headerlink" title="回退问题"></a>回退问题</h2><h3 id="回退到上一个"><a href="#回退到上一个" class="headerlink" title="回退到上一个"></a>回退到上一个</h3><p>Fragment 也有自己的栈，在简单示例的代码中，有一个 add 方法。这个方法就是把 Fragment 添加到所属的栈中，不过，我们在按手机上的返回按钮时。不跳回到 FragmentA，而是直接退出了这个 Activity 中。</p>
-<p><img src="/images/Android/fragment/7dsfo-u8g68.gif" loading="lazy"></p>
-<p>这怎么办呢？？</p>
-<p>其实也不难，只需要调用 <code>addToBackState(null)</code> 这个方法，就可以出栈，回退到上一个 Fragment 了。完整的写法如下。不过还是不懂这个方法中的参数到底是什么意思。</p>
-<pre class="language-java" data-language="java"><code class="language-java"><span class="token function">getFragmentManager</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">beginTransaction</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span><span class="token class-name">R</span><span class="token punctuation">.</span>id<span class="token punctuation">.</span>frag_layout<span class="token punctuation">,</span> bFragment<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">addToBackState</span><span class="token punctuation">(</span><span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">commitAllowingStateLoss</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
-
-<p>更改之后的效果如下</p>
-<p><img src="/images/Android/fragment/i8zig-blfoa.gif" loading="lazy"></p>
-<h4 id="跳转不销毁"><a href="#跳转不销毁" class="headerlink" title="跳转不销毁"></a>跳转不销毁</h4><p>在上面的简单示例代码中和生命周期的演示中，从 AFragment 调用到 BFragment 时发现，原来的 AFragment 已经被销毁了。那是因为我们调用的时候是调用 replace 方法，replace 的动作可以看成是先删除再添加，所以才会造成这种问题的。</p>
-<p>以下效果可以展示出，返回到 AFragment 的时候，发现其内容还原了。</p>
-<p><img src="/images/Android/fragment/lfwfn-vtb64.gif" loading="lazy"></p>
-<p>为了实现跳转之后不销毁原来的 AFragment，可以调用其 hide 方法，在跳转 BFragment 的时候，先隐藏 AFragment 然后将 BFragment 添加到栈中来。返回到 AFragment 时将其显示出来。</p>
-<p>首先，在添加 AFragment 的时候添加一个 tag，这边传入了一个 tag 为 A。</p>
-<pre class="language-java" data-language="java"><code class="language-java"><span class="token function">getFragmentManager</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">beginTransaction</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token class-name">R</span><span class="token punctuation">.</span>id<span class="token punctuation">.</span>frag_layout<span class="token punctuation">,</span> aFragment<span class="token punctuation">,</span> <span class="token string">"a"</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">commitAllowingStateLoss</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
-
-<p>然后，在 AFragment 中的 onViewCreated 方法中获取到跳转按钮，设置点击事件。点击事件中，先获取 tag 为 a 的 Fragment，然后获取到之后将其隐藏，如果没有获取到 a 标签，则不隐藏，直接 AFragment 销毁。</p>
-<p>主要代码如下</p>
-<pre class="language-java" data-language="java"><code class="language-java"><span class="token comment">// 获得按钮并设置跳转</span>
-changeFragment <span class="token operator">=</span> view<span class="token punctuation">.</span><span class="token function">findViewById</span><span class="token punctuation">(</span><span class="token class-name">R</span><span class="token punctuation">.</span>id<span class="token punctuation">.</span>btn_fragment_b<span class="token punctuation">)</span><span class="token punctuation">;</span>
-changeFragment<span class="token punctuation">.</span><span class="token function">setOnClickListener</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">View<span class="token punctuation">.</span>OnClickListener</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token annotation punctuation">@Override</span>
-    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onClick</span><span class="token punctuation">(</span><span class="token class-name">View</span> v<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token keyword">if</span><span class="token punctuation">(</span>bFragment <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-            bFragment <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">BFragment</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">&#125;</span>
-        <span class="token comment">// 点击跳转时，先通过标签获取AFragment</span>
-        <span class="token class-name">Fragment</span> fragment <span class="token operator">=</span> <span class="token function">getFragmentManager</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">findFragmentByTag</span><span class="token punctuation">(</span><span class="token string">"a"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">if</span><span class="token punctuation">(</span>fragment <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-            <span class="token comment">// 将A隐藏，并且将B添加进来</span>
-        	<span class="token function">getFragmentManager</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">beginTransaction</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">hide</span><span class="token punctuation">(</span>fragment<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token class-name">R</span><span class="token punctuation">.</span>id<span class="token punctuation">.</span>frag_layout<span class="token punctuation">,</span> bFragment<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">addToBackStack</span><span class="token punctuation">(</span><span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">commitAllowingStateLoss</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">&#125;</span><span class="token keyword">else</span><span class="token punctuation">&#123;</span>
-            <span class="token function">getFragmentManager</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">beginTransaction</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span><span class="token class-name">R</span><span class="token punctuation">.</span>id<span class="token punctuation">.</span>frag_layout<span class="token punctuation">,</span> bFragment<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">addToBackStack</span><span class="token punctuation">(</span><span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">commitAllowingStateLoss</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token punctuation">&#125;</span>
-    <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
-
-<p>最后的运行效果如下</p>
-<p><img src="/images/Android/fragment/kqlip-yosnh.gif" loading="lazy"></p>
-<h2 id="数据传递"><a href="#数据传递" class="headerlink" title="数据传递"></a>数据传递</h2><p>数据传递总共有两种方式，一个是从 Activity 传递到 Fragment，另外一个是从 Fragment 到 Activity。从 Activity 到 Fragment 通过 Bundle 的方式传递的。从 Fragment 到 Activity 是通过调用 getActivity 方法，然后在调用 Activity 中的公共方法来达到数据传递的目的。</p>
-<h3 id="从-Activity-传递到-Fragment"><a href="#从-Activity-传递到-Fragment" class="headerlink" title="从 Activity 传递到 Fragment"></a>从 Activity 传递到 Fragment</h3><p>为了调取方便，我们在 AFragment 中编写一个静态方法，用于创建 AFragment 示例，同时带一个参数用来传递数据。</p>
-<pre class="language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">AFragment</span> <span class="token keyword">extends</span> <span class="token class-name">Fragment</span> <span class="token punctuation">&#123;</span>
-
-    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token class-name">AFragment</span> <span class="token function">newInstance</span><span class="token punctuation">(</span><span class="token class-name">String</span> data<span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
-        <span class="token class-name">AFragment</span> aFragment <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">AFragment</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token comment">// 传入参数</span>
-        <span class="token class-name">Bundle</span> bundle <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Bundle</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        bundle<span class="token punctuation">.</span><span class="token function">putString</span><span class="token punctuation">(</span><span class="token string">"data"</span><span class="token punctuation">,</span> data<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token comment">// 在Fragment中设置参数</span>
-        aFragment<span class="token punctuation">.</span><span class="token function">setArguments</span><span class="token punctuation">(</span>bundle<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">return</span> aFragment<span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
-<span class="token punctuation">&#125;</span></code></pre>
-
-<p>然后，在视图创建完成之后，会执行 onViewCreated 方法，所以，应该在创建之后获取传过来的值并且设置好即可</p>
-<pre class="language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@Override</span>
-<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onViewCreated</span><span class="token punctuation">(</span><span class="token class-name">View</span> view<span class="token punctuation">,</span> <span class="token annotation punctuation">@Nullable</span> <span class="token class-name">Bundle</span> savedInstanceState<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token comment">// 获取参数</span>
-    <span class="token class-name">Bundle</span> bundle <span class="token operator">=</span> <span class="token function">getArguments</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token class-name">String</span> data <span class="token operator">=</span> bundle<span class="token punctuation">.</span><span class="token function">getString</span><span class="token punctuation">(</span><span class="token string">"data"</span><span class="token punctuation">,</span> <span class="token string">"我是洛天依A"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token comment">// 设置文字</span>
-    <span class="token class-name">TextView</span> textView <span class="token operator">=</span> view<span class="token punctuation">.</span><span class="token function">findViewById</span><span class="token punctuation">(</span><span class="token class-name">R</span><span class="token punctuation">.</span>id<span class="token punctuation">.</span>frag_a<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    textView<span class="token punctuation">.</span><span class="token function">setText</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span></code></pre>
-
-<p>在 ContainerActivity 创建 Fragment 实例中，将创建的实例更改成</p>
-<pre class="language-java" data-language="java"><code class="language-java">aFragment <span class="token operator">=</span> <span class="token class-name">AFragment</span><span class="token punctuation">.</span><span class="token function">newInstance</span><span class="token punctuation">(</span><span class="token string">"我不是FragmentA，真难听"</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
-
-<p>最后看看执行效果</p>
-<p><img src="/images/Android/fragment/QQ%E6%88%AA%E5%9B%BE20210314173826.jpg" loading="lazy"></p>
-<h3 id="从-Fragment-传递到-Activity"><a href="#从-Fragment-传递到-Activity" class="headerlink" title="从 Fragment 传递到 Activity"></a>从 Fragment 传递到 Activity</h3><p>因为 Fragment 是依赖于 Activity 的，所以我们可以在 Fragment 中通过 getActivity 方法得到 Fragment 所在的 Activity。最后在调用其 Activity 中的公开的方法即可。</p>
-<p>首先，在 ContainerActivity  编写一个公共方法，本实例中的公共方法的例子将 Activity 中的文本组件重新赋值。</p>
-<pre class="language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">ContainerActivity</span> <span class="token keyword">extends</span> <span class="token class-name">AppCompatActivity</span> <span class="token punctuation">&#123;</span>
-
-    <span class="token keyword">private</span> <span class="token class-name">Fragment</span> aFragment<span class="token punctuation">,</span> bFragment<span class="token punctuation">;</span>
-    <span class="token keyword">private</span> <span class="token class-name">TextView</span> outerText<span class="token punctuation">;</span>
-
-    <span class="token annotation punctuation">@Override</span>
-    <span class="token keyword">protected</span> <span class="token keyword">void</span> <span class="token function">onCreate</span><span class="token punctuation">(</span><span class="token annotation punctuation">@Nullable</span> <span class="token class-name">Bundle</span> savedInstanceState<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token function">onCreate</span><span class="token punctuation">(</span>savedInstanceState<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token function">setContentView</span><span class="token punctuation">(</span><span class="token class-name">R</span><span class="token punctuation">.</span>layout<span class="token punctuation">.</span>activity_container<span class="token punctuation">)</span><span class="token punctuation">;</span>
-
-        button <span class="token operator">=</span> <span class="token function">findViewById</span><span class="token punctuation">(</span><span class="token class-name">R</span><span class="token punctuation">.</span>id<span class="token punctuation">.</span>change_fragment<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        outerText <span class="token operator">=</span> <span class="token function">findViewById</span><span class="token punctuation">(</span><span class="token class-name">R</span><span class="token punctuation">.</span>id<span class="token punctuation">.</span>outer_text<span class="token punctuation">)</span><span class="token punctuation">;</span>
-		<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
-    <span class="token punctuation">&#125;</span>
-
-    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">setOuterText</span><span class="token punctuation">(</span><span class="token class-name">String</span> msg<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-       outerText<span class="token punctuation">.</span><span class="token function">setText</span><span class="token punctuation">(</span>msg<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span></code></pre>
-
-<p>在 AFragment 中的布局文件创建一个按钮。</p>
-<pre class="language-markup" data-language="markup"><code class="language-markup"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>LinearLayout</span>
-    <span class="token attr-name"><span class="token namespace">xmlns:</span>android</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://schemas.android.com/apk/res/android<span class="token punctuation">"</span></span>
-    <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>match_parent<span class="token punctuation">"</span></span>
-    <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>match_parent<span class="token punctuation">"</span></span>
-    <span class="token attr-name"><span class="token namespace">android:</span>background</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@drawable/lty_a<span class="token punctuation">"</span></span>
-    <span class="token attr-name"><span class="token namespace">android:</span>orientation</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>vertical<span class="token punctuation">"</span></span>
-    <span class="token attr-name"><span class="token namespace">android:</span>gravity</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>center<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
-    
-    ......
-
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>Button</span>
-        <span class="token attr-name"><span class="token namespace">android:</span>id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>@+id/btn_change_outer<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>match_parent<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>wrap_content<span class="token punctuation">"</span></span>
-        <span class="token attr-name"><span class="token namespace">android:</span>text</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>改变外部文字<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
-
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>LinearLayout</span><span class="token punctuation">></span></span></code></pre>
-
-<p>在 onViewCreated 方法中，获取按钮并设置点击事件，点击事件中获取当前的 Activity 并且调用其中的方法。</p>
-<pre class="language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@Override</span>
-<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onViewCreated</span><span class="token punctuation">(</span><span class="token class-name">View</span> view<span class="token punctuation">,</span> <span class="token annotation punctuation">@Nullable</span> <span class="token class-name">Bundle</span> savedInstanceState<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token comment">// 改变外部的文字</span>
-    changeOuterText <span class="token operator">=</span> view<span class="token punctuation">.</span><span class="token function">findViewById</span><span class="token punctuation">(</span><span class="token class-name">R</span><span class="token punctuation">.</span>id<span class="token punctuation">.</span>btn_change_outer<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    changeOuterText<span class="token punctuation">.</span><span class="token function">setOnClickListener</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">View<span class="token punctuation">.</span>OnClickListener</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token annotation punctuation">@Override</span>
-        <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onClick</span><span class="token punctuation">(</span><span class="token class-name">View</span> v<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-            <span class="token class-name">Log</span><span class="token punctuation">.</span><span class="token function">d</span><span class="token punctuation">(</span><span class="token string">"getActivity()"</span><span class="token punctuation">,</span> <span class="token function">getActivity</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token function">getActivity</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">!=</span> <span class="token keyword">null</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
-                <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token class-name">ContainerActivity</span><span class="token punctuation">)</span> <span class="token function">getActivity</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">setOuterText</span><span class="token punctuation">(</span><span class="token string">"我已经炸了"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token punctuation">&#125;</span>
-        <span class="token punctuation">&#125;</span>
-    <span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span></code></pre>
-
-<p>点击按钮之后的效果如下所示，这个“我是外部文字”是属于 Activity 的，点击按钮时发现文字内容已经发现变化</p>
-<p><img src="/images/Android/fragment/i99qy-pxm85.gif" loading="lazy"></p>
-<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>项目的代码都在 <a target="_blank" rel="noopener" href="https://github.com/BestGuo2020/AndroidStudy">AndroidStudy</a> 的 github 仓库中。</p>
-<p>学习过程中参考了部分博客</p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/21a862dae6f9">https://www.jianshu.com/p/21a862dae6f9</a></li>
-<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/fanglongxiang/p/12149066.html">https://www.cnblogs.com/fanglongxiang/p/12149066.html</a></li>
-</ul>
-</div></section><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>BestGuo2020</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="https://www.bestguo.top/journal/fragment-component/" title="Android 入门篇之 Fragment">https://www.bestguo.top/journal/fragment-component/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><span class="icon iconify" data-icon="ri:creative-commons-line"></span><span class="icon iconify" data-icon="ri:creative-commons-by-line"></span><span class="icon iconify" data-icon="ri:creative-commons-nc-line"></span><span class="icon iconify" data-icon="ri:creative-commons-sa-line"></span></a> 许可协议。</li></ul></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/journal/ConstraintLayout-component/" rel="prev" title="Android 入门篇之 ConstraintLayout 的使用"><span class="icon iconify" data-icon="ri:arrow-left-s-line"></span><span class="post-nav-text">Android 入门篇之 ConstraintLayout 的使用</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/journal/custom-dialog/" rel="next" title="自定义 Android 对话框"><span class="post-nav-text">自定义 Android 对话框</span><span class="icon iconify" data-icon="ri:arrow-right-s-line"></span></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>请诸位理性发言！</span><br><span>请勿发布违反中国大陆地区法律的言论，请勿人身攻击、谩骂、侮辱和煽动式的语言。</span><br></div><div id="waline"></div><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/@waline/client@v2/dist/waline.css"><script>window.CONFIG.waline.config.path = "/journal/fragment-component/"</script><div class="js-Pjax"><script src="/js/comments/waline.js" type="module" defer></script></div></div></main><footer class="sidebar-translate" id="footer"><div class="beian"><a rel="noopener" href="https://beian.miit.gov.cn/" target="_blank">赣 ICP 备 20009988 号</a></div><div class="copyright"><span>&copy; 2019 – 2023 </span><span class="with-love" id="animate"><span class="icon iconify" data-icon="ri:cloud-line"></span></span><span class="author"> BestGuo2020</span></div><div class="powered"><span>由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v6.2.0</span><span class="footer-separator">|</span><span>主题 - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.10.9</span></div><div class="live-time"><span>本站点已正常地运行</span><span id="display_live_time"></span><span class="moe-text"><br/>♬(ノ゜∇゜)ノ♩<br></span><script>function blog_live_time() {
-  setTimeout(blog_live_time, 1000);
-  const start = new Date('2019-01-01T00:00:00');
-  const now = new Date();
-  const timeDiff = (now.getTime() - start.getTime());
-  const msPerMinute = 60 * 1000;
-  const msPerHour = 60 * msPerMinute;
-  const msPerDay = 24 * msPerHour;
-  const passDay = Math.floor(timeDiff / msPerDay);
-  const passHour = Math.floor((timeDiff % msPerDay) / 60 / 60 / 1000);
-  const passMinute = Math.floor((timeDiff % msPerHour) / 60 / 1000);
-  const passSecond = Math.floor((timeDiff % msPerMinute) / 1000);
-  display_live_time.innerHTML = ` ${passDay} 天 ${passHour} 小时 ${passMinute} 分 ${passSecond} 秒`;
+.post-body {
+  padding: 0 5rem;
+tablet()
+mobile()
 }
-blog_live_time();
-</script></div><div id="busuanzi"><span id="busuanzi_container_site_uv" title="总访客量"><span><span class="icon iconify" data-icon="ri:user-line"></span></span><span id="busuanzi_value_site_uv"></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv" title="总访问量"><span><span class="icon iconify" data-icon="ri:eye-line"></span></span><span id="busuanzi_value_site_pv"></span></span><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div class="footer-support"><span>本网站由</span><a class="footer-support-logo" href="https://www.upyun.com/?utm_source=lianmeng&amp;utm_medium=referral" target="blank" title="又拍云"><img height="30" src="https://cdn.yunyoujun.cn/img/logo/upyun-logo.png" alt="又拍云"></a><span>提供 CDN 加速服务</span></div></footer></div><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><span class="icon iconify" data-icon="ri:arrow-up-s-line"></span><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a><a class="popup-trigger hty-icon-button icon-search" id="search" href="javascript:;" title="搜索"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:search-line"></span></span></a><script>window.addEventListener("DOMContentLoaded", () => {
-  // Handle and trigger popup window
-  document.querySelector(".popup-trigger").addEventListener("click", () => {
-    document.querySelector(".popup").classList.add("show");
-    setTimeout(() => {
-      document.querySelector(".search-input").focus();
-    }, 100);
-  });
-
-  // Monitor main search box
-  const onPopupClose = () => {
-    document.querySelector(".popup").classList.remove("show");
-  };
-
-  document.querySelector(".popup-btn-close").addEventListener("click", () => {
-    onPopupClose();
-  });
-
-  window.addEventListener("keyup", event => {
-    if (event.key === "Escape") {
-      onPopupClose();
-    }
-  });
-});
-</script><script src="https://fastly.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js"></script><script src="/js/search/local-search.js" defer type="module"></script><div class="popup search-popup"><div class="search-header"><span class="popup-btn-close close-icon hty-icon-button"><span class="icon iconify" data-icon="ri:close-line"></span></span></div><div class="search-input-container"><input class="search-input" id="local-search-input" type="text" placeholder="搜索..." value=""></div><div class="search-result-container"></div></div></body></html>
+.post-meta {
+  font-size: 14px;
+  color: var(--hty-secondary-text-color);
+}
+.post-meta .icon {
+  margin-bottom: -1px;
+}
+.post-description {
+  font-weight: normal;
+  padding: 0.5rem;
+}
+.post-author {
+  display: flex;
+  justify-content: center;
+}
+.post-author .author-avatar {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 0;
+}
+.post-author .author-avatar img {
+  border-radius: 50%;
+  height: 1rem;
+  width: 1rem;
+  padding: 2px;
+  border: 2px solid #d3d3d3;
+}
+.post-author .author-name {
+  margin-left: 0.5rem;
+  font-size: 1rem;
+}
+.post-meta-item-icon {
+  display: inline-block;
+  color: var(--text-color, --hty-secondary-text-color);
+}
+.post-meta-divider {
+  height: 25px;
+  color: var(--hty-secondary-text-color);
+  margin: 0 0.5rem;
+}
+.post-eof {
+  margin: 50px auto;
+  width: 50%;
+  height: 1px;
+  background: $blue;
+  opacity: 0.1;
+}
+.post-copyright {
+  font-size: 0.9rem;
+  margin: 0.5rem 5rem 1rem 5rem;
+  padding: 0.5rem 1rem;
+  border-left: 4px solid #ff5252;
+  background-color: var(--hty-bg-color);
+  list-style: none;
+  word-break: break-all;
+  position: relative;
+  overflow: hidden;
+mobile()
+}
+.post-copyright::after {
+  position: absolute;
+  color: #fff;
+  background: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 496 512'%3E%3Cpath fill='gray' d='M245.8 214.9l-33.2 17.3c-9.4-19.6-25.2-20-27.4-20-22.2 0-33.3 14.6-33.3 43.9 0 23.5 9.2 43.8 33.3 43.8 14.4 0 24.6-7 30.5-21.3l30.6 15.5a73.2 73.2 0 01-65.1 39c-22.6 0-74-10.3-74-77 0-58.7 43-77 72.6-77 30.8-.1 52.7 11.9 66 35.8zm143 0l-32.7 17.3c-9.5-19.8-25.7-20-27.9-20-22.1 0-33.2 14.6-33.2 43.9 0 23.5 9.2 43.8 33.2 43.8 14.5 0 24.7-7 30.5-21.3l31 15.5c-2 3.8-21.3 39-65 39-22.7 0-74-9.9-74-77 0-58.7 43-77 72.6-77C354 179 376 191 389 214.8zM247.7 8C104.7 8 0 123 0 256c0 138.4 113.6 248 247.6 248C377.5 504 496 403 496 256 496 118 389.4 8 247.6 8zm.8 450.8c-112.5 0-203.7-93-203.7-202.8 0-105.5 85.5-203.3 203.8-203.3A201.7 201.7 0 01451.3 256c0 121.7-99.7 202.9-202.9 202.9z'/%3E%3C/svg%3E");
+  content: ' ';
+  height: 10rem;
+  width: 10rem;
+  right: -2rem;
+  top: -2rem;
+  opacity: 0.1;
+}
+.tag-name {
+  padding: 0 0.1rem;
+}

@@ -1,415 +1,86 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="BestGuo2020"><meta name="copyright" content="BestGuo2020"><meta name="generator" content="Hexo 6.2.0"><meta name="theme" content="hexo-theme-yun"><title>SpringBoot注解的学习 | BestGuo 的小窝</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/star-markdown-css@0.4.1/dist/yun/yun-markdown.min.css"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/prism-theme-vars/base.css"><script src="https://fastly.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>function initScrollReveal() {
-  [".post-card",".markdown-body img"].forEach((target)=> {
-    ScrollReveal().reveal(target);
-  })
+.post-block {
+  color: var(--hty-text-color);
+  margin: 0 1rem;
+  padding: 1rem;
+  background-color: var(--post-block-bg-color);
+mobile()
 }
-document.addEventListener("DOMContentLoaded", initScrollReveal);
-document.addEventListener("pjax:success", initScrollReveal);
-</script><link rel="icon" type="image/png" href="/favicon.ico"><link rel="mask-icon" href="/favicon.ico" color="#0078E7"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="preconnect" href="https://fastly.jsdelivr.net/npm/" crossorigin><script id="yun-config">
-    window.Yun = {}
-    window.CONFIG = {"hostname":"www.bestguo.top","root":"/","title":["Best","Guo","的","小","窝"],"version":"1.10.9","mode":"time","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"搜索...","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）"},"anonymous_image":"https://cdn.yunyoujun.cn/img/avatar/none.jpg","say":{"api":"https://el-bot-api.vercel.app/api/words/young"},"local_search":{"path":"/search.xml"},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false,"src":"/js/search/local-search.js"},"fireworks":{"colors":null},"waline":{"config":{"enable":true,"serverURL":"https://comment.bestguo.top","comment":true,"requiredFields":["nick","mail"],"placeholder":"有什么想要对 BestGuo 说的呢，输入正确有效的邮箱有机会收到回复哟😊😊","avatarCDN":"https://seccdn.libravatar.org/avatar/","emoji":["https://unpkg.com/@waline/emojis@1.0.1/weibo/","https://unpkg.com/@waline/emojis@1.0.1/bilibili/","https://unpkg.com/@waline/emojis@1.0.1/qq/","https://unpkg.com/@waline/emojis@1.0.1/tieba/"],"avatar":"monsterid","el":"#waline","lang":"zh-CN"},"cdn":"https://fastly.jsdelivr.net/npm/@waline/client@v2/dist/waline.js","dark":"html.dark"},"vendors":{"host":"https://fastly.jsdelivr.net/npm/","darken":"https://fastly.jsdelivr.net/npm/darken@1.5.0"}};
-  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/hexo-theme-yun.js" type="module"></script><link rel="preconnect" href="https://www.google-analytics.com" crossorigin><script async src="https://www.googletagmanager.com/gtag/js?id=G-907LWSSHLS"></script><script>if (CONFIG.hostname === location.hostname) {
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-907LWSSHLS');
-}</script><script>(function(){
-  var bp = document.createElement('script');
-  var curProtocol = window.location.protocol.split(':')[0];
-  if (curProtocol === 'https') {
-    bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
-  }
-  else {
-    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
-  }
-  var s = document.getElementsByTagName("script")[0];
-  s.parentNode.insertBefore(bp, s);
-})();</script><meta name="description" content="今天学习了 SpringBoot 中的一些注解，不过有些注解是 Spring 中的，它们分别是 @Configuration、@Import、@Bean、@Conditional、@ImportResource、@ConfigurationProperties、@EnableConfigurationProperties 注解。 学完这些注解之后，突然有一个想法。就是之前在 SpringBoot">
-<meta property="og:type" content="article">
-<meta property="og:title" content="SpringBoot注解的学习">
-<meta property="og:url" content="https://www.bestguo.top/journal/springboot-annotations-ususally/index.html">
-<meta property="og:site_name" content="BestGuo 的小窝">
-<meta property="og:description" content="今天学习了 SpringBoot 中的一些注解，不过有些注解是 Spring 中的，它们分别是 @Configuration、@Import、@Bean、@Conditional、@ImportResource、@ConfigurationProperties、@EnableConfigurationProperties 注解。 学完这些注解之后，突然有一个想法。就是之前在 SpringBoot">
-<meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://www.bestguo.top/journal/springboot-annotations-ususally/7af40ad162d9f2d314edf006abec8a136227cc5f.gif">
-<meta property="og:image" content="https://www.bestguo.top/journal/springboot-annotations-ususally/dfjdifjdsi.jpg">
-<meta property="og:image" content="https://www.bestguo.top/journal/springboot-annotations-ususally/QQ%E6%88%AA%E5%9B%BE20210626230931.png">
-<meta property="og:image" content="https://www.bestguo.top/journal/springboot-annotations-ususally/QQ%E6%88%AA%E5%9B%BE20210626235311.png">
-<meta property="article:published_time" content="2021-06-26T12:25:34.000Z">
-<meta property="article:modified_time" content="2022-05-25T10:47:49.054Z">
-<meta property="article:author" content="BestGuo2020">
-<meta property="article:tag" content="Java">
-<meta property="article:tag" content="SpringBoot">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://www.bestguo.top/journal/springboot-annotations-ususally/7af40ad162d9f2d314edf006abec8a136227cc5f.gif"><script>(function() {
-  if (CONFIG.mode !== 'auto') return
-  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-  const setting = localStorage.getItem('darken-mode') || 'auto'
-  if (setting === 'dark' || (prefersDark && setting !== 'light'))
-    document.documentElement.classList.toggle('dark', true)
-})()</script></head><body><script src="https://code.iconify.design/2/2.1.1/iconify.min.js"></script><script>// Define global variable
-IconifyProviders = {
-  // Empty prefix: overwrite default API provider configuration
-  '': {
-    // Use custom API first, use Iconify public API as backup
-    resources: [
-        'https://api.iconify.design',
-    ],
-    // Wait for 1 second before switching API hosts
-    rotate: 1000,
-  },
-};</script><script defer src="https://fastly.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js" type="module"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js" type="module"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><span class="icon iconify" data-icon="ri:list-ordered"></span></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><span class="icon iconify" data-icon="ri:passport-line"></span></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="BestGuo2020"><img width="96" loading="lazy" src="/images/avatar.png" alt="BestGuo2020"><span class="site-author-status" title="在找工作">👨‍💻</span></a><div class="site-author-name"><a href="/about/">BestGuo2020</a></div><a class="site-name" href="/about/site.html">BestGuo 的小窝</a><sub class="site-subtitle">善良、勇敢、可爱</sub><div class="site-description">一个人的世界是如此的安静</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="首页"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:home-4-line"></span></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:archive-line"></span></span><span class="site-state-item-count">79</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:folder-2-line"></span></span><span class="site-state-item-count">23</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="site-state-item-count">49</span></a></div><a class="site-state-item hty-icon-button" href="/albums/" title="相册集"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:gallery-line"></span></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://wpa.qq.com/msgrd?v=3&amp;uin=1540113012&amp;site=qq&amp;menu=yes" title="QQ：xiaohehe2021" target="_blank" style="color:#12B7F5"><span class="icon iconify" data-icon="ri:qq-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/bestguo2020" title="GitHub：BestGuo2020" target="_blank" style="color:#8251e6"><span class="icon iconify" data-icon="ri:github-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/184681623" title="哔哩哔哩: 我叫人员外婆" target="_blank" style="color:#FF8EB3"><span class="icon iconify" data-icon="ri:bilibili-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:bestguo2020@foxmail.com" title="E-Mail" target="_blank" style="color:#8E71C1"><span class="icon iconify" data-icon="ri:mail-line"></span></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><span class="icon iconify" data-icon="ri:contrast-2-line"></span></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Configuration-%E6%B3%A8%E8%A7%A3"><span class="toc-number">1.</span> <span class="toc-text">Configuration 注解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E5%BE%97%E5%88%B0%E5%AE%B9%E5%99%A8%E4%B8%AD%E7%9A%84%E5%AF%B9%E8%B1%A1"><span class="toc-number">1.1.</span> <span class="toc-text">如何得到容器中的对象</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8D%95%E5%AE%9E%E4%BE%8B"><span class="toc-number">1.1.1.</span> <span class="toc-text">单实例</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E7%B1%BB%E6%9C%AC%E8%BA%AB%E4%B9%9F%E6%98%AF%E5%AF%B9%E8%B1%A1"><span class="toc-number">1.1.2.</span> <span class="toc-text">配置类本身也是对象</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#proxyBeanMethod"><span class="toc-number">1.2.</span> <span class="toc-text">proxyBeanMethod</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF-%E2%80%93-%E7%BB%84%E4%BB%B6%E4%BE%9D%E8%B5%96"><span class="toc-number">1.2.1.</span> <span class="toc-text">使用场景 – 组件依赖</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BE%8B%E5%AD%90%E6%80%BB%E7%BB%93"><span class="toc-number">1.2.2.</span> <span class="toc-text">例子总结</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Import-%E6%B3%A8%E8%A7%A3"><span class="toc-number">2.</span> <span class="toc-text">Import 注解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Conditional-%E6%B3%A8%E8%A7%A3"><span class="toc-number">3.</span> <span class="toc-text">Conditional 注解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ConditionalOnBean-%E6%B3%A8%E8%A7%A3"><span class="toc-number">3.1.</span> <span class="toc-text">ConditionalOnBean 注解</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ImportResource-%E6%B3%A8%E8%A7%A3"><span class="toc-number">4.</span> <span class="toc-text">ImportResource 注解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ConfigurationProperties-%E6%B3%A8%E8%A7%A3"><span class="toc-number">5.</span> <span class="toc-text">ConfigurationProperties 注解</span></a></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article" style="--smc-primary:#0078E7;"><link itemprop="mainEntityOfPage" href="https://www.bestguo.top/journal/springboot-annotations-ususally/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="BestGuo2020"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="BestGuo 的小窝"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">SpringBoot注解的学习</h1><div class="post-meta"><div class="post-time"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:calendar-line"></span></span> <time title="创建时间：2021-06-26 20:25:34" itemprop="dateCreated datePublished" datetime="2021-06-26T20:25:34+08:00">2021-06-26</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:calendar-2-line"></span></span> <time title="修改时间：2022-05-25 18:47:49" itemprop="dateModified" datetime="2022-05-25T18:47:49+08:00">2022-05-25</time></div><span class="post-busuanzi"><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读次数"><span class="icon iconify" data-icon="ri:eye-line"></span> <span id="busuanzi_value_page_pv"></span></span></span><span class="post-meta-divider">-</span><a href="#comment"><span class="post-meta-item-icon" title="评论数"><span class="icon iconify" data-icon="ri:chat-3-line"></span> <span class="waline-comment-count" id="/journal/springboot-annotations-ususally/"></span></span></a><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><span class="icon iconify" data-icon="ri:folder-line"></span></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">后端开发</span></a></span> > <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/SpringBoot-%E5%BC%80%E5%8F%91%E5%AD%A6%E4%B9%A0%E5%8E%86%E7%A8%8B/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">SpringBoot 开发学习历程</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/Java/" style="--text-color:#ff9900"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">Java</span></a><a class="tag-item" href="/tags/SpringBoot/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">SpringBoot</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body"><p>今天学习了 SpringBoot 中的一些注解，不过有些注解是 Spring 中的，它们分别是 @Configuration、@Import、@Bean、@Conditional、@ImportResource、@ConfigurationProperties、@EnableConfigurationProperties 注解。</p>
-<p>学完这些注解之后，突然有一个想法。就是之前在 SpringBoot 的 Web 模块的时候，SpringBoot 好像还是需要我们来自己编写拦截器，这就感到费时间，有点不符合 SpringBoot 的少量配置的特点。暑假想自己尝试写一个基于 Spring MVC 的拦截器的第三方库。</p>
-<p><img src="/journal/springboot-annotations-ususally/7af40ad162d9f2d314edf006abec8a136227cc5f.gif" alt="7af40ad162d9f2d314edf006abec8a136227cc5f" loading="lazy"></p>
-<p>我觉得这个还是等到把雷神的 SpringBoot 给弄完，能在暑假之内做出来是最好的了。</p>
-<span id="more"></span>
-
-<h2 id="Configuration-注解"><a href="#Configuration-注解" class="headerlink" title="Configuration 注解"></a>Configuration 注解</h2><p>Configutation 注解，标记在某一个类上，这个类就成为了一个配置类了。标记的效果等同于在 Spring 的 xml 配置文件一样。</p>
-<blockquote>
-<p>有一个名词叫”注册“，注册的意思就是创建一个对象，像是 new Random(); 这种写法。</p>
-</blockquote>
-<p>既然和 xml 的配置文件一样注册对象，那它向容器中注册对象的方式是这样的。也就是说，需要先声明一个方法，需要在方法上面标记一个 Bean 注解，Bean 注解就是在 Spring 的 ioc 容器（后续简称容器）中添加对象，默认是以方法名作为对象id，返回类型就是对象的类型。</p>
-<pre class="language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@Configuration</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MyConfig</span> <span class="token punctuation">&#123;</span>
-    
-    <span class="token annotation punctuation">@Bean</span><span class="token punctuation">(</span><span class="token string">"zhangsan"</span><span class="token punctuation">)</span>
-    <span class="token keyword">public</span> <span class="token class-name">User</span> <span class="token function">user01</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token class-name">User</span> zhangsan <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">User</span><span class="token punctuation">(</span><span class="token string">"zhangsan"</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">return</span> zhangsan<span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-    
-    <span class="token annotation punctuation">@Bean</span>
-    <span class="token keyword">public</span> <span class="token class-name">User</span> <span class="token function">user02</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token class-name">User</span> lisi <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">User</span><span class="token punctuation">(</span><span class="token string">"lisi"</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">return</span> lisi<span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-    
-    <span class="token annotation punctuation">@Bean</span>
-    <span class="token keyword">public</span> <span class="token class-name">Pet</span> <span class="token function">pet01</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">Pet</span><span class="token punctuation">(</span><span class="token string">"tomcat"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-
-    <span class="token annotation punctuation">@Bean</span>
-    <span class="token keyword">public</span> <span class="token class-name">Pet</span> <span class="token function">pet02</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">Pet</span><span class="token punctuation">(</span><span class="token string">"tomcat222"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-    
-<span class="token punctuation">&#125;</span></code></pre>
-
-<p>其中，我们可以自己在 Bean 注解中指定id，比如 <code>@Bean(&quot;zhangsan&quot;)</code>，指定名字完之后，那么这个对象的 id 就不再是 user01 ，而是 zhangsan 。</p>
-<h3 id="如何得到容器中的对象"><a href="#如何得到容器中的对象" class="headerlink" title="如何得到容器中的对象"></a>如何得到容器中的对象</h3><p>获取容器的对象也非常简单，和以前使用 ApplicationContext 对象一样，也是利用 getBean 来获取的。</p>
-<pre class="language-java" data-language="java"><code class="language-java"><span class="token comment">// Spring IOC容器</span>
-<span class="token class-name">ConfigurableApplicationContext</span> run <span class="token operator">=</span> <span class="token class-name">SpringApplication</span><span class="token punctuation">.</span><span class="token function">run</span><span class="token punctuation">(</span><span class="token class-name">SpringBootApplication</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">,</span> args<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token comment">// 获取 user02</span>
-<span class="token class-name">User</span> user02 <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">User</span><span class="token punctuation">)</span> run<span class="token punctuation">.</span><span class="token function">getBean</span><span class="token punctuation">(</span><span class="token string">"user02"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>user02<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token comment">// 获取 zhangsan</span>
-<span class="token class-name">User</span> zhangsan <span class="token operator">=</span> run<span class="token punctuation">.</span><span class="token function">getBean</span><span class="token punctuation">(</span><span class="token string">"zhangsan"</span><span class="token punctuation">,</span> <span class="token class-name">User</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>zhangsan<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
-
-<p>运行结果如下：</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash">User<span class="token punctuation">&#123;</span>brand<span class="token operator">=</span><span class="token string">'lisi'</span>, <span class="token assign-left variable">age</span><span class="token operator">=</span><span class="token number">10</span><span class="token punctuation">&#125;</span>
-User<span class="token punctuation">&#123;</span>brand<span class="token operator">=</span><span class="token string">'zhangsan'</span>, <span class="token assign-left variable">age</span><span class="token operator">=</span><span class="token number">10</span><span class="token punctuation">&#125;</span></code></pre>
-
-<h4 id="单实例"><a href="#单实例" class="headerlink" title="单实例"></a>单实例</h4><p>如果我们多次获取容器中的对象，那么我们获取到的对象是否为同一个呢？通过以下代码进行验证。</p>
-<pre class="language-java" data-language="java"><code class="language-java"><span class="token comment">// 两个实例是不是一样的？</span>
-<span class="token class-name">Pet</span> pet1 <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">Pet</span><span class="token punctuation">)</span> run<span class="token punctuation">.</span><span class="token function">getBean</span><span class="token punctuation">(</span><span class="token string">"pet01"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token class-name">Pet</span> pet2 <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">Pet</span><span class="token punctuation">)</span> run<span class="token punctuation">.</span><span class="token function">getBean</span><span class="token punctuation">(</span><span class="token string">"pet01"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"pet1==pet2 ? "</span> <span class="token operator">+</span> <span class="token punctuation">(</span>pet1 <span class="token operator">==</span> pet2<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
-
-<p>运行结果如下：</p>
-<pre class="language-java" data-language="java"><code class="language-java">pet1<span class="token operator">==</span>pet2 <span class="token operator">?</span> <span class="token boolean">true</span></code></pre>
-
-<p>运行结果为 true ，意味着所得到的对象实例是单实例的。</p>
-<h4 id="配置类本身也是对象"><a href="#配置类本身也是对象" class="headerlink" title="配置类本身也是对象"></a>配置类本身也是对象</h4><p>我们创建的配置类其实本身也是一个对象。我们也可以将它给调用出来</p>
-<pre class="language-java" data-language="java"><code class="language-java"><span class="token class-name">MyConfig</span> bean <span class="token operator">=</span> run<span class="token punctuation">.</span><span class="token function">getBean</span><span class="token punctuation">(</span><span class="token class-name">MyConfig</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>bean<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
-
-<p>运行结果如下：</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash">top.bestguo.config.MyConfig<span class="token variable">$$</span>EnhancerBySpringCGLIB<span class="token variable">$$</span>137f765f@62315f22</code></pre>
-
-<p>不过，我们得到的配置类是一个加强版的类。一看到 CGLIB 就知道，这是一个被代理过的对象，里面的对象也是由 CGLIB 进行代理的。那它代理了什么呢？</p>
-<p>其实，在 SpringBoot 2.3 之后的版本，由于 SpringBoot 2.3 是基于 Spring 5.2+ 的，Configuration 注解多了一个叫做 proxyBeanMethod 的属性，是因为它可以设置 true 和 false ，如果设置成了 true 就是这个对象是被代理的，设置成 false 就是未被代理的。</p>
-<p>那，代理的意义何在呢？🧐🧐</p>
-<h3 id="proxyBeanMethod"><a href="#proxyBeanMethod" class="headerlink" title="proxyBeanMethod"></a>proxyBeanMethod</h3><p>该注解中的属性，默认值为 true 。</p>
-<p>上面部分提到过这个属性设置成 true 和 false ，配置类分别就是被代理和未被代理的。上面也有提到，配置类也是一个对象，配置类对象里面不是有很多方法吗？那我们调用一下这里面的方法试试看。</p>
-<p>如果我多次调用这个配置类对象中的方法，直接获取 ioc 容器中注册的对象，还是仅仅只是单纯的方法调用，每次的调用返回的对象都是不同的呢？</p>
-<pre class="language-java" data-language="java"><code class="language-java"><span class="token class-name">MyConfig</span> bean <span class="token operator">=</span> run<span class="token punctuation">.</span><span class="token function">getBean</span><span class="token punctuation">(</span><span class="token class-name">MyConfig</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token class-name">User</span> user01 <span class="token operator">=</span> bean<span class="token punctuation">.</span><span class="token function">user01</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token class-name">User</span> user011 <span class="token operator">=</span> bean<span class="token punctuation">.</span><span class="token function">user01</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"从配置容器中调用的方法，是一样的吗？"</span> <span class="token operator">+</span> <span class="token punctuation">(</span>user01 <span class="token operator">==</span> user011<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
-
-<p>运行结果如下，发现得到的方法是同一个对象。</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash">从配置容器中调用的方法，是一样的吗？true</code></pre>
-
-<p>那我们把 proxyBeanMethod 值改成 false 会怎么样呢？运行结果如下。</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash">top.bestguo.config.MyConfig@5bdaf2ce
-从配置容器中调用的方法，是一样的吗？false</code></pre>
-
-<p>很显然，MyConfig 这个配置类不再被代理了，并且这两次的调用都是 false。那我们直接通过 getBean 的方式看看得到的两个对象是否为同一个。</p>
-<pre class="language-java" data-language="java"><code class="language-java"><span class="token class-name">User</span> zhangsan <span class="token operator">=</span> run<span class="token punctuation">.</span><span class="token function">getBean</span><span class="token punctuation">(</span><span class="token string">"zhangsan"</span><span class="token punctuation">,</span> <span class="token class-name">User</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token class-name">User</span> zhangsan2 <span class="token operator">=</span> run<span class="token punctuation">.</span><span class="token function">getBean</span><span class="token punctuation">(</span><span class="token string">"zhangsan"</span><span class="token punctuation">,</span> <span class="token class-name">User</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"是不是同一个？"</span> <span class="token operator">+</span> <span class="token punctuation">(</span>zhangsan <span class="token operator">==</span> zhangsan2<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
-
-<p>运行结果如下，发现这是同一个对象。</p>
-<pre class="language-java" data-language="java"><code class="language-java">是不是同一个？<span class="token boolean">true</span></code></pre>
-
-<p>所以，proxyBeanMethod 对象的用途，如果设置成 true ，那么在调用 MyConfig 配置类中的方法时，就会先去拿到这个 Bean 的 id，来确认这个对象是不是存在于容器中，如果存在与容器中，调用配置类中的方法时就直接去拿容器中的对象。</p>
-<p>如果是 false ，它就不会通过 id 去确认容器中是否存在该对象，相当于是直接调用 MyConfig 中的方法而已，并且这个方法返回的对象并不是从容器中直接获取的，而是单纯的在方法中 new 一个对象出来。每一次 new 出来的对象都是不同的。</p>
-<h4 id="使用场景-–-组件依赖"><a href="#使用场景-–-组件依赖" class="headerlink" title="使用场景 – 组件依赖"></a>使用场景 – 组件依赖</h4><blockquote>
-<p>组件的意思就是容器中所实例化的对象。</p>
-</blockquote>
-<p>一位名叫 zhangsan 的主人，它刚刚养了一只狗，这只狗狗的名字叫 ”tomcat“。刚没养几天，主人就要回老家三个月有事情，它只好将这只狗狗放到了宠物临时收养的机构进行收养。等主人回到家，回到宠物临时收养机构领取自己的宠物狗狗。</p>
-<p><img src="/journal/springboot-annotations-ususally/dfjdifjdsi.jpg" alt="7af40ad162d9f2d314edf006abec8a136227cc5f" loading="lazy"></p>
-<p>回到家之后，它去领养。宠物临时收养机构管理人员可能将该主人的狗狗信息丢了，只记得狗狗的名字；或者也有可能什么都记得，管理人员这种行为可将其类比成 proxyBeanMethod 值为 false 和proxyBeanMethod 值为 true 的两种情况。</p>
-<p>以下是主人来领取宠物的代码。</p>
-<pre class="language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MyConfig</span> <span class="token punctuation">&#123;</span>
-
-    <span class="token annotation punctuation">@Bean</span><span class="token punctuation">(</span><span class="token string">"zhangsan"</span><span class="token punctuation">)</span>
-    <span class="token keyword">public</span> <span class="token class-name">User</span> <span class="token function">user01</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token class-name">User</span> zhangsan <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">User</span><span class="token punctuation">(</span><span class="token string">"zhangsan"</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        zhangsan<span class="token punctuation">.</span><span class="token function">setPet</span><span class="token punctuation">(</span><span class="token function">pet01</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">return</span> zhangsan<span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-
-    <span class="token annotation punctuation">@Bean</span>
-    <span class="token keyword">public</span> <span class="token class-name">Pet</span> <span class="token function">pet01</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">Pet</span><span class="token punctuation">(</span><span class="token string">"tomcat"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-
-<span class="token punctuation">&#125;</span></code></pre>
-
-<p>如果 proxyBeanMethod 值为 false 时，也就是狗狗信息丢了，只记得狗狗的名字。我们来验证验证工作人员是否找对了。</p>
-<pre class="language-java" data-language="java"><code class="language-java"><span class="token comment">// 组件依赖示例</span>
-<span class="token class-name">User</span> zhangsan <span class="token operator">=</span> run<span class="token punctuation">.</span><span class="token function">getBean</span><span class="token punctuation">(</span><span class="token string">"zhangsan"</span><span class="token punctuation">,</span> <span class="token class-name">User</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token comment">// 判断用户的宠物是容器中的宠物吗</span>
-<span class="token class-name">Pet</span> pet1 <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token class-name">Pet</span><span class="token punctuation">)</span> run<span class="token punctuation">.</span><span class="token function">getBean</span><span class="token punctuation">(</span><span class="token string">"pet01"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"用户zhangsan的宠物是它的吗？"</span> <span class="token operator">+</span> <span class="token punctuation">(</span>zhangsan<span class="token punctuation">.</span><span class="token function">getPet</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">==</span> pet1<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
-
-<p>那么执行的结果如下，值为 false。很遗憾，工作人员的失职行为已经是非常严重的了。</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash">用户zhangsan的宠物是它的吗？false</code></pre>
-
-<p>如果 proxyBeanMethod 值为 true 时，也就是狗狗信息还在。那么执行的结果如下。很好，工作人员做的不错。</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash">用户zhangsan的宠物是它的吗？true</code></pre>
-
-<h4 id="例子总结"><a href="#例子总结" class="headerlink" title="例子总结"></a>例子总结</h4><p>proxyBeanMethod 为 true 或者为 false 时，对应的模式如下。</p>
-<ul>
-<li>Full(proxyBeanMethods = true) – 如果组件之间有依赖，有依赖的就设置为 true</li>
-<li>Lite(proxyBeanMethods = false) – 如果只是单纯的创建组件到容器中，且组件之间并没有依赖。那么就设置成为 false</li>
-</ul>
-<h2 id="Import-注解"><a href="#Import-注解" class="headerlink" title="Import 注解"></a>Import 注解</h2><p>直接通过该注解，将对象实例化之后保存到容器中。能标记的地方非常之多，比如 SpringBoot 的主程序类、配置类、被 Service、Repository、Controller 标记的地方都可以将其标记。</p>
-<p>存在的意义就是，有些对象是封装在一个外部的 jar 包中的。封装在 jar 包中的源代码是无法直接更改的，也就是说没办法直接标记这些 Component 等等上面提及到的那些注解。所以可以通过这个注解来将对象保存到容器中。</p>
-<pre class="language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@Import</span><span class="token punctuation">(</span><span class="token punctuation">&#123;</span><span class="token class-name">User</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">,</span> <span class="token class-name">DBHelper</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
-<span class="token annotation punctuation">@Configuration</span><span class="token punctuation">(</span>proxyBeanMethods <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">)</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MyConfig</span> <span class="token punctuation">&#123;</span>
-    <span class="token comment">// coding......</span>
-<span class="token punctuation">&#125;</span></code></pre>
-
-<p>测试代码：</p>
-<pre class="language-java" data-language="java"><code class="language-java"><span class="token comment">// 获取 User 类型的组件</span>
-<span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> strings <span class="token operator">=</span> run<span class="token punctuation">.</span><span class="token function">getBeanNamesForType</span><span class="token punctuation">(</span><span class="token class-name">User</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token class-name">String</span> string <span class="token operator">:</span> strings<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>string<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span>
-<span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>run<span class="token punctuation">.</span><span class="token function">getBean</span><span class="token punctuation">(</span><span class="token class-name">DBHelper</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
-
-<p>运行结果如下，其中 DBHelper 本身就是来自于外部的 jar 包。</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash">top.bestguo.bean.User
-zhangsan
-user02
-ch.qos.logback.classic.db.DBHelper@6e4ea0bd</code></pre>
-
-<h2 id="Conditional-注解"><a href="#Conditional-注解" class="headerlink" title="Conditional 注解"></a>Conditional 注解</h2><p>该注解也称之为条件注解，该注解的意图就是在特定的场合下，将某一些组件给保存到容器中。其中，它的衍生注解有很多种。如下图所示。</p>
-<p><img src="/journal/springboot-annotations-ususally/QQ%E6%88%AA%E5%9B%BE20210626230931.png" alt="QQ截图20210626230931" loading="lazy"></p>
-<h3 id="ConditionalOnBean-注解"><a href="#ConditionalOnBean-注解" class="headerlink" title="ConditionalOnBean 注解"></a>ConditionalOnBean 注解</h3><p>在学习的时候学习到了 ConditionalOnBean 这个注解，它的意思是当容器中存在某个组件时，那么就将这个对象给实例化保存到容器中，否则就不进行任何的操作。</p>
-<p>它被标记到配置类中方法上</p>
-<pre class="language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@Configuration</span><span class="token punctuation">(</span>proxyBeanMethods <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">)</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MyConfig</span> <span class="token punctuation">&#123;</span>
-
-    <span class="token annotation punctuation">@ConditionalOnBean</span><span class="token punctuation">(</span>name <span class="token operator">=</span> <span class="token string">"pet01"</span><span class="token punctuation">)</span> <span class="token comment">// 当容器中有 pet01 的时候，那么就注册 zhangsan 组件。</span>
-    <span class="token annotation punctuation">@Bean</span><span class="token punctuation">(</span><span class="token string">"zhangsan"</span><span class="token punctuation">)</span>
-    <span class="token keyword">public</span> <span class="token class-name">User</span> <span class="token function">user01</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token class-name">User</span> zhangsan <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">User</span><span class="token punctuation">(</span><span class="token string">"zhangsan"</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        zhangsan<span class="token punctuation">.</span><span class="token function">setPet</span><span class="token punctuation">(</span><span class="token function">pet01</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">return</span> zhangsan<span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-
-    <span class="token annotation punctuation">@Bean</span>
-    <span class="token keyword">public</span> <span class="token class-name">User</span> <span class="token function">user02</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token class-name">User</span> lisi <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">User</span><span class="token punctuation">(</span><span class="token string">"lisi"</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">return</span> lisi<span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-
-    <span class="token annotation punctuation">@Bean</span>
-    <span class="token keyword">public</span> <span class="token class-name">Pet</span> <span class="token function">pet01</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">Pet</span><span class="token punctuation">(</span><span class="token string">"tomcat"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-
-    <span class="token annotation punctuation">@Bean</span>
-    <span class="token keyword">public</span> <span class="token class-name">Pet</span> <span class="token function">pet02</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">Pet</span><span class="token punctuation">(</span><span class="token string">"tomcat222"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-
-<span class="token punctuation">&#125;</span></code></pre>
-
-<p>运行测试代码</p>
-<pre class="language-java" data-language="java"><code class="language-java"><span class="token keyword">boolean</span> pet01 <span class="token operator">=</span> run<span class="token punctuation">.</span><span class="token function">containsBean</span><span class="token punctuation">(</span><span class="token string">"pet01"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"容器中有 pet01 组件吗？"</span> <span class="token operator">+</span> pet01<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token keyword">boolean</span> pet02 <span class="token operator">=</span> run<span class="token punctuation">.</span><span class="token function">containsBean</span><span class="token punctuation">(</span><span class="token string">"pet02"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"容器中有 pet02 组件吗？"</span> <span class="token operator">+</span> pet02<span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token keyword">boolean</span> zhangsan <span class="token operator">=</span> run<span class="token punctuation">.</span><span class="token function">containsBean</span><span class="token punctuation">(</span><span class="token string">"zhangsan"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"容器中有 zhangsan 组件吗？"</span> <span class="token operator">+</span> zhangsan<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
-
-<p>测试结果如下：</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash">容器中有 pet01 组件吗？true
-容器中有 pet02 组件吗？true
-容器中有 zhangsan 组件吗？false</code></pre>
-
-<p>测试结果很奇怪，并没有按照我想象中的那样子，也就是 pet01 组件创建它就会创建。后面经过 bilibili 的弹幕中才知道，组件在进行注册的过程中似乎和顺序相关。所以改改顺序看看，将 user01 放到最后。</p>
-<pre class="language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@Configuration</span><span class="token punctuation">(</span>proxyBeanMethods <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">)</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MyConfig</span> <span class="token punctuation">&#123;</span>
-    
-    <span class="token annotation punctuation">@Bean</span>
-    <span class="token keyword">public</span> <span class="token class-name">User</span> <span class="token function">user02</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token class-name">User</span> lisi <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">User</span><span class="token punctuation">(</span><span class="token string">"lisi"</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">return</span> lisi<span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-    
-    <span class="token annotation punctuation">@Bean</span>
-    <span class="token keyword">public</span> <span class="token class-name">Pet</span> <span class="token function">pet01</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">Pet</span><span class="token punctuation">(</span><span class="token string">"tomcat"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-    
-    <span class="token annotation punctuation">@Bean</span>
-    <span class="token keyword">public</span> <span class="token class-name">Pet</span> <span class="token function">pet02</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">Pet</span><span class="token punctuation">(</span><span class="token string">"tomcat222"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-    
-    <span class="token annotation punctuation">@ConditionalOnBean</span><span class="token punctuation">(</span>name <span class="token operator">=</span> <span class="token string">"pet01"</span><span class="token punctuation">)</span> <span class="token comment">// 当容器中有 pet01 的时候，那么就注册 zhangsan 组件。</span>
-    <span class="token annotation punctuation">@Bean</span><span class="token punctuation">(</span><span class="token string">"zhangsan"</span><span class="token punctuation">)</span>
-    <span class="token keyword">public</span> <span class="token class-name">User</span> <span class="token function">user01</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-        <span class="token class-name">User</span> zhangsan <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">User</span><span class="token punctuation">(</span><span class="token string">"zhangsan"</span><span class="token punctuation">,</span> <span class="token number">10</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        zhangsan<span class="token punctuation">.</span><span class="token function">setPet</span><span class="token punctuation">(</span><span class="token function">pet01</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">return</span> zhangsan<span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-
-<span class="token punctuation">&#125;</span></code></pre>
-
-<p>运行结果如下，发现这才是我预想的结果</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash">容器中有 pet01 组件吗？true
-容器中有 pet02 组件吗？true
-容器中有 zhangsan 组件吗？true</code></pre>
-
-<p>目前只学习到这个注解，后面在学习到其它的条件注解再来这里记录记录。</p>
-<h2 id="ImportResource-注解"><a href="#ImportResource-注解" class="headerlink" title="ImportResource 注解"></a>ImportResource 注解</h2><p>这个注解的用途是加载一个 Spring 的 xml 配置文件，将 xml 文件中配置好的对象放入到容器中。</p>
-<p>主程序类</p>
-<pre class="language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@SpringBootApplication</span><span class="token punctuation">(</span>scanBasePackages <span class="token operator">=</span> <span class="token string">"top.bestguo"</span><span class="token punctuation">)</span>
-<span class="token annotation punctuation">@ImportResource</span><span class="token punctuation">(</span><span class="token string">"classpath:bean.xml"</span><span class="token punctuation">)</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">SpringBootApplication</span> <span class="token punctuation">&#123;</span>
-
-    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-
-        <span class="token comment">// Spring IOC容器</span>
-        <span class="token class-name">ConfigurableApplicationContext</span> run <span class="token operator">=</span> <span class="token class-name">SpringApplication</span><span class="token punctuation">.</span><span class="token function">run</span><span class="token punctuation">(</span><span class="token class-name">SpringBootApplication</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">,</span> args<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">boolean</span> haha <span class="token operator">=</span> run<span class="token punctuation">.</span><span class="token function">containsBean</span><span class="token punctuation">(</span><span class="token string">"haha"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"容器中有 haha 组件吗？"</span> <span class="token operator">+</span> haha<span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">boolean</span> hehe <span class="token operator">=</span> run<span class="token punctuation">.</span><span class="token function">containsBean</span><span class="token punctuation">(</span><span class="token string">"hehe"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"容器中有 hehe 组件吗？"</span> <span class="token operator">+</span> hehe<span class="token punctuation">)</span><span class="token punctuation">;</span>
-    <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span></code></pre>
-
-<p>xml 配置文件</p>
-<pre class="language-markup" data-language="markup"><code class="language-markup"><span class="token prolog">&lt;?xml version="1.0" encoding="UTF-8"?></span>
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>beans</span> <span class="token attr-name">xmlns</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://www.springframework.org/schema/beans<span class="token punctuation">"</span></span>
-       <span class="token attr-name"><span class="token namespace">xmlns:</span>xsi</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://www.w3.org/2001/XMLSchema-instance<span class="token punctuation">"</span></span>
-       <span class="token attr-name"><span class="token namespace">xsi:</span>schemaLocation</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
-
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>bean</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>top.bestguo.bean.Pet<span class="token punctuation">"</span></span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>haha<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>property</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>name<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>haha<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>bean</span><span class="token punctuation">></span></span>
-
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>bean</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>top.bestguo.bean.Pet<span class="token punctuation">"</span></span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>hehe<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
-        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>property</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>name<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">"</span>hehe<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
-    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>bean</span><span class="token punctuation">></span></span>
-
-<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>beans</span><span class="token punctuation">></span></span></code></pre>
-
-<p>运行结果如下，发现已经导入成功。</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash">容器中有 haha 组件吗？true
-容器中有 hehe 组件吗？true</code></pre>
-
-<h2 id="ConfigurationProperties-注解"><a href="#ConfigurationProperties-注解" class="headerlink" title="ConfigurationProperties 注解"></a>ConfigurationProperties 注解</h2><p>在某个类上标记，且设置完 prefix 前缀之后，可以在 application.properties 配置文件的属性值注入到实例化组件中。</p>
-<p>汽车类</p>
-<pre class="language-java" data-language="java"><code class="language-java"><span class="token keyword">import</span> <span class="token namespace">org<span class="token punctuation">.</span>springframework<span class="token punctuation">.</span>boot<span class="token punctuation">.</span>context<span class="token punctuation">.</span>properties<span class="token punctuation">.</span></span><span class="token class-name">ConfigurationProperties</span><span class="token punctuation">;</span>
-
-<span class="token annotation punctuation">@ConfigurationProperties</span><span class="token punctuation">(</span>prefix <span class="token operator">=</span> <span class="token string">"mycar"</span><span class="token punctuation">)</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Car</span> <span class="token punctuation">&#123;</span>
-
-    <span class="token keyword">private</span> <span class="token class-name">String</span> brand<span class="token punctuation">;</span>
-    <span class="token keyword">private</span> <span class="token class-name">Integer</span> price<span class="token punctuation">;</span>
-    
-    <span class="token comment">// coding......</span>
-    
-<span class="token punctuation">&#125;</span></code></pre>
-
-<p>application.properties 配置文件</p>
-<pre class="language-properties" data-language="properties"><code class="language-properties"><span class="token attr-name">mycar.brand</span><span class="token punctuation">=</span><span class="token attr-value">BMW</span>
-<span class="token attr-name">mycar.price</span><span class="token punctuation">=</span><span class="token attr-value">8000</span></code></pre>
-
-<p>当然，配置完成之后需要在主程序类上标记一个 EnableConfigurationProperties 注解，然后传入 ”类名.class“ 即可。</p>
-<pre class="language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@ImportResource</span><span class="token punctuation">(</span><span class="token string">"classpath:bean.xml"</span><span class="token punctuation">)</span>
-<span class="token annotation punctuation">@EnableConfigurationProperties</span><span class="token punctuation">(</span><span class="token class-name">Car</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span> <span class="token comment">// 传入”类名.class“ </span>
-<span class="token annotation punctuation">@SpringBootApplication</span><span class="token punctuation">(</span>scanBasePackages <span class="token operator">=</span> <span class="token string">"top.bestguo"</span><span class="token punctuation">)</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">SpringBootApplication</span> <span class="token punctuation">&#123;</span>
-    <span class="token comment">// coding......</span>
-<span class="token punctuation">&#125;</span></code></pre>
-
-<p>通过 Web 模块访问，看看能否正常得到。</p>
-<pre class="language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@RequestMapping</span><span class="token punctuation">(</span><span class="token string">"/car"</span><span class="token punctuation">)</span>
-<span class="token annotation punctuation">@ResponseBody</span>
-<span class="token keyword">public</span> <span class="token class-name">Car</span> <span class="token function">car</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    <span class="token keyword">return</span> car<span class="token punctuation">;</span>
-<span class="token punctuation">&#125;</span></code></pre>
-
-<p>运行结果如下，配置文件中的值已经成功注入进来了。</p>
-<p><img src="/journal/springboot-annotations-ususally/QQ%E6%88%AA%E5%9B%BE20210626235311.png" alt="QQ截图20210626235311" loading="lazy"></p>
-</div></section><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>BestGuo2020</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="https://www.bestguo.top/journal/springboot-annotations-ususally/" title="SpringBoot注解的学习">https://www.bestguo.top/journal/springboot-annotations-ususally/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><span class="icon iconify" data-icon="ri:creative-commons-line"></span><span class="icon iconify" data-icon="ri:creative-commons-by-line"></span><span class="icon iconify" data-icon="ri:creative-commons-nc-line"></span><span class="icon iconify" data-icon="ri:creative-commons-sa-line"></span></a> 许可协议。</li></ul></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/journal/springboot-best-coding/" rel="prev" title="SpringBoot开发小技巧"><span class="icon iconify" data-icon="ri:arrow-left-s-line"></span><span class="post-nav-text">SpringBoot开发小技巧</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/journal/website-migrate/" rel="next" title="小站迁移工作小记"><span class="post-nav-text">小站迁移工作小记</span><span class="icon iconify" data-icon="ri:arrow-right-s-line"></span></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>请诸位理性发言！</span><br><span>请勿发布违反中国大陆地区法律的言论，请勿人身攻击、谩骂、侮辱和煽动式的语言。</span><br></div><div id="waline"></div><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/@waline/client@v2/dist/waline.css"><script>window.CONFIG.waline.config.path = "/journal/springboot-annotations-ususally/"</script><div class="js-Pjax"><script src="/js/comments/waline.js" type="module" defer></script></div></div></main><footer class="sidebar-translate" id="footer"><div class="beian"><a rel="noopener" href="https://beian.miit.gov.cn/" target="_blank">赣 ICP 备 20009988 号</a></div><div class="copyright"><span>&copy; 2019 – 2023 </span><span class="with-love" id="animate"><span class="icon iconify" data-icon="ri:cloud-line"></span></span><span class="author"> BestGuo2020</span></div><div class="powered"><span>由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v6.2.0</span><span class="footer-separator">|</span><span>主题 - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.10.9</span></div><div class="live-time"><span>本站点已正常地运行</span><span id="display_live_time"></span><span class="moe-text"><br/>♬(ノ゜∇゜)ノ♩<br></span><script>function blog_live_time() {
-  setTimeout(blog_live_time, 1000);
-  const start = new Date('2019-01-01T00:00:00');
-  const now = new Date();
-  const timeDiff = (now.getTime() - start.getTime());
-  const msPerMinute = 60 * 1000;
-  const msPerHour = 60 * msPerMinute;
-  const msPerDay = 24 * msPerHour;
-  const passDay = Math.floor(timeDiff / msPerDay);
-  const passHour = Math.floor((timeDiff % msPerDay) / 60 / 60 / 1000);
-  const passMinute = Math.floor((timeDiff % msPerHour) / 60 / 1000);
-  const passSecond = Math.floor((timeDiff % msPerMinute) / 1000);
-  display_live_time.innerHTML = ` ${passDay} 天 ${passHour} 小时 ${passMinute} 分 ${passSecond} 秒`;
+.post-body {
+  padding: 0 5rem;
+tablet()
+mobile()
 }
-blog_live_time();
-</script></div><div id="busuanzi"><span id="busuanzi_container_site_uv" title="总访客量"><span><span class="icon iconify" data-icon="ri:user-line"></span></span><span id="busuanzi_value_site_uv"></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv" title="总访问量"><span><span class="icon iconify" data-icon="ri:eye-line"></span></span><span id="busuanzi_value_site_pv"></span></span><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div class="footer-support"><span>本网站由</span><a class="footer-support-logo" href="https://www.upyun.com/?utm_source=lianmeng&amp;utm_medium=referral" target="blank" title="又拍云"><img height="30" src="https://cdn.yunyoujun.cn/img/logo/upyun-logo.png" alt="又拍云"></a><span>提供 CDN 加速服务</span></div></footer></div><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><span class="icon iconify" data-icon="ri:arrow-up-s-line"></span><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a><a class="popup-trigger hty-icon-button icon-search" id="search" href="javascript:;" title="搜索"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:search-line"></span></span></a><script>window.addEventListener("DOMContentLoaded", () => {
-  // Handle and trigger popup window
-  document.querySelector(".popup-trigger").addEventListener("click", () => {
-    document.querySelector(".popup").classList.add("show");
-    setTimeout(() => {
-      document.querySelector(".search-input").focus();
-    }, 100);
-  });
-
-  // Monitor main search box
-  const onPopupClose = () => {
-    document.querySelector(".popup").classList.remove("show");
-  };
-
-  document.querySelector(".popup-btn-close").addEventListener("click", () => {
-    onPopupClose();
-  });
-
-  window.addEventListener("keyup", event => {
-    if (event.key === "Escape") {
-      onPopupClose();
-    }
-  });
-});
-</script><script src="https://fastly.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js"></script><script src="/js/search/local-search.js" defer type="module"></script><div class="popup search-popup"><div class="search-header"><span class="popup-btn-close close-icon hty-icon-button"><span class="icon iconify" data-icon="ri:close-line"></span></span></div><div class="search-input-container"><input class="search-input" id="local-search-input" type="text" placeholder="搜索..." value=""></div><div class="search-result-container"></div></div></body></html>
+.post-meta {
+  font-size: 14px;
+  color: var(--hty-secondary-text-color);
+}
+.post-meta .icon {
+  margin-bottom: -1px;
+}
+.post-description {
+  font-weight: normal;
+  padding: 0.5rem;
+}
+.post-author {
+  display: flex;
+  justify-content: center;
+}
+.post-author .author-avatar {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 0;
+}
+.post-author .author-avatar img {
+  border-radius: 50%;
+  height: 1rem;
+  width: 1rem;
+  padding: 2px;
+  border: 2px solid #d3d3d3;
+}
+.post-author .author-name {
+  margin-left: 0.5rem;
+  font-size: 1rem;
+}
+.post-meta-item-icon {
+  display: inline-block;
+  color: var(--text-color, --hty-secondary-text-color);
+}
+.post-meta-divider {
+  height: 25px;
+  color: var(--hty-secondary-text-color);
+  margin: 0 0.5rem;
+}
+.post-eof {
+  margin: 50px auto;
+  width: 50%;
+  height: 1px;
+  background: $blue;
+  opacity: 0.1;
+}
+.post-copyright {
+  font-size: 0.9rem;
+  margin: 0.5rem 5rem 1rem 5rem;
+  padding: 0.5rem 1rem;
+  border-left: 4px solid #ff5252;
+  background-color: var(--hty-bg-color);
+  list-style: none;
+  word-break: break-all;
+  position: relative;
+  overflow: hidden;
+mobile()
+}
+.post-copyright::after {
+  position: absolute;
+  color: #fff;
+  background: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 496 512'%3E%3Cpath fill='gray' d='M245.8 214.9l-33.2 17.3c-9.4-19.6-25.2-20-27.4-20-22.2 0-33.3 14.6-33.3 43.9 0 23.5 9.2 43.8 33.3 43.8 14.4 0 24.6-7 30.5-21.3l30.6 15.5a73.2 73.2 0 01-65.1 39c-22.6 0-74-10.3-74-77 0-58.7 43-77 72.6-77 30.8-.1 52.7 11.9 66 35.8zm143 0l-32.7 17.3c-9.5-19.8-25.7-20-27.9-20-22.1 0-33.2 14.6-33.2 43.9 0 23.5 9.2 43.8 33.2 43.8 14.5 0 24.7-7 30.5-21.3l31 15.5c-2 3.8-21.3 39-65 39-22.7 0-74-9.9-74-77 0-58.7 43-77 72.6-77C354 179 376 191 389 214.8zM247.7 8C104.7 8 0 123 0 256c0 138.4 113.6 248 247.6 248C377.5 504 496 403 496 256 496 118 389.4 8 247.6 8zm.8 450.8c-112.5 0-203.7-93-203.7-202.8 0-105.5 85.5-203.3 203.8-203.3A201.7 201.7 0 01451.3 256c0 121.7-99.7 202.9-202.9 202.9z'/%3E%3C/svg%3E");
+  content: ' ';
+  height: 10rem;
+  width: 10rem;
+  right: -2rem;
+  top: -2rem;
+  opacity: 0.1;
+}
+.tag-name {
+  padding: 0 0.1rem;
+}

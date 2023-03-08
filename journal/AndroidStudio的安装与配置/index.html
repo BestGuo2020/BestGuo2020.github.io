@@ -1,278 +1,86 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="BestGuo2020"><meta name="copyright" content="BestGuo2020"><meta name="generator" content="Hexo 6.2.0"><meta name="theme" content="hexo-theme-yun"><title>Android 开发环境安装 | BestGuo 的小窝</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/star-markdown-css@0.4.1/dist/yun/yun-markdown.min.css"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/prism-theme-vars/base.css"><script src="https://fastly.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>function initScrollReveal() {
-  [".post-card",".markdown-body img"].forEach((target)=> {
-    ScrollReveal().reveal(target);
-  })
+.post-block {
+  color: var(--hty-text-color);
+  margin: 0 1rem;
+  padding: 1rem;
+  background-color: var(--post-block-bg-color);
+mobile()
 }
-document.addEventListener("DOMContentLoaded", initScrollReveal);
-document.addEventListener("pjax:success", initScrollReveal);
-</script><link rel="icon" type="image/png" href="/favicon.ico"><link rel="mask-icon" href="/favicon.ico" color="#0078E7"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="preconnect" href="https://fastly.jsdelivr.net/npm/" crossorigin><script id="yun-config">
-    window.Yun = {}
-    window.CONFIG = {"hostname":"www.bestguo.top","root":"/","title":["Best","Guo","的","小","窝"],"version":"1.10.9","mode":"time","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"搜索...","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）"},"anonymous_image":"https://cdn.yunyoujun.cn/img/avatar/none.jpg","say":{"api":"https://el-bot-api.vercel.app/api/words/young"},"local_search":{"path":"/search.xml"},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false,"src":"/js/search/local-search.js"},"fireworks":{"colors":null},"waline":{"config":{"enable":true,"serverURL":"https://comment.bestguo.top","comment":true,"requiredFields":["nick","mail"],"placeholder":"有什么想要对 BestGuo 说的呢，输入正确有效的邮箱有机会收到回复哟😊😊","avatarCDN":"https://seccdn.libravatar.org/avatar/","emoji":["https://unpkg.com/@waline/emojis@1.0.1/weibo/","https://unpkg.com/@waline/emojis@1.0.1/bilibili/","https://unpkg.com/@waline/emojis@1.0.1/qq/","https://unpkg.com/@waline/emojis@1.0.1/tieba/"],"avatar":"monsterid","el":"#waline","lang":"zh-CN"},"cdn":"https://fastly.jsdelivr.net/npm/@waline/client@v2/dist/waline.js","dark":"html.dark"},"vendors":{"host":"https://fastly.jsdelivr.net/npm/","darken":"https://fastly.jsdelivr.net/npm/darken@1.5.0"}};
-  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/hexo-theme-yun.js" type="module"></script><link rel="preconnect" href="https://www.google-analytics.com" crossorigin><script async src="https://www.googletagmanager.com/gtag/js?id=G-907LWSSHLS"></script><script>if (CONFIG.hostname === location.hostname) {
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-907LWSSHLS');
-}</script><script>(function(){
-  var bp = document.createElement('script');
-  var curProtocol = window.location.protocol.split(':')[0];
-  if (curProtocol === 'https') {
-    bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
-  }
-  else {
-    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
-  }
-  var s = document.getElementsByTagName("script")[0];
-  s.parentNode.insertBefore(bp, s);
-})();</script><meta name="description" content="前言下学期要教安卓开发了，在寒假里还是要好好的去预习一波。为了记录 Android 的学习历程，特意设置了一个新类别，叫做 “Android 开发学习历程”，未来还会设置一个“Android 开发常见问题”类别。在学习 Android 的相关知识都会记录在内，所以我相信，我能够入门（错啦，是入土），并且可以开发出一个完整的 Android APP 项目出来。 奥利给，干咯！ 我学习的视频是 bil">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Android 开发环境安装">
-<meta property="og:url" content="https://www.bestguo.top/journal/AndroidStudio%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE/index.html">
-<meta property="og:site_name" content="BestGuo 的小窝">
-<meta property="og:description" content="前言下学期要教安卓开发了，在寒假里还是要好好的去预习一波。为了记录 Android 的学习历程，特意设置了一个新类别，叫做 “Android 开发学习历程”，未来还会设置一个“Android 开发常见问题”类别。在学习 Android 的相关知识都会记录在内，所以我相信，我能够入门（错啦，是入土），并且可以开发出一个完整的 Android APP 项目出来。 奥利给，干咯！ 我学习的视频是 bil">
-<meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://www.bestguo.top/images/Android/tutoral/1.png">
-<meta property="og:image" content="https://www.bestguo.top/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122145609.jpg">
-<meta property="og:image" content="https://www.bestguo.top/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122145830.jpg">
-<meta property="og:image" content="https://www.bestguo.top/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122150056.jpg">
-<meta property="og:image" content="https://www.bestguo.top/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122150140.jpg">
-<meta property="og:image" content="https://www.bestguo.top/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122163750.jpg">
-<meta property="og:image" content="https://www.bestguo.top/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122163919.jpg">
-<meta property="og:image" content="https://www.bestguo.top/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122164039.jpg">
-<meta property="og:image" content="https://www.bestguo.top/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122164400.jpg">
-<meta property="og:image" content="https://www.bestguo.top/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122164715.jpg">
-<meta property="og:image" content="https://www.bestguo.top/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122164954.jpg">
-<meta property="og:image" content="https://www.bestguo.top/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122165402.jpg">
-<meta property="og:image" content="https://www.bestguo.top/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122165625.jpg">
-<meta property="og:image" content="https://www.bestguo.top/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122165802.jpg">
-<meta property="og:image" content="https://www.bestguo.top/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122183745.jpg">
-<meta property="og:image" content="https://www.bestguo.top/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122171136.jpg">
-<meta property="og:image" content="https://www.bestguo.top/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122171440.jpg">
-<meta property="og:image" content="https://www.bestguo.top/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122171610.jpg">
-<meta property="og:image" content="https://www.bestguo.top/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122171810.jpg">
-<meta property="og:image" content="https://www.bestguo.top/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122172250.jpg">
-<meta property="og:image" content="https://www.bestguo.top/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122172154.jpg">
-<meta property="og:image" content="https://www.bestguo.top/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122174045.jpg">
-<meta property="og:image" content="https://www.bestguo.top/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122174351.jpg">
-<meta property="og:image" content="https://www.bestguo.top/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122174836.jpg">
-<meta property="og:image" content="https://www.bestguo.top/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122174859.jpg">
-<meta property="og:image" content="https://www.bestguo.top/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122175418.jpg">
-<meta property="og:image" content="https://www.bestguo.top/images/Android/tutoral/QQ%E5%9B%BE%E7%89%8720210122175835.png">
-<meta property="og:image" content="https://www.bestguo.top/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122180036.jpg">
-<meta property="og:image" content="https://www.bestguo.top/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122180133.jpg">
-<meta property="og:image" content="https://www.bestguo.top/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122180218.jpg">
-<meta property="og:image" content="https://www.bestguo.top/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122180457.jpg">
-<meta property="og:image" content="https://www.bestguo.top/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122184340.jpg">
-<meta property="og:image" content="https://www.bestguo.top/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122184505.jpg">
-<meta property="og:image" content="https://www.bestguo.top/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122184808.jpg">
-<meta property="og:image" content="https://www.bestguo.top/images/Android/tutoral/2021-01-22_185300.gif">
-<meta property="og:image" content="https://www.bestguo.top/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122185651.jpg">
-<meta property="article:published_time" content="2021-01-22T06:34:00.000Z">
-<meta property="article:modified_time" content="2022-05-25T10:47:48.745Z">
-<meta property="article:author" content="BestGuo2020">
-<meta property="article:tag" content="Android">
-<meta property="article:tag" content="Java">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://www.bestguo.top/images/Android/tutoral/1.png"><script>(function() {
-  if (CONFIG.mode !== 'auto') return
-  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-  const setting = localStorage.getItem('darken-mode') || 'auto'
-  if (setting === 'dark' || (prefersDark && setting !== 'light'))
-    document.documentElement.classList.toggle('dark', true)
-})()</script></head><body><script src="https://code.iconify.design/2/2.1.1/iconify.min.js"></script><script>// Define global variable
-IconifyProviders = {
-  // Empty prefix: overwrite default API provider configuration
-  '': {
-    // Use custom API first, use Iconify public API as backup
-    resources: [
-        'https://api.iconify.design',
-    ],
-    // Wait for 1 second before switching API hosts
-    rotate: 1000,
-  },
-};</script><script defer src="https://fastly.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js" type="module"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js" type="module"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><span class="icon iconify" data-icon="ri:list-ordered"></span></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><span class="icon iconify" data-icon="ri:passport-line"></span></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="BestGuo2020"><img width="96" loading="lazy" src="/images/avatar.png" alt="BestGuo2020"><span class="site-author-status" title="在找工作">👨‍💻</span></a><div class="site-author-name"><a href="/about/">BestGuo2020</a></div><a class="site-name" href="/about/site.html">BestGuo 的小窝</a><sub class="site-subtitle">善良、勇敢、可爱</sub><div class="site-description">一个人的世界是如此的安静</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="首页"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:home-4-line"></span></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:archive-line"></span></span><span class="site-state-item-count">79</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:folder-2-line"></span></span><span class="site-state-item-count">23</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="site-state-item-count">49</span></a></div><a class="site-state-item hty-icon-button" href="/albums/" title="相册集"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:gallery-line"></span></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://wpa.qq.com/msgrd?v=3&amp;uin=1540113012&amp;site=qq&amp;menu=yes" title="QQ：xiaohehe2021" target="_blank" style="color:#12B7F5"><span class="icon iconify" data-icon="ri:qq-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/bestguo2020" title="GitHub：BestGuo2020" target="_blank" style="color:#8251e6"><span class="icon iconify" data-icon="ri:github-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/184681623" title="哔哩哔哩: 我叫人员外婆" target="_blank" style="color:#FF8EB3"><span class="icon iconify" data-icon="ri:bilibili-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:bestguo2020@foxmail.com" title="E-Mail" target="_blank" style="color:#8E71C1"><span class="icon iconify" data-icon="ri:mail-line"></span></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><span class="icon iconify" data-icon="ri:contrast-2-line"></span></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E7%BD%AE%E6%9D%A1%E4%BB%B6"><span class="toc-number">2.</span> <span class="toc-text">前置条件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE"><span class="toc-number">3.</span> <span class="toc-text">安装与配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E6%AD%A5%E9%AA%A4"><span class="toc-number">3.1.</span> <span class="toc-text">安装步骤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E6%AD%A5%E9%AA%A4"><span class="toc-number">3.2.</span> <span class="toc-text">配置步骤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E7%AC%AC%E4%B8%80%E4%B8%AA%E9%A1%B9%E7%9B%AE"><span class="toc-number">3.3.</span> <span class="toc-text">创建第一个项目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%90%E8%A1%8C%E7%AC%AC%E4%B8%80%E4%B8%AA%E9%A1%B9%E7%9B%AE"><span class="toc-number">3.4.</span> <span class="toc-text">运行第一个项目</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E5%90%8E%E7%BB%AD"><span class="toc-number">4.</span> <span class="toc-text">安装后续</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BD-bilibili"><span class="toc-number">4.1.</span> <span class="toc-text">下载 bilibili</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-bilibili"><span class="toc-number">4.2.</span> <span class="toc-text">安装 bilibili</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E5%AE%8C%E6%88%90%EF%BC%8C%E5%BC%80%E5%A7%8B%E8%BF%BD%E7%95%AA"><span class="toc-number">4.3.</span> <span class="toc-text">安装完成，开始追番</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%80%E5%90%8E"><span class="toc-number">4.4.</span> <span class="toc-text">最后</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E6%96%87%E7%AB%A0"><span class="toc-number">5.</span> <span class="toc-text">参考文章</span></a></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article" style="--smc-primary:#0078E7;"><link itemprop="mainEntityOfPage" href="https://www.bestguo.top/journal/AndroidStudio%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="BestGuo2020"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="BestGuo 的小窝"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">Android 开发环境安装</h1><div class="post-meta"><div class="post-time"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:calendar-line"></span></span> <time title="创建时间：2021-01-22 14:34:00" itemprop="dateCreated datePublished" datetime="2021-01-22T14:34:00+08:00">2021-01-22</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:calendar-2-line"></span></span> <time title="修改时间：2022-05-25 18:47:48" itemprop="dateModified" datetime="2022-05-25T18:47:48+08:00">2022-05-25</time></div><span class="post-busuanzi"><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读次数"><span class="icon iconify" data-icon="ri:eye-line"></span> <span id="busuanzi_value_page_pv"></span></span></span><span class="post-meta-divider">-</span><a href="#comment"><span class="post-meta-item-icon" title="评论数"><span class="icon iconify" data-icon="ri:chat-3-line"></span> <span class="waline-comment-count" id="/journal/AndroidStudio%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE/"></span></span></a><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><span class="icon iconify" data-icon="ri:folder-line"></span></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/Android-%E5%BC%80%E5%8F%91%E7%9A%84%E5%AD%A6%E4%B9%A0%E5%8E%86%E7%A8%8B/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">Android 开发的学习历程</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/Android/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">Android</span></a><a class="tag-item" href="/tags/Java/" style="--text-color:#ff9900"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">Java</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body"><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>下学期要教安卓开发了，在寒假里还是要好好的去预习一波。为了记录 Android 的学习历程，特意设置了一个新类别，叫做 “Android 开发学习历程”，未来还会设置一个“Android 开发常见问题”类别。在学习 Android 的相关知识都会记录在内，所以我相信，我能够入门<del>（错啦，是入土）</del>，并且可以开发出一个完整的 Android APP 项目出来。</p>
-<p>奥利给，干咯！</p>
-<p>我学习的视频是 bilibili 的天哥在奔跑的<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1Rt411e76H">安卓视频教程</a>，版本确实有些老。不过没关系，为了入门我觉得这个视频也够了。</p>
-<p><img src="/images/Android/tutoral/1.png" alt="Android" loading="lazy"></p>
-<p>不过，在安装 Android 开发环境时，至少需要两个前置条件。但是还是会有一些吃力。</p>
-<span id="more"></span>
-<h2 id="前置条件"><a href="#前置条件" class="headerlink" title="前置条件"></a>前置条件</h2><ol>
-<li>需要安装 jdk 1.8 及以上，如果没有安装 jdk 请先安装一个 jdk 并配置环境变量才能继续。</li>
-<li>需要有一些 java 的基础，会一些 java 面向对象编程</li>
-<li>可有可无：~~ 需要有一些 html，css，js 基础。因为这些都差不多。~~</li>
-</ol>
-<h2 id="安装与配置"><a href="#安装与配置" class="headerlink" title="安装与配置"></a>安装与配置</h2><blockquote>
-<p>我的 Android Studio 版本为 2.3.2，<a target="_blank" rel="noopener" href="https://redirector.gvt1.com/edgedl/android/studio/install/2.3.2.0/android-studio-bundle-162.3934792-windows.exe">点击这里直接下载</a></p>
-</blockquote>
-<h3 id="安装步骤"><a href="#安装步骤" class="headerlink" title="安装步骤"></a>安装步骤</h3><ol>
-<li>一直 Next 到如图所示，将他们全部勾上<br><img src="/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122145609.jpg" loading="lazy"></li>
-<li>一直 Next 到如图所示，建议更改一下位置，如果你的 C 盘空间非常大请随意。我更改的 Android Studio 为“E:\Android\Android Sudio”，sdk 为“E:\Android\sdk”<br><img src="/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122145830.jpg" loading="lazy"></li>
-<li>点击 install，等待安装完成<br><img src="/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122150056.jpg" loading="lazy"><br><img src="/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122150140.jpg" loading="lazy"></li>
-<li>安装完成，点击 Finish 或者关闭即可</li>
-</ol>
-<h3 id="配置步骤"><a href="#配置步骤" class="headerlink" title="配置步骤"></a>配置步骤</h3><ol>
-<li>选择下面的，直接OK。然后等待进入项目创建界面<br><img src="/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122163750.jpg" loading="lazy"></li>
-<li>紧挨着会弹出一个窗口，点击 Cancel<br><img src="/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122163919.jpg" loading="lazy"></li>
-<li>这个时候出现了界面，我们点击 Next<br><img src="/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122164039.jpg" loading="lazy"></li>
-<li>选择 Custom，继续 Next<br><img src="/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122164400.jpg" loading="lazy"></li>
-<li>主题随意选择，接下来要选择 sdk 的安装路径。因为我是安装在“E:\Android\sdk”下，所以我就是这路径<br><img src="/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122164715.jpg" loading="lazy"></li>
-<li>然后我们暂时把这个勾去掉，因为目前还用不到最新的 Android 11版本，完成后 Next<br><img src="/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122164954.jpg" loading="lazy"></li>
-<li>选择分配的内存空间，根据自己电脑的性能来要求。如果电脑内存是4GB以及更低，将内存的分配调小一些。但注意：安卓虚拟机将会卡顿。选择完成后 Next。<br><img src="/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122165402.jpg" loading="lazy"></li>
-<li>点击 Finish，等待配置完成<br><img src="/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122165625.jpg" loading="lazy"></li>
-<li>安装成功，点击 Finish<br><img src="/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122165802.jpg" loading="lazy"></li>
-</ol>
-<h3 id="创建第一个项目"><a href="#创建第一个项目" class="headerlink" title="创建第一个项目"></a>创建第一个项目</h3><ol>
-<li><p>点击 “Start a new Android Studio project”<br><img src="/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122183745.jpg" loading="lazy"></p>
-</li>
-<li><p>填写项目名，域名（如果没有域名也没关系，随便写比如 hsq .com）和更改项目的路径。然后 Next<br><img src="/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122171136.jpg" loading="lazy"></p>
-</li>
-<li><p>选择你要求的 Android 系统的最低版本。我这里选择 5.1，然后 Next<br><img src="/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122171440.jpg" loading="lazy"></p>
-</li>
-<li><p>我们默认选择 “Empty Activity”，然后 Next<br><img src="/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122171610.jpg" loading="lazy"></p>
-</li>
-<li><p>直接 Finish，等待项目创建完成<br><img src="/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122171810.jpg" loading="lazy"></p>
-</li>
-<li><p>创建完成之后，关闭窗口，然后下面会报一个错误<br><img src="/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122172250.jpg" loading="lazy"><br><img src="/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122172154.jpg" loading="lazy"></p>
-</li>
-<li><p>进入 build.gradle，修改的地方如下</p>
-</li>
-</ol>
-<pre class="language-gradle" data-language="gradle"><code class="language-gradle">apply plugin: &#39;com.android.application&#39;
-
-android &#123;
-    compileSdkVersion 26
-    buildToolsVersion &quot;26.1.1&quot; &#x2F;&#x2F; 修改
-    defaultConfig &#123;
-        applicationId &quot;top.bestguo.myfirstapplication&quot;
-        minSdkVersion 22
-        targetSdkVersion 26 &#x2F;&#x2F; 修改
-        versionCode 1
-        versionName &quot;1.0&quot;
-        testInstrumentationRunner &quot;android.support.test.runner.AndroidJUnitRunner&quot;
-    &#125;
-    buildTypes &#123;
-        release &#123;
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile(&#39;proguard-android.txt&#39;), &#39;proguard-rules.pro&#39;
-        &#125;
-    &#125;
-&#125;
-
-dependencies &#123;
-    compile fileTree(dir: &#39;libs&#39;, include: [&#39;*.jar&#39;])
-    androidTestCompile(&#39;com.android.support.test.espresso:espresso-core:2.2.2&#39;, &#123;
-        exclude group: &#39;com.android.support&#39;, module: &#39;support-annotations&#39;
-    &#125;)
-    compile &#39;com.android.support:appcompat-v7:26.+&#39; &#x2F;&#x2F; 修改
-    compile &#39;com.android.support.constraint:constraint-layout:1.0.2&#39;
-    testCompile &#39;junit:junit:4.12&#39;
-&#125;</code></pre>
-
-<ol start="8">
-<li>如果出现了以下问题，点击“install missing platform(s) and sync project”</li>
-</ol>
-<p><img src="/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122174045.jpg" loading="lazy"></p>
-<ol start="9">
-<li>等待下载并解压完成</li>
-</ol>
-<p><img src="/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122174351.jpg" loading="lazy"></p>
-<ol start="10">
-<li>如果出现了以下问题，点击“install build tools 26.0.0 and sync project”</li>
-</ol>
-<p><img src="/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122174836.jpg" loading="lazy"></p>
-<ol start="11">
-<li>等待下载并解压完成</li>
-</ol>
-<p><img src="/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122174859.jpg" loading="lazy"></p>
-<ol start="12">
-<li>解压完成之后，进入 build.gradle，修改 buildToolsVersion 为 “26.0.0” </li>
-</ol>
-<pre class="language-gradle" data-language="gradle"><code class="language-gradle">apply plugin: &#39;com.android.application&#39;
-
-android &#123;
-    compileSdkVersion 26
-    buildToolsVersion &quot;26.0.0&quot; &#x2F;&#x2F; 修改为 26.0.0
-    defaultConfig &#123;
-        applicationId &quot;top.bestguo.myfirstapplication&quot;
-        minSdkVersion 22
-        targetSdkVersion 26 &#x2F;&#x2F; 修改
-        versionCode 1
-        versionName &quot;1.0&quot;
-        testInstrumentationRunner &quot;android.support.test.runner.AndroidJUnitRunner&quot;
-    &#125;
-    ...
-&#125;</code></pre>
-<ol start="13">
-<li>这样，项目创建并配置完成<br><img src="/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122175418.jpg" loading="lazy"></li>
-</ol>
-<h3 id="运行第一个项目"><a href="#运行第一个项目" class="headerlink" title="运行第一个项目"></a>运行第一个项目</h3><ol>
-<li>点击运行项目，创建一台 Android 虚拟机</li>
-</ol>
-<p><img src="/images/Android/tutoral/QQ%E5%9B%BE%E7%89%8720210122175835.png" loading="lazy"></p>
-<ol start="2">
-<li>选择一个屏幕分辨率，点击 Next</li>
-</ol>
-<p><img src="/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122180036.jpg" loading="lazy"></p>
-<ol start="3">
-<li>继续 Next</li>
-</ol>
-<p><img src="/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122180133.jpg" loading="lazy"></p>
-<ol start="4">
-<li>点击 Finish，最后选中那台虚拟机，点击 OK 即可</li>
-</ol>
-<p><img src="/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122180218.jpg" loading="lazy"></p>
-<ol start="5">
-<li>等待虚拟手机启动并看到程序运行成功的界面，这样，我们的第一个 Android 程序就这样完成了</li>
-</ol>
-<p><img src="/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122180457.jpg" loading="lazy"></p>
-<h2 id="安装后续"><a href="#安装后续" class="headerlink" title="安装后续"></a>安装后续</h2><p>哈哈，终于结束了，我要赶紧下载一波 bilibili，追番去咯。🤪🤪</p>
-<h3 id="下载-bilibili"><a href="#下载-bilibili" class="headerlink" title="下载 bilibili"></a>下载 bilibili</h3><p><img src="/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122184340.jpg" loading="lazy"></p>
-<h3 id="安装-bilibili"><a href="#安装-bilibili" class="headerlink" title="安装 bilibili"></a>安装 bilibili</h3><p><img src="/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122184505.jpg" loading="lazy"></p>
-<p>嘿嘿，真有意思😄😄😄</p>
-<h3 id="安装完成，开始追番"><a href="#安装完成，开始追番" class="headerlink" title="安装完成，开始追番"></a>安装完成，开始追番</h3><p><img src="/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122184808.jpg" loading="lazy"></p>
-<p>我要看猛男番“天使降临到我身边”，以下是 gif 图。</p>
-<p><img src="/images/Android/tutoral/2021-01-22_185300.gif" loading="lazy"></p>
-<p>猛男番就是不一样，自己的电脑的 CPU 都<del>受不了啦</del></p>
-<p><img src="/images/Android/tutoral/QQ%E6%88%AA%E5%9B%BE20210122185651.jpg" loading="lazy"></p>
-<h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><p>后续我还会单独写这些 gradle 中为什么需要修改这些配置。以及如何使用 ADB 在自己的安卓手机上调试应用程序。</p>
-<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/mhl18820672087/article/details/78385361">https://blog.csdn.net/mhl18820672087/article/details/78385361</a></p>
-</div></section><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>BestGuo2020</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="https://www.bestguo.top/journal/AndroidStudio%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE/" title="Android 开发环境安装">https://www.bestguo.top/journal/AndroidStudio%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><span class="icon iconify" data-icon="ri:creative-commons-line"></span><span class="icon iconify" data-icon="ri:creative-commons-by-line"></span><span class="icon iconify" data-icon="ri:creative-commons-nc-line"></span><span class="icon iconify" data-icon="ri:creative-commons-sa-line"></span></a> 许可协议。</li></ul></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/journal/How-to-use-linearlayout/" rel="prev" title="Android 入门篇之 LinearLayout 的使用"><span class="icon iconify" data-icon="ri:arrow-left-s-line"></span><span class="post-nav-text">Android 入门篇之 LinearLayout 的使用</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/journal/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B9%8B%E9%93%B6%E8%A1%8C%E5%AE%B6%E7%AE%97%E6%B3%95/" rel="next" title="操作系统之神秘的银行家算法"><span class="post-nav-text">操作系统之神秘的银行家算法</span><span class="icon iconify" data-icon="ri:arrow-right-s-line"></span></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>请诸位理性发言！</span><br><span>请勿发布违反中国大陆地区法律的言论，请勿人身攻击、谩骂、侮辱和煽动式的语言。</span><br></div><div id="waline"></div><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/@waline/client@v2/dist/waline.css"><script>window.CONFIG.waline.config.path = "/journal/AndroidStudio%E7%9A%84%E5%AE%89%E8%A3%85%E4%B8%8E%E9%85%8D%E7%BD%AE/"</script><div class="js-Pjax"><script src="/js/comments/waline.js" type="module" defer></script></div></div></main><footer class="sidebar-translate" id="footer"><div class="beian"><a rel="noopener" href="https://beian.miit.gov.cn/" target="_blank">赣 ICP 备 20009988 号</a></div><div class="copyright"><span>&copy; 2019 – 2023 </span><span class="with-love" id="animate"><span class="icon iconify" data-icon="ri:cloud-line"></span></span><span class="author"> BestGuo2020</span></div><div class="powered"><span>由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v6.2.0</span><span class="footer-separator">|</span><span>主题 - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.10.9</span></div><div class="live-time"><span>本站点已正常地运行</span><span id="display_live_time"></span><span class="moe-text"><br/>♬(ノ゜∇゜)ノ♩<br></span><script>function blog_live_time() {
-  setTimeout(blog_live_time, 1000);
-  const start = new Date('2019-01-01T00:00:00');
-  const now = new Date();
-  const timeDiff = (now.getTime() - start.getTime());
-  const msPerMinute = 60 * 1000;
-  const msPerHour = 60 * msPerMinute;
-  const msPerDay = 24 * msPerHour;
-  const passDay = Math.floor(timeDiff / msPerDay);
-  const passHour = Math.floor((timeDiff % msPerDay) / 60 / 60 / 1000);
-  const passMinute = Math.floor((timeDiff % msPerHour) / 60 / 1000);
-  const passSecond = Math.floor((timeDiff % msPerMinute) / 1000);
-  display_live_time.innerHTML = ` ${passDay} 天 ${passHour} 小时 ${passMinute} 分 ${passSecond} 秒`;
+.post-body {
+  padding: 0 5rem;
+tablet()
+mobile()
 }
-blog_live_time();
-</script></div><div id="busuanzi"><span id="busuanzi_container_site_uv" title="总访客量"><span><span class="icon iconify" data-icon="ri:user-line"></span></span><span id="busuanzi_value_site_uv"></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv" title="总访问量"><span><span class="icon iconify" data-icon="ri:eye-line"></span></span><span id="busuanzi_value_site_pv"></span></span><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div class="footer-support"><span>本网站由</span><a class="footer-support-logo" href="https://www.upyun.com/?utm_source=lianmeng&amp;utm_medium=referral" target="blank" title="又拍云"><img height="30" src="https://cdn.yunyoujun.cn/img/logo/upyun-logo.png" alt="又拍云"></a><span>提供 CDN 加速服务</span></div></footer></div><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><span class="icon iconify" data-icon="ri:arrow-up-s-line"></span><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a><a class="popup-trigger hty-icon-button icon-search" id="search" href="javascript:;" title="搜索"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:search-line"></span></span></a><script>window.addEventListener("DOMContentLoaded", () => {
-  // Handle and trigger popup window
-  document.querySelector(".popup-trigger").addEventListener("click", () => {
-    document.querySelector(".popup").classList.add("show");
-    setTimeout(() => {
-      document.querySelector(".search-input").focus();
-    }, 100);
-  });
-
-  // Monitor main search box
-  const onPopupClose = () => {
-    document.querySelector(".popup").classList.remove("show");
-  };
-
-  document.querySelector(".popup-btn-close").addEventListener("click", () => {
-    onPopupClose();
-  });
-
-  window.addEventListener("keyup", event => {
-    if (event.key === "Escape") {
-      onPopupClose();
-    }
-  });
-});
-</script><script src="https://fastly.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js"></script><script src="/js/search/local-search.js" defer type="module"></script><div class="popup search-popup"><div class="search-header"><span class="popup-btn-close close-icon hty-icon-button"><span class="icon iconify" data-icon="ri:close-line"></span></span></div><div class="search-input-container"><input class="search-input" id="local-search-input" type="text" placeholder="搜索..." value=""></div><div class="search-result-container"></div></div></body></html>
+.post-meta {
+  font-size: 14px;
+  color: var(--hty-secondary-text-color);
+}
+.post-meta .icon {
+  margin-bottom: -1px;
+}
+.post-description {
+  font-weight: normal;
+  padding: 0.5rem;
+}
+.post-author {
+  display: flex;
+  justify-content: center;
+}
+.post-author .author-avatar {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 0;
+}
+.post-author .author-avatar img {
+  border-radius: 50%;
+  height: 1rem;
+  width: 1rem;
+  padding: 2px;
+  border: 2px solid #d3d3d3;
+}
+.post-author .author-name {
+  margin-left: 0.5rem;
+  font-size: 1rem;
+}
+.post-meta-item-icon {
+  display: inline-block;
+  color: var(--text-color, --hty-secondary-text-color);
+}
+.post-meta-divider {
+  height: 25px;
+  color: var(--hty-secondary-text-color);
+  margin: 0 0.5rem;
+}
+.post-eof {
+  margin: 50px auto;
+  width: 50%;
+  height: 1px;
+  background: $blue;
+  opacity: 0.1;
+}
+.post-copyright {
+  font-size: 0.9rem;
+  margin: 0.5rem 5rem 1rem 5rem;
+  padding: 0.5rem 1rem;
+  border-left: 4px solid #ff5252;
+  background-color: var(--hty-bg-color);
+  list-style: none;
+  word-break: break-all;
+  position: relative;
+  overflow: hidden;
+mobile()
+}
+.post-copyright::after {
+  position: absolute;
+  color: #fff;
+  background: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 496 512'%3E%3Cpath fill='gray' d='M245.8 214.9l-33.2 17.3c-9.4-19.6-25.2-20-27.4-20-22.2 0-33.3 14.6-33.3 43.9 0 23.5 9.2 43.8 33.3 43.8 14.4 0 24.6-7 30.5-21.3l30.6 15.5a73.2 73.2 0 01-65.1 39c-22.6 0-74-10.3-74-77 0-58.7 43-77 72.6-77 30.8-.1 52.7 11.9 66 35.8zm143 0l-32.7 17.3c-9.5-19.8-25.7-20-27.9-20-22.1 0-33.2 14.6-33.2 43.9 0 23.5 9.2 43.8 33.2 43.8 14.5 0 24.7-7 30.5-21.3l31 15.5c-2 3.8-21.3 39-65 39-22.7 0-74-9.9-74-77 0-58.7 43-77 72.6-77C354 179 376 191 389 214.8zM247.7 8C104.7 8 0 123 0 256c0 138.4 113.6 248 247.6 248C377.5 504 496 403 496 256 496 118 389.4 8 247.6 8zm.8 450.8c-112.5 0-203.7-93-203.7-202.8 0-105.5 85.5-203.3 203.8-203.3A201.7 201.7 0 01451.3 256c0 121.7-99.7 202.9-202.9 202.9z'/%3E%3C/svg%3E");
+  content: ' ';
+  height: 10rem;
+  width: 10rem;
+  right: -2rem;
+  top: -2rem;
+  opacity: 0.1;
+}
+.tag-name {
+  padding: 0 0.1rem;
+}

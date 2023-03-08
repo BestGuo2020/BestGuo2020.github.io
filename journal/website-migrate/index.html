@@ -1,271 +1,86 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="BestGuo2020"><meta name="copyright" content="BestGuo2020"><meta name="generator" content="Hexo 6.2.0"><meta name="theme" content="hexo-theme-yun"><title>小站迁移工作小记 | BestGuo 的小窝</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/star-markdown-css@0.4.1/dist/yun/yun-markdown.min.css"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/prism-theme-vars/base.css"><script src="https://fastly.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>function initScrollReveal() {
-  [".post-card",".markdown-body img"].forEach((target)=> {
-    ScrollReveal().reveal(target);
-  })
+.post-block {
+  color: var(--hty-text-color);
+  margin: 0 1rem;
+  padding: 1rem;
+  background-color: var(--post-block-bg-color);
+mobile()
 }
-document.addEventListener("DOMContentLoaded", initScrollReveal);
-document.addEventListener("pjax:success", initScrollReveal);
-</script><link rel="icon" type="image/png" href="/favicon.ico"><link rel="mask-icon" href="/favicon.ico" color="#0078E7"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="preconnect" href="https://fastly.jsdelivr.net/npm/" crossorigin><script id="yun-config">
-    window.Yun = {}
-    window.CONFIG = {"hostname":"www.bestguo.top","root":"/","title":["Best","Guo","的","小","窝"],"version":"1.10.9","mode":"time","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"搜索...","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）"},"anonymous_image":"https://cdn.yunyoujun.cn/img/avatar/none.jpg","say":{"api":"https://el-bot-api.vercel.app/api/words/young"},"local_search":{"path":"/search.xml"},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false,"src":"/js/search/local-search.js"},"fireworks":{"colors":null},"waline":{"config":{"enable":true,"serverURL":"https://comment.bestguo.top","comment":true,"requiredFields":["nick","mail"],"placeholder":"有什么想要对 BestGuo 说的呢，输入正确有效的邮箱有机会收到回复哟😊😊","avatarCDN":"https://seccdn.libravatar.org/avatar/","emoji":["https://unpkg.com/@waline/emojis@1.0.1/weibo/","https://unpkg.com/@waline/emojis@1.0.1/bilibili/","https://unpkg.com/@waline/emojis@1.0.1/qq/","https://unpkg.com/@waline/emojis@1.0.1/tieba/"],"avatar":"monsterid","el":"#waline","lang":"zh-CN"},"cdn":"https://fastly.jsdelivr.net/npm/@waline/client@v2/dist/waline.js","dark":"html.dark"},"vendors":{"host":"https://fastly.jsdelivr.net/npm/","darken":"https://fastly.jsdelivr.net/npm/darken@1.5.0"}};
-  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/hexo-theme-yun.js" type="module"></script><link rel="preconnect" href="https://www.google-analytics.com" crossorigin><script async src="https://www.googletagmanager.com/gtag/js?id=G-907LWSSHLS"></script><script>if (CONFIG.hostname === location.hostname) {
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-907LWSSHLS');
-}</script><script>(function(){
-  var bp = document.createElement('script');
-  var curProtocol = window.location.protocol.split(':')[0];
-  if (curProtocol === 'https') {
-    bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
-  }
-  else {
-    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
-  }
-  var s = document.getElementsByTagName("script")[0];
-  s.parentNode.insertBefore(bp, s);
-})();</script><meta name="description" content="今天自己的阿里云的轻量级云服务器即将到期，准备去续费，发现续费的时候没有学生优惠了。一个月的话就要个几百元，对于我来说这毫无疑问是一种非常大的支出，非常得不偿失。所以，今天做了一个非常重要的决定，就是将自己的小站托管到国外的网站托管服务上。 GitHub Pages 虽然是一个很好的选择，不过，它绝大多数时候是抽风的状态。所以我选择 Vercel 来将自己的个人站点进行托管，加上自己的站点经过了">
-<meta property="og:type" content="article">
-<meta property="og:title" content="小站迁移工作小记">
-<meta property="og:url" content="https://www.bestguo.top/journal/website-migrate/index.html">
-<meta property="og:site_name" content="BestGuo 的小窝">
-<meta property="og:description" content="今天自己的阿里云的轻量级云服务器即将到期，准备去续费，发现续费的时候没有学生优惠了。一个月的话就要个几百元，对于我来说这毫无疑问是一种非常大的支出，非常得不偿失。所以，今天做了一个非常重要的决定，就是将自己的小站托管到国外的网站托管服务上。 GitHub Pages 虽然是一个很好的选择，不过，它绝大多数时候是抽风的状态。所以我选择 Vercel 来将自己的个人站点进行托管，加上自己的站点经过了">
-<meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://www.bestguo.top/journal/website-migrate/thumb-1920-913081.png">
-<meta property="og:image" content="https://www.bestguo.top/journal/website-migrate/1243431.png">
-<meta property="og:image" content="https://www.bestguo.top/journal/website-migrate/12121344.png">
-<meta property="og:image" content="https://www.bestguo.top/journal/website-migrate/X%5BY%5D(%5D)8E%7B4LMLGG8~M5@8X.png">
-<meta property="og:image" content="https://www.bestguo.top/journal/website-migrate/QQ%E6%88%AA%E5%9B%BE20210625001851.png">
-<meta property="og:image" content="https://www.bestguo.top/journal/website-migrate/QQ%E6%88%AA%E5%9B%BE20210625002221.png">
-<meta property="og:image" content="https://www.bestguo.top/journal/website-migrate/QQ%E6%88%AA%E5%9B%BE20210625002537.png">
-<meta property="og:image" content="https://www.bestguo.top/journal/website-migrate/QQ%E6%88%AA%E5%9B%BE20210625094335.png">
-<meta property="og:image" content="https://www.bestguo.top/journal/website-migrate/QQ%E6%88%AA%E5%9B%BE20210625102537.png">
-<meta property="og:image" content="https://www.bestguo.top/journal/website-migrate/QQ%E6%88%AA%E5%9B%BE20210625163004.png">
-<meta property="og:image" content="https://www.bestguo.top/journal/website-migrate/QQ%E6%88%AA%E5%9B%BE20210625214029.png">
-<meta property="og:image" content="https://www.bestguo.top/journal/website-migrate/QQ%E6%88%AA%E5%9B%BE20210625215114.png">
-<meta property="og:image" content="https://www.bestguo.top/journal/website-migrate/ffdfdf.png">
-<meta property="og:image" content="https://www.bestguo.top/journal/website-migrate/QQ%E6%88%AA%E5%9B%BE20210625220159.png">
-<meta property="og:image" content="https://www.bestguo.top/journal/website-migrate/QQ%E6%88%AA%E5%9B%BE20210625221716.png">
-<meta property="og:image" content="https://www.bestguo.top/journal/website-migrate/QQ%E6%88%AA%E5%9B%BE20210625224356.png">
-<meta property="og:image" content="https://www.bestguo.top/journal/website-migrate/QQ%E5%9B%BE%E7%89%8720210625230445.png">
-<meta property="og:image" content="https://www.bestguo.top/journal/website-migrate/QQ%E6%88%AA%E5%9B%BE20210625230650.png">
-<meta property="article:published_time" content="2021-06-24T16:00:00.000Z">
-<meta property="article:modified_time" content="2022-05-25T10:47:49.117Z">
-<meta property="article:author" content="BestGuo2020">
-<meta property="article:tag" content="Hexo">
-<meta property="article:tag" content="网站搭建">
-<meta property="article:tag" content="Vercel">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://www.bestguo.top/journal/website-migrate/thumb-1920-913081.png"><script>(function() {
-  if (CONFIG.mode !== 'auto') return
-  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-  const setting = localStorage.getItem('darken-mode') || 'auto'
-  if (setting === 'dark' || (prefersDark && setting !== 'light'))
-    document.documentElement.classList.toggle('dark', true)
-})()</script></head><body><script src="https://code.iconify.design/2/2.1.1/iconify.min.js"></script><script>// Define global variable
-IconifyProviders = {
-  // Empty prefix: overwrite default API provider configuration
-  '': {
-    // Use custom API first, use Iconify public API as backup
-    resources: [
-        'https://api.iconify.design',
-    ],
-    // Wait for 1 second before switching API hosts
-    rotate: 1000,
-  },
-};</script><script defer src="https://fastly.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js" type="module"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js" type="module"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><span class="icon iconify" data-icon="ri:list-ordered"></span></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><span class="icon iconify" data-icon="ri:passport-line"></span></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="BestGuo2020"><img width="96" loading="lazy" src="/images/avatar.png" alt="BestGuo2020"><span class="site-author-status" title="在找工作">👨‍💻</span></a><div class="site-author-name"><a href="/about/">BestGuo2020</a></div><a class="site-name" href="/about/site.html">BestGuo 的小窝</a><sub class="site-subtitle">善良、勇敢、可爱</sub><div class="site-description">一个人的世界是如此的安静</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="首页"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:home-4-line"></span></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:archive-line"></span></span><span class="site-state-item-count">79</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:folder-2-line"></span></span><span class="site-state-item-count">23</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="site-state-item-count">49</span></a></div><a class="site-state-item hty-icon-button" href="/albums/" title="相册集"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:gallery-line"></span></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://wpa.qq.com/msgrd?v=3&amp;uin=1540113012&amp;site=qq&amp;menu=yes" title="QQ：xiaohehe2021" target="_blank" style="color:#12B7F5"><span class="icon iconify" data-icon="ri:qq-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/bestguo2020" title="GitHub：BestGuo2020" target="_blank" style="color:#8251e6"><span class="icon iconify" data-icon="ri:github-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/184681623" title="哔哩哔哩: 我叫人员外婆" target="_blank" style="color:#FF8EB3"><span class="icon iconify" data-icon="ri:bilibili-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:bestguo2020@foxmail.com" title="E-Mail" target="_blank" style="color:#8E71C1"><span class="icon iconify" data-icon="ri:mail-line"></span></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><span class="icon iconify" data-icon="ri:contrast-2-line"></span></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%81%E7%A7%BB%E5%88%B0-Vercel"><span class="toc-number">1.</span> <span class="toc-text">迁移到 Vercel</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%89%E6%8B%A9%E6%A8%A1%E6%9D%BF"><span class="toc-number">1.1.</span> <span class="toc-text">选择模板</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%8B%E9%9A%86%E4%BB%93%E5%BA%93"><span class="toc-number">1.2.</span> <span class="toc-text">克隆仓库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E4%B8%80%E4%BA%9B%E4%B8%9C%E8%A5%BF"><span class="toc-number">1.3.</span> <span class="toc-text">修改一些东西</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2%E9%98%B6%E6%AE%B5"><span class="toc-number">1.4.</span> <span class="toc-text">部署阶段</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8F%90%E5%8D%87%E8%AE%BF%E9%97%AE%E9%80%9F%E5%BA%A6"><span class="toc-number">2.</span> <span class="toc-text">提升访问速度</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9E%E6%BA%90%E5%87%BA%E7%8E%B0%E9%97%AE%E9%A2%98"><span class="toc-number">2.1.</span> <span class="toc-text">回源出现问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2%E5%88%B0-GitHub-Page"><span class="toc-number">2.2.</span> <span class="toc-text">部署到 GitHub Page</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E5%90%8E%E7%9A%84%E6%94%B6%E5%B0%BE%E5%B7%A5%E4%BD%9C"><span class="toc-number">3.</span> <span class="toc-text">最后的收尾工作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A5%87%E6%80%AA%E7%9A%84-404"><span class="toc-number">3.1.</span> <span class="toc-text">奇怪的 404</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%8E%E8%AE%B0"><span class="toc-number">4.</span> <span class="toc-text">后记</span></a></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article" style="--smc-primary:#0078E7;"><link itemprop="mainEntityOfPage" href="https://www.bestguo.top/journal/website-migrate/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="BestGuo2020"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="BestGuo 的小窝"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">小站迁移工作小记</h1><div class="post-meta"><div class="post-time"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:calendar-line"></span></span> <time title="创建时间：2021-06-25 00:00:00" itemprop="dateCreated datePublished" datetime="2021-06-25T00:00:00+08:00">2021-06-25</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:calendar-2-line"></span></span> <time title="修改时间：2022-05-25 18:47:49" itemprop="dateModified" datetime="2022-05-25T18:47:49+08:00">2022-05-25</time></div><span class="post-busuanzi"><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读次数"><span class="icon iconify" data-icon="ri:eye-line"></span> <span id="busuanzi_value_page_pv"></span></span></span><span class="post-meta-divider">-</span><a href="#comment"><span class="post-meta-item-icon" title="评论数"><span class="icon iconify" data-icon="ri:chat-3-line"></span> <span class="waline-comment-count" id="/journal/website-migrate/"></span></span></a><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><span class="icon iconify" data-icon="ri:folder-line"></span></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/%E7%BD%91%E7%AB%99%E7%9A%84%E9%83%A8%E7%BD%B2%E4%B8%8E%E7%BB%B4%E6%8A%A4/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">网站的部署与维护</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/Hexo/" style="--text-color:#0E83CD"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">Hexo</span></a><a class="tag-item" href="/tags/%E7%BD%91%E7%AB%99%E6%90%AD%E5%BB%BA/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">网站搭建</span></a><a class="tag-item" href="/tags/Vercel/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">Vercel</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body"><p>今天自己的阿里云的轻量级云服务器即将到期，准备去续费，发现续费的时候没有学生优惠了。一个月的话就要个几百元，对于我来说这毫无疑问是一种非常大的支出，非常得不偿失。所以，今天做了一个非常重要的决定，就是将自己的小站托管到国外的网站托管服务上。</p>
-<p>GitHub Pages 虽然是一个很好的选择，不过，它绝大多数时候是抽风的状态。所以我选择 Vercel 来将自己的个人站点进行托管，加上自己的站点经过了 CDN 的加速，访问速度应该不会受到太大的影响。</p>
-<p>先赶紧给它办完，后期的小学期的事情又会多起来。😇😇</p>
-<p><img src="/journal/website-migrate/thumb-1920-913081.png" alt="website-migrate" loading="lazy"></p>
-<span id="more"></span>
-
-<p>会计一定能过的 🤗</p>
-<p>会计一定能过的 🤗</p>
-<p>会计一定能过的 🤗</p>
-<p>会计一定能过的 🤗</p>
-<h2 id="迁移到-Vercel"><a href="#迁移到-Vercel" class="headerlink" title="迁移到 Vercel"></a>迁移到 Vercel</h2><blockquote>
-<p>Vercel 需要用你的 GitHub 账号，GitLab 账号来进行绑定。这样就可以正常的将仓库中的代码直接自动部署到 Vercel 上面了</p>
-</blockquote>
-<h3 id="选择模板"><a href="#选择模板" class="headerlink" title="选择模板"></a>选择模板</h3><p>登录到 Vercel ，创建一个项目并且选择一个模板。我的小站是由 Hexo 来进行构建的，所以就选择 Hexo 就好了。</p>
-<p><img src="/journal/website-migrate/1243431.png" alt="website-migrate" loading="lazy"></p>
-<p>选择个人账户，下一步。</p>
-<p><img src="/journal/website-migrate/12121344.png" alt="website-migrate" loading="lazy"></p>
-<p>输入 GitHub 的仓库名并设置为私有。毕竟那些源文件还是不想让别人看到。嘿嘿。</p>
-<p><img src="/journal/website-migrate/X%5BY%5D(%5D)8E%7B4LMLGG8~M5@8X.png" alt="website-migrate" loading="lazy"></p>
-<p>然后点击部署，对啦。项目名可以修改的</p>
-<p><img src="/journal/website-migrate/QQ%E6%88%AA%E5%9B%BE20210625001851.png" alt="QQ截图20210625001851" loading="lazy"></p>
-<p>等待部署完。</p>
-<p><img src="/journal/website-migrate/QQ%E6%88%AA%E5%9B%BE20210625002221.png" alt="QQ截图20210625001851" loading="lazy"></p>
-<p>部署完成之后，就可以访问我们的 Demo 界面了。</p>
-<p><img src="/journal/website-migrate/QQ%E6%88%AA%E5%9B%BE20210625002537.png" alt="QQ截图20210625001851" loading="lazy"></p>
-<h3 id="克隆仓库"><a href="#克隆仓库" class="headerlink" title="克隆仓库"></a>克隆仓库</h3><p>先将 GitHub 上的自动生成的给克隆下来，使用 <code>git clone https://github.com/xxxxxxx</code> 将仓库上的代码下载下来。</p>
-<p>由于自己之前有一个 gitee 的公钥，所以还要再添加一个。添加 SSH 公钥可以看看这里 – <a href="https://www.bestguo.top/2021/04/19/How-do-you-configure-ssh-in-your-pc/">如何管理你的多个 SSH key</a></p>
-<p>添加完成之后就可以正常的克隆下来了。然后我又重新试了提交，也是能正常的使用，不过很奇怪的是我在执行 <code>ssh -T BestGuo2020@github.com</code> 说连接被拒绝，好奇怪 🤔🤔</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash">$ <span class="token function">ssh</span> -T BestGuo2020@github.com
-BestGuo2020@github.com: Permission denied <span class="token punctuation">(</span>publickey<span class="token punctuation">)</span>.</code></pre>
-
-<p>不过这没关系，能够提交就好了。</p>
-<h3 id="修改一些东西"><a href="#修改一些东西" class="headerlink" title="修改一些东西"></a>修改一些东西</h3><p>由于克隆下来的，如果将我原有的日志全部复制到那个我 clone 下来的项目中，有点浪费时间。所以直接将 clone 下来的项目，复制几个文件或者文件夹即可。</p>
-<p><img src="/journal/website-migrate/QQ%E6%88%AA%E5%9B%BE20210625094335.png" alt="QQ截图20210625094335.png" loading="lazy"></p>
-<p>当然， _config.yml 这个配置文件需要打开，将我原来项目中的 _config.yml 这个配置文件进行一个对照还是需要修改的。主要还是在部署的地方，我们就按照从仓库中拉取下来的部署去配置即可。</p>
-<p>下面是我原来的配置</p>
-<pre class="language-yaml" data-language="yaml"><code class="language-yaml"><span class="token comment"># Deployment</span>
-<span class="token comment">## Docs: https://hexo.io/docs/one-command-deployment</span>
-<span class="token key atrule">deploy</span><span class="token punctuation">:</span>
-  <span class="token key atrule">type</span><span class="token punctuation">:</span> git
-  <span class="token key atrule">repo</span><span class="token punctuation">:</span> git@xxxxxxxxxx<span class="token punctuation">:</span>/home/git/xiaohehe_site
-  <span class="token key atrule">branch</span><span class="token punctuation">:</span> master</code></pre>
-
-<p>现在要改成这样</p>
-<pre class="language-yaml" data-language="yaml"><code class="language-yaml"><span class="token comment"># Deployment</span>
-<span class="token comment">## Docs: https://hexo.io/docs/one-command-deployment</span>
-<span class="token key atrule">deploy</span><span class="token punctuation">:</span>
-  type<span class="token punctuation">:</span></code></pre>
-
-<p>嗯🤔，还要将 .git 的文件夹、.gitignore 和 .vercelignore 给复制到我的原项目中。</p>
-<h3 id="部署阶段"><a href="#部署阶段" class="headerlink" title="部署阶段"></a>部署阶段</h3><p>最后可以开始提交代码到远程仓库了。不过我在提交到远程仓库的时候会出现一个问题。下面是控制台输出的警告。这个警告是我的 git 项目中还有一个 git 项目，所以就出现了这个警告。</p>
-<p>因为 Hexo 的第三方主题也是一个 git 项目。</p>
-<pre class="language-none"><code class="language-none">hint: You&#39;ve added another git repository inside your current repository.
-hint: Clones of the outer repository will not contain the contents of
-hint: the embedded repository and will not know how to obtain it.
-hint: If you meant to add a submodule, use:
-hint: 
-hint:   git submodule add &lt;url&gt; themes&#x2F;yun
-hint: 
-hint: If you added this path by mistake, you can remove it from the
-hint: index with:
-hint: 
-hint:   git rm --cached themes&#x2F;yun
-hint: 
-hint: See &quot;git help submodule&quot; for more information.</code></pre>
-
-<p>所以需要做的是，先清空暂存区中的 themes/yun ，然后将 yun 这个文件夹给添加进来。</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token function">git</span> <span class="token function">rm</span> --cached themes/yun
-<span class="token function">git</span> <span class="token function">add</span> themes/yun/</code></pre>
-
-<p>解决办法参照于 <a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1583762">git仓库包含子仓库时，add报错的解决办法</a></p>
-<p>然后我们提交试试看，看看能不能正确的部署成功。</p>
-<p><img src="/journal/website-migrate/QQ%E6%88%AA%E5%9B%BE20210625102537.png" alt="QQ截图20210625102537.png" loading="lazy"></p>
-<p>看起来是部署成功了，但是很多日志中的图片都没有全部展示出来。然后再 Vercel 的日志（部分内容）中发现这些图片的链接被指向了一个未知的地方。</p>
-<pre class="language-log" data-language="log"><code class="language-log">11:15:23.350  	update link as:--&gt;&#x2F;.top&#x2F;&#x2F;2007786.jpg
-11:15:23.352  	update link as:--&gt;&#x2F;.top&#x2F;&#x2F;QQ%E6%88%AA%E5%9B%BE20210419200043.jpg
-11:15:23.352  	update link as:--&gt;&#x2F;.top&#x2F;&#x2F;QQ%E6%88%AA%E5%9B%BE20210419201526.jpg
-11:15:23.353  	update link as:--&gt;&#x2F;.top&#x2F;&#x2F;QQ%E6%88%AA%E5%9B%BE20210419201708.jpg
-11:15:23.353  	update link as:--&gt;&#x2F;.top&#x2F;&#x2F;QQ%E6%88%AA%E5%9B%BE20210419203658.jpg
-11:15:23.353  	update link as:--&gt;&#x2F;.top&#x2F;&#x2F;QQ%E6%88%AA%E5%9B%BE20210419203715.jpg
-11:15:23.353  	update link as:--&gt;&#x2F;.top&#x2F;&#x2F;QQ%E6%88%AA%E5%9B%BE20210419205135.jpg
-11:15:23.353  	update link as:--&gt;&#x2F;.top&#x2F;&#x2F;QQ%E6%88%AA%E5%9B%BE20210419205204.jpg</code></pre>
-
-<p>后面这个问题被我困扰了半天，头都秃了😭😭😭，然后后面据我所知，这个问题是 hexo-asset-tag 这个插件有问题，这个插件在两年前就已经提出。具体请看这个 GitHub 上的 <a target="_blank" rel="noopener" href="https://github.com/xcodebuild/hexo-asset-image/issues/47">issue</a></p>
-<p>但是、但是，我还发现别人已经把修改好的版本上传到 GitHub 并且能够使用 npm 来安装。太对了哥，哥太对，哈哈哈哈哈哈哈，我还以为没救了。所以，在 package.json 中的 dependencies 的 hexo-asset-image 的依赖改成如下所示。</p>
-<pre class="language-json" data-language="json"><code class="language-json"><span class="token punctuation">&#123;</span>
-    <span class="token property">"dependencies"</span><span class="token operator">:</span> <span class="token punctuation">&#123;</span>
-        <span class="token property">"@bwqdxxg/hexo-asset-image"</span><span class="token operator">:</span> <span class="token string">"^0.1.1"</span><span class="token punctuation">,</span>
-        <span class="token property">"hexo"</span><span class="token operator">:</span> <span class="token string">"^5.0.0"</span><span class="token punctuation">,</span>
-        <span class="token property">"hexo-deployer-git"</span><span class="token operator">:</span> <span class="token string">"^3.0.0"</span><span class="token punctuation">,</span>
-        <span class="token property">"hexo-generator-archive"</span><span class="token operator">:</span> <span class="token string">"^1.0.0"</span><span class="token punctuation">,</span>
-        <span class="token property">"hexo-generator-category"</span><span class="token operator">:</span> <span class="token string">"^1.0.0"</span><span class="token punctuation">,</span>
-        <span class="token property">"hexo-generator-index"</span><span class="token operator">:</span> <span class="token string">"^2.0.0"</span><span class="token punctuation">,</span>
-        <span class="token property">"hexo-generator-tag"</span><span class="token operator">:</span> <span class="token string">"^1.0.0"</span><span class="token punctuation">,</span>
-        <span class="token property">"hexo-render-pug"</span><span class="token operator">:</span> <span class="token string">"^2.1.4"</span><span class="token punctuation">,</span>
-        <span class="token property">"hexo-renderer-ejs"</span><span class="token operator">:</span> <span class="token string">"^1.0.0"</span><span class="token punctuation">,</span>
-        <span class="token property">"hexo-renderer-marked"</span><span class="token operator">:</span> <span class="token string">"^4.0.0"</span><span class="token punctuation">,</span>
-        <span class="token property">"hexo-renderer-stylus"</span><span class="token operator">:</span> <span class="token string">"^2.0.0"</span><span class="token punctuation">,</span>
-        <span class="token property">"hexo-server"</span><span class="token operator">:</span> <span class="token string">"^2.0.0"</span><span class="token punctuation">,</span>
-        <span class="token property">"hexo-tag-aplayer"</span><span class="token operator">:</span> <span class="token string">"^3.0.4"</span><span class="token punctuation">,</span>
-        <span class="token property">"hexo-theme-landscape"</span><span class="token operator">:</span> <span class="token string">"^0.0.3"</span>
- 	<span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span></code></pre>
-
-<p>改完之后，然后我们重新上传到 GitHub 上让他自动部署看看图片能否正常显示。看，图片可以正常的显示了。</p>
-<p><img src="/journal/website-migrate/QQ%E6%88%AA%E5%9B%BE20210625163004.png" loading="lazy"></p>
-<p>然后我们再看看 Vercel 的日志输出情况（部分内容），发现图片的指向已经正常了。</p>
-<pre class="language-log" data-language="log"><code class="language-log">16:28:21.331  	update link as:--&gt;&#x2F;2021&#x2F;04&#x2F;19&#x2F;How-do-you-configure-ssh-in-your-pc&#x2F;2007786.jpg
-16:28:21.334  	update link as:--&gt;&#x2F;2021&#x2F;04&#x2F;19&#x2F;How-do-you-configure-ssh-in-your-pc&#x2F;QQ%E6%88%AA%E5%9B%BE20210419200043.jpg
-16:28:21.334  	update link as:--&gt;&#x2F;2021&#x2F;04&#x2F;19&#x2F;How-do-you-configure-ssh-in-your-pc&#x2F;QQ%E6%88%AA%E5%9B%BE20210419201526.jpg
-16:28:21.334  	update link as:--&gt;&#x2F;2021&#x2F;04&#x2F;19&#x2F;How-do-you-configure-ssh-in-your-pc&#x2F;QQ%E6%88%AA%E5%9B%BE20210419201708.jpg
-16:28:21.334  	update link as:--&gt;&#x2F;2021&#x2F;04&#x2F;19&#x2F;How-do-you-configure-ssh-in-your-pc&#x2F;QQ%E6%88%AA%E5%9B%BE20210419203658.jpg
-16:28:21.334  	update link as:--&gt;&#x2F;2021&#x2F;04&#x2F;19&#x2F;How-do-you-configure-ssh-in-your-pc&#x2F;QQ%E6%88%AA%E5%9B%BE20210419203715.jpg
-16:28:21.334  	update link as:--&gt;&#x2F;2021&#x2F;04&#x2F;19&#x2F;How-do-you-configure-ssh-in-your-pc&#x2F;QQ%E6%88%AA%E5%9B%BE20210419205135.jpg
-16:28:21.335  	update link as:--&gt;&#x2F;2021&#x2F;04&#x2F;19&#x2F;How-do-you-configure-ssh-in-your-pc&#x2F;QQ%E6%88%AA%E5%9B%BE20210419205204.jpg</code></pre>
-
-<p>此时，小站已经成功迁移到代码仓库中。</p>
-<h2 id="提升访问速度"><a href="#提升访问速度" class="headerlink" title="提升访问速度"></a>提升访问速度</h2><p>说到给自己的网站加速，就可以使用 CDN 来进行加速。如果使用国内的 CDN 的话，那么需要将你要加速的网站进行 ICP 备案才能使用国内的 CDN 服务。</p>
-<p>我自己的小站是有经过 ICP 备案并且使用某拍云进行加速。这也对境内的用户也非常好的，访问速度也会非常的快。</p>
-<h3 id="回源出现问题"><a href="#回源出现问题" class="headerlink" title="回源出现问题"></a>回源出现问题</h3><p>不过我今晚又试了试，发现又拍云在回源到 Vercel 的时候，回源不了。绝了呀😢😢</p>
-<p>看来只好先 Vercel 作为自己的备用站点，只好用 GitHub Page 配合 CDN 来作为主站点了。</p>
-<h3 id="部署到-GitHub-Page"><a href="#部署到-GitHub-Page" class="headerlink" title="部署到 GitHub Page"></a>部署到 GitHub Page</h3><p>以后，GitHub Page 就将是我的主站了。</p>
-<p>GitHub Pages 需要将代码仓库公开才能够使用。先创建一个名字为 BestGuo2020.github.io 的仓库，这是一个固定的规则。然后又需要改一改 _config.yml 的配置文件</p>
-<pre class="language-yaml" data-language="yaml"><code class="language-yaml"><span class="token key atrule">deploy</span><span class="token punctuation">:</span>
-  <span class="token key atrule">type</span><span class="token punctuation">:</span> git
-  <span class="token key atrule">repo</span><span class="token punctuation">:</span> git@github.com<span class="token punctuation">:</span>BestGuo2020/BestGuo2020.github.io.git
-  <span class="token key atrule">branch</span><span class="token punctuation">:</span> master</code></pre>
-
-<p>最后使用 hexo d，将 .deploy_git 中的代码给 push 到该仓库中。push 完成之后就能看到这里面的内容了。</p>
-<p><img src="/journal/website-migrate/QQ%E6%88%AA%E5%9B%BE20210625214029.png" loading="lazy"></p>
-<p>设置一下 A 记录，我的根域名还没有利用到，就将我的根域名 bestguo.top 指向到 GitHub page 中的一个 ip 地址。</p>
-<p><img src="/journal/website-migrate/QQ%E6%88%AA%E5%9B%BE20210625215114.png" loading="lazy"></p>
-<p>然后在 GitHub Page 仓库中的设置里面，自定义域名，这里设置的域名类似于跳转到 <a href="http://www.bestguo.top/">www.bestguo.top</a> 这个网页这个意思吧。比如我输入 bestguo.top 就会自动重定向到 <a href="http://www.bestguo.top/">www.bestguo.top</a> 。</p>
-<p><img src="/journal/website-migrate/ffdfdf.png" loading="lazy"></p>
-<p>待他自动部署完成之后，再次访问，可以正常使用 <a href="https://www.bestguo.top/">https://www.bestguo.top</a> 访问了，使用这些 <a target="_blank" rel="noopener" href="http://bestguo.top、https//bestguo.top">http://bestguo.top、https://bestguo.top</a> 都将会自动重定向到最前面的域名。</p>
-<p><img src="/journal/website-migrate/QQ%E6%88%AA%E5%9B%BE20210625220159.png" loading="lazy"></p>
-<h2 id="最后的收尾工作"><a href="#最后的收尾工作" class="headerlink" title="最后的收尾工作"></a>最后的收尾工作</h2><p>突然想到一个更简化的操作，在提交整个源项目到 GitHub 的时候会自动构建嘛，所以这个时候在他自动构建的时候执行一下 hexo deploy 命令，就可以将 .deploy_git 中的文件推送到 GitHub Pages 中，这样应该是能行的。试试看。</p>
-<p>行吧，他居然报错了。因为 Vercel 中没有私钥呀，所以再部署到 GitHub Pages 中时，才会爆出严重的错误。</p>
-<p><img src="/journal/website-migrate/QQ%E6%88%AA%E5%9B%BE20210625221716.png" alt="QQ截图20210625221716" loading="lazy"></p>
-<p>看来目前要提交两次，一个是 GitHub Pages，另外一个是 Vercel 了。</p>
-<h3 id="奇怪的-404"><a href="#奇怪的-404" class="headerlink" title="奇怪的 404"></a>奇怪的 404</h3><p>当我点开我写的文章时，突然就 404 了。</p>
-<p><img src="/journal/website-migrate/QQ%E6%88%AA%E5%9B%BE20210625224356.png" alt="QQ截图20210625224356" loading="lazy"></p>
-<p>百度了解了一下，需要将 CNAME 文件放到我们的 source 目录下就好了。</p>
-<p><img src="/journal/website-migrate/QQ%E5%9B%BE%E7%89%8720210625230445.png" alt="QQ图片20210625230445" loading="lazy"></p>
-<p>最后访问一下，可以正常的显示出来了。</p>
-<p><img src="/journal/website-migrate/QQ%E6%88%AA%E5%9B%BE20210625230650.png" alt="QQ截图20210625230650" loading="lazy"></p>
-<p>好了，小站迁移完成，将阿里云的源站进行关闭，站点迁移工作已经全部结束了。</p>
-<p>弄了一天了，我也该歇会儿了😪😪😪。</p>
-<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>主站：<a href="https://www.bestguo.top/">https://www.bestguo.top</a> | <a target="_blank" rel="noopener" href="https://bestguo.top/">https://bestguo.top</a></p>
-<p>备用：<a target="_blank" rel="noopener" href="https://blog.bestguo.top/">https://blog.bestguo.top</a> | <a target="_blank" rel="noopener" href="https://bestguo.vercel.app/">https://bestguo.vercel.app/</a></p>
-<p>参考：</p>
-<ul>
-<li><a target="_blank" rel="noopener" href="https://www.yunyoujun.cn/note/use-cdn-speed-up-site/">使用 CDN 加速你的 GitHub Pages 网站</a></li>
-<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/147723106">什么是CNAME</a></li>
-<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/Belingda/article/details/100635572">github page+hexo 绑定域名后页面显示404</a></li>
-</ul>
-</div></section><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>BestGuo2020</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="https://www.bestguo.top/journal/website-migrate/" title="小站迁移工作小记">https://www.bestguo.top/journal/website-migrate/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><span class="icon iconify" data-icon="ri:creative-commons-line"></span><span class="icon iconify" data-icon="ri:creative-commons-by-line"></span><span class="icon iconify" data-icon="ri:creative-commons-nc-line"></span><span class="icon iconify" data-icon="ri:creative-commons-sa-line"></span></a> 许可协议。</li></ul></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/journal/springboot-annotations-ususally/" rel="prev" title="SpringBoot注解的学习"><span class="icon iconify" data-icon="ri:arrow-left-s-line"></span><span class="post-nav-text">SpringBoot注解的学习</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/journal/how-to-use-websql/" rel="next" title="WebSQL 使用小记"><span class="post-nav-text">WebSQL 使用小记</span><span class="icon iconify" data-icon="ri:arrow-right-s-line"></span></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>请诸位理性发言！</span><br><span>请勿发布违反中国大陆地区法律的言论，请勿人身攻击、谩骂、侮辱和煽动式的语言。</span><br></div><div id="waline"></div><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/@waline/client@v2/dist/waline.css"><script>window.CONFIG.waline.config.path = "/journal/website-migrate/"</script><div class="js-Pjax"><script src="/js/comments/waline.js" type="module" defer></script></div></div></main><footer class="sidebar-translate" id="footer"><div class="beian"><a rel="noopener" href="https://beian.miit.gov.cn/" target="_blank">赣 ICP 备 20009988 号</a></div><div class="copyright"><span>&copy; 2019 – 2023 </span><span class="with-love" id="animate"><span class="icon iconify" data-icon="ri:cloud-line"></span></span><span class="author"> BestGuo2020</span></div><div class="powered"><span>由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v6.2.0</span><span class="footer-separator">|</span><span>主题 - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.10.9</span></div><div class="live-time"><span>本站点已正常地运行</span><span id="display_live_time"></span><span class="moe-text"><br/>♬(ノ゜∇゜)ノ♩<br></span><script>function blog_live_time() {
-  setTimeout(blog_live_time, 1000);
-  const start = new Date('2019-01-01T00:00:00');
-  const now = new Date();
-  const timeDiff = (now.getTime() - start.getTime());
-  const msPerMinute = 60 * 1000;
-  const msPerHour = 60 * msPerMinute;
-  const msPerDay = 24 * msPerHour;
-  const passDay = Math.floor(timeDiff / msPerDay);
-  const passHour = Math.floor((timeDiff % msPerDay) / 60 / 60 / 1000);
-  const passMinute = Math.floor((timeDiff % msPerHour) / 60 / 1000);
-  const passSecond = Math.floor((timeDiff % msPerMinute) / 1000);
-  display_live_time.innerHTML = ` ${passDay} 天 ${passHour} 小时 ${passMinute} 分 ${passSecond} 秒`;
+.post-body {
+  padding: 0 5rem;
+tablet()
+mobile()
 }
-blog_live_time();
-</script></div><div id="busuanzi"><span id="busuanzi_container_site_uv" title="总访客量"><span><span class="icon iconify" data-icon="ri:user-line"></span></span><span id="busuanzi_value_site_uv"></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv" title="总访问量"><span><span class="icon iconify" data-icon="ri:eye-line"></span></span><span id="busuanzi_value_site_pv"></span></span><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div class="footer-support"><span>本网站由</span><a class="footer-support-logo" href="https://www.upyun.com/?utm_source=lianmeng&amp;utm_medium=referral" target="blank" title="又拍云"><img height="30" src="https://cdn.yunyoujun.cn/img/logo/upyun-logo.png" alt="又拍云"></a><span>提供 CDN 加速服务</span></div></footer></div><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><span class="icon iconify" data-icon="ri:arrow-up-s-line"></span><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a><a class="popup-trigger hty-icon-button icon-search" id="search" href="javascript:;" title="搜索"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:search-line"></span></span></a><script>window.addEventListener("DOMContentLoaded", () => {
-  // Handle and trigger popup window
-  document.querySelector(".popup-trigger").addEventListener("click", () => {
-    document.querySelector(".popup").classList.add("show");
-    setTimeout(() => {
-      document.querySelector(".search-input").focus();
-    }, 100);
-  });
-
-  // Monitor main search box
-  const onPopupClose = () => {
-    document.querySelector(".popup").classList.remove("show");
-  };
-
-  document.querySelector(".popup-btn-close").addEventListener("click", () => {
-    onPopupClose();
-  });
-
-  window.addEventListener("keyup", event => {
-    if (event.key === "Escape") {
-      onPopupClose();
-    }
-  });
-});
-</script><script src="https://fastly.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js"></script><script src="/js/search/local-search.js" defer type="module"></script><div class="popup search-popup"><div class="search-header"><span class="popup-btn-close close-icon hty-icon-button"><span class="icon iconify" data-icon="ri:close-line"></span></span></div><div class="search-input-container"><input class="search-input" id="local-search-input" type="text" placeholder="搜索..." value=""></div><div class="search-result-container"></div></div></body></html>
+.post-meta {
+  font-size: 14px;
+  color: var(--hty-secondary-text-color);
+}
+.post-meta .icon {
+  margin-bottom: -1px;
+}
+.post-description {
+  font-weight: normal;
+  padding: 0.5rem;
+}
+.post-author {
+  display: flex;
+  justify-content: center;
+}
+.post-author .author-avatar {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 0;
+}
+.post-author .author-avatar img {
+  border-radius: 50%;
+  height: 1rem;
+  width: 1rem;
+  padding: 2px;
+  border: 2px solid #d3d3d3;
+}
+.post-author .author-name {
+  margin-left: 0.5rem;
+  font-size: 1rem;
+}
+.post-meta-item-icon {
+  display: inline-block;
+  color: var(--text-color, --hty-secondary-text-color);
+}
+.post-meta-divider {
+  height: 25px;
+  color: var(--hty-secondary-text-color);
+  margin: 0 0.5rem;
+}
+.post-eof {
+  margin: 50px auto;
+  width: 50%;
+  height: 1px;
+  background: $blue;
+  opacity: 0.1;
+}
+.post-copyright {
+  font-size: 0.9rem;
+  margin: 0.5rem 5rem 1rem 5rem;
+  padding: 0.5rem 1rem;
+  border-left: 4px solid #ff5252;
+  background-color: var(--hty-bg-color);
+  list-style: none;
+  word-break: break-all;
+  position: relative;
+  overflow: hidden;
+mobile()
+}
+.post-copyright::after {
+  position: absolute;
+  color: #fff;
+  background: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 496 512'%3E%3Cpath fill='gray' d='M245.8 214.9l-33.2 17.3c-9.4-19.6-25.2-20-27.4-20-22.2 0-33.3 14.6-33.3 43.9 0 23.5 9.2 43.8 33.3 43.8 14.4 0 24.6-7 30.5-21.3l30.6 15.5a73.2 73.2 0 01-65.1 39c-22.6 0-74-10.3-74-77 0-58.7 43-77 72.6-77 30.8-.1 52.7 11.9 66 35.8zm143 0l-32.7 17.3c-9.5-19.8-25.7-20-27.9-20-22.1 0-33.2 14.6-33.2 43.9 0 23.5 9.2 43.8 33.2 43.8 14.5 0 24.7-7 30.5-21.3l31 15.5c-2 3.8-21.3 39-65 39-22.7 0-74-9.9-74-77 0-58.7 43-77 72.6-77C354 179 376 191 389 214.8zM247.7 8C104.7 8 0 123 0 256c0 138.4 113.6 248 247.6 248C377.5 504 496 403 496 256 496 118 389.4 8 247.6 8zm.8 450.8c-112.5 0-203.7-93-203.7-202.8 0-105.5 85.5-203.3 203.8-203.3A201.7 201.7 0 01451.3 256c0 121.7-99.7 202.9-202.9 202.9z'/%3E%3C/svg%3E");
+  content: ' ';
+  height: 10rem;
+  width: 10rem;
+  right: -2rem;
+  top: -2rem;
+  opacity: 0.1;
+}
+.tag-name {
+  padding: 0 0.1rem;
+}

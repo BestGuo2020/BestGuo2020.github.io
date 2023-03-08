@@ -1,704 +1,86 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="BestGuo2020"><meta name="copyright" content="BestGuo2020"><meta name="generator" content="Hexo 6.2.0"><meta name="theme" content="hexo-theme-yun"><title>MongoDB 学习笔记 | BestGuo 的小窝</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/star-markdown-css@0.4.1/dist/yun/yun-markdown.min.css"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/prism-theme-vars/base.css"><script src="https://fastly.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>function initScrollReveal() {
-  [".post-card",".markdown-body img"].forEach((target)=> {
-    ScrollReveal().reveal(target);
-  })
+.post-block {
+  color: var(--hty-text-color);
+  margin: 0 1rem;
+  padding: 1rem;
+  background-color: var(--post-block-bg-color);
+mobile()
 }
-document.addEventListener("DOMContentLoaded", initScrollReveal);
-document.addEventListener("pjax:success", initScrollReveal);
-</script><link rel="icon" type="image/png" href="/favicon.ico"><link rel="mask-icon" href="/favicon.ico" color="#0078E7"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="preconnect" href="https://fastly.jsdelivr.net/npm/" crossorigin><script id="yun-config">
-    window.Yun = {}
-    window.CONFIG = {"hostname":"www.bestguo.top","root":"/","title":["Best","Guo","的","小","窝"],"version":"1.10.9","mode":"time","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"搜索...","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）"},"anonymous_image":"https://cdn.yunyoujun.cn/img/avatar/none.jpg","say":{"api":"https://el-bot-api.vercel.app/api/words/young"},"local_search":{"path":"/search.xml"},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false,"src":"/js/search/local-search.js"},"fireworks":{"colors":null},"waline":{"config":{"enable":true,"serverURL":"https://comment.bestguo.top","comment":true,"requiredFields":["nick","mail"],"placeholder":"有什么想要对 BestGuo 说的呢，输入正确有效的邮箱有机会收到回复哟😊😊","avatarCDN":"https://seccdn.libravatar.org/avatar/","emoji":["https://unpkg.com/@waline/emojis@1.0.1/weibo/","https://unpkg.com/@waline/emojis@1.0.1/bilibili/","https://unpkg.com/@waline/emojis@1.0.1/qq/","https://unpkg.com/@waline/emojis@1.0.1/tieba/"],"avatar":"monsterid","el":"#waline","lang":"zh-CN"},"cdn":"https://fastly.jsdelivr.net/npm/@waline/client@v2/dist/waline.js","dark":"html.dark"},"vendors":{"host":"https://fastly.jsdelivr.net/npm/","darken":"https://fastly.jsdelivr.net/npm/darken@1.5.0"}};
-  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/hexo-theme-yun.js" type="module"></script><link rel="preconnect" href="https://www.google-analytics.com" crossorigin><script async src="https://www.googletagmanager.com/gtag/js?id=G-907LWSSHLS"></script><script>if (CONFIG.hostname === location.hostname) {
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-907LWSSHLS');
-}</script><script>(function(){
-  var bp = document.createElement('script');
-  var curProtocol = window.location.protocol.split(':')[0];
-  if (curProtocol === 'https') {
-    bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
-  }
-  else {
-    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
-  }
-  var s = document.getElementsByTagName("script")[0];
-  s.parentNode.insertBefore(bp, s);
-})();</script><meta name="description" content="MongoDB 相关概念MongoDB 中基本的概念是文档、集合、数据库。 数据库MongoDB 的单个实例可以容纳多个独立的数据库，每一个都有自己的集合和权限，不同的数据库也放置在不同的文件中。 文档文档类似于 MySQL 中的一条记录（row），其大小不能超过 16M。文档内的属性不能包含 null 字符，句点（.），美元符号（$），不能以 system 开头。 文档的存储是以 JSON 的形">
-<meta property="og:type" content="article">
-<meta property="og:title" content="MongoDB 学习笔记">
-<meta property="og:url" content="https://www.bestguo.top/journal/mongodb-crud/index.html">
-<meta property="og:site_name" content="BestGuo 的小窝">
-<meta property="og:description" content="MongoDB 相关概念MongoDB 中基本的概念是文档、集合、数据库。 数据库MongoDB 的单个实例可以容纳多个独立的数据库，每一个都有自己的集合和权限，不同的数据库也放置在不同的文件中。 文档文档类似于 MySQL 中的一条记录（row），其大小不能超过 16M。文档内的属性不能包含 null 字符，句点（.），美元符号（$），不能以 system 开头。 文档的存储是以 JSON 的形">
-<meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-06-29T16:34:42.000Z">
-<meta property="article:modified_time" content="2022-10-14T00:21:24.775Z">
-<meta property="article:author" content="BestGuo2020">
-<meta property="article:tag" content="MongoDB">
-<meta name="twitter:card" content="summary"><script>(function() {
-  if (CONFIG.mode !== 'auto') return
-  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-  const setting = localStorage.getItem('darken-mode') || 'auto'
-  if (setting === 'dark' || (prefersDark && setting !== 'light'))
-    document.documentElement.classList.toggle('dark', true)
-})()</script></head><body><script src="https://code.iconify.design/2/2.1.1/iconify.min.js"></script><script>// Define global variable
-IconifyProviders = {
-  // Empty prefix: overwrite default API provider configuration
-  '': {
-    // Use custom API first, use Iconify public API as backup
-    resources: [
-        'https://api.iconify.design',
-    ],
-    // Wait for 1 second before switching API hosts
-    rotate: 1000,
-  },
-};</script><script defer src="https://fastly.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js" type="module"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js" type="module"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><span class="icon iconify" data-icon="ri:list-ordered"></span></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><span class="icon iconify" data-icon="ri:passport-line"></span></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="BestGuo2020"><img width="96" loading="lazy" src="/images/avatar.png" alt="BestGuo2020"><span class="site-author-status" title="在找工作">👨‍💻</span></a><div class="site-author-name"><a href="/about/">BestGuo2020</a></div><a class="site-name" href="/about/site.html">BestGuo 的小窝</a><sub class="site-subtitle">善良、勇敢、可爱</sub><div class="site-description">一个人的世界是如此的安静</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="首页"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:home-4-line"></span></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:archive-line"></span></span><span class="site-state-item-count">79</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:folder-2-line"></span></span><span class="site-state-item-count">23</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="site-state-item-count">49</span></a></div><a class="site-state-item hty-icon-button" href="/albums/" title="相册集"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:gallery-line"></span></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://wpa.qq.com/msgrd?v=3&amp;uin=1540113012&amp;site=qq&amp;menu=yes" title="QQ：xiaohehe2021" target="_blank" style="color:#12B7F5"><span class="icon iconify" data-icon="ri:qq-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/bestguo2020" title="GitHub：BestGuo2020" target="_blank" style="color:#8251e6"><span class="icon iconify" data-icon="ri:github-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/184681623" title="哔哩哔哩: 我叫人员外婆" target="_blank" style="color:#FF8EB3"><span class="icon iconify" data-icon="ri:bilibili-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:bestguo2020@foxmail.com" title="E-Mail" target="_blank" style="color:#8E71C1"><span class="icon iconify" data-icon="ri:mail-line"></span></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><span class="icon iconify" data-icon="ri:contrast-2-line"></span></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#MongoDB-%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5"><span class="toc-number">1.</span> <span class="toc-text">MongoDB 相关概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-number">1.1.</span> <span class="toc-text">数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E6%A1%A3"><span class="toc-number">1.2.</span> <span class="toc-text">文档</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9B%86%E5%90%88"><span class="toc-number">1.3.</span> <span class="toc-text">集合</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL-%E4%B8%8E-NoSQL-%E5%AF%B9%E6%AF%94"><span class="toc-number">2.</span> <span class="toc-text">SQL 与 NoSQL 对比</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MongoDB-%E6%95%B0%E6%8D%AE%E5%BA%93%E6%93%8D%E4%BD%9C"><span class="toc-number">3.</span> <span class="toc-text">MongoDB 数据库操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#show-%E5%91%BD%E4%BB%A4"><span class="toc-number">3.1.</span> <span class="toc-text">show 命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#use-%E5%91%BD%E4%BB%A4"><span class="toc-number">3.2.</span> <span class="toc-text">use 命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#db-%E5%91%BD%E4%BB%A4"><span class="toc-number">3.3.</span> <span class="toc-text">db 命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E9%9B%86%E5%90%88-%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-number">3.4.</span> <span class="toc-text">创建集合&#x2F;数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E9%9B%86%E5%90%88"><span class="toc-number">3.5.</span> <span class="toc-text">删除集合</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8F%92%E5%85%A5%E6%96%87%E6%A1%A3"><span class="toc-number">3.6.</span> <span class="toc-text">插入文档</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#insert-%E6%96%B9%E6%B3%95"><span class="toc-number">3.6.1.</span> <span class="toc-text">insert 方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#save-%E6%96%B9%E6%B3%95"><span class="toc-number">3.6.2.</span> <span class="toc-text">save 方法</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9B%B4%E6%96%B0%E6%96%87%E6%A1%A3"><span class="toc-number">3.7.</span> <span class="toc-text">更新文档</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2%E6%96%87%E6%A1%A3"><span class="toc-number">3.8.</span> <span class="toc-text">查询文档</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%98%BE%E7%A4%BA%E6%8C%87%E5%AE%9A%E7%9A%84%E5%AD%97%E6%AE%B5"><span class="toc-number">3.8.1.</span> <span class="toc-text">显示指定的字段</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#AND-%E6%9D%A1%E4%BB%B6"><span class="toc-number">3.8.2.</span> <span class="toc-text">AND 条件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#OR-%E6%9D%A1%E4%BB%B6"><span class="toc-number">3.8.3.</span> <span class="toc-text">OR 条件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C%E7%AC%A6"><span class="toc-number">3.8.4.</span> <span class="toc-text">操作符</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#great-than"><span class="toc-number">3.8.4.1.</span> <span class="toc-text">great than</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#less-than"><span class="toc-number">3.8.4.2.</span> <span class="toc-text">less than</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#great-than-or-equals"><span class="toc-number">3.8.4.3.</span> <span class="toc-text">great than or equals</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#less-than-or-equals"><span class="toc-number">3.8.4.4.</span> <span class="toc-text">less than or equals</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A8%A1%E7%B3%8A%E6%9F%A5%E8%AF%A2"><span class="toc-number">3.8.5.</span> <span class="toc-text">模糊查询</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%81%94%E5%8A%A8"><span class="toc-number">3.8.6.</span> <span class="toc-text">联动</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E6%96%87%E6%A1%A3"><span class="toc-number">3.9.</span> <span class="toc-text">删除文档</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%92%E5%BA%8F"><span class="toc-number">3.10.</span> <span class="toc-text">排序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Limit-%E4%B8%8E-Skip"><span class="toc-number">3.11.</span> <span class="toc-text">Limit 与 Skip</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%81%9A%E5%90%88"><span class="toc-number">3.12.</span> <span class="toc-text">聚合</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E5%88%86%E7%BB%84%E7%BB%9F%E8%AE%A1%E4%B8%AA%E6%95%B0"><span class="toc-number">3.12.1.</span> <span class="toc-text">利用分组统计个数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E5%88%86%E7%BB%84%E6%B1%82%E5%B9%B3%E5%9D%87%E5%80%BC%E3%80%81%E6%9C%80%E5%B0%8F%E5%80%BC%E5%92%8C%E6%9C%80%E5%A4%A7%E5%80%BC"><span class="toc-number">3.12.2.</span> <span class="toc-text">利用分组求平均值、最小值和最大值</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%86%E7%BB%84%E7%BB%93%E6%9E%9C%E6%8E%92%E5%BA%8F"><span class="toc-number">3.12.3.</span> <span class="toc-text">分组结果排序</span></a></li></ol></li></ol></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article" style="--smc-primary:#0078E7;"><link itemprop="mainEntityOfPage" href="https://www.bestguo.top/journal/mongodb-crud/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="BestGuo2020"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="BestGuo 的小窝"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">MongoDB 学习笔记</h1><div class="post-meta"><div class="post-time"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:calendar-line"></span></span> <time title="创建时间：2022-06-30 00:34:42" itemprop="dateCreated datePublished" datetime="2022-06-30T00:34:42+08:00">2022-06-30</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:calendar-2-line"></span></span> <time title="修改时间：2022-10-14 08:21:24" itemprop="dateModified" datetime="2022-10-14T08:21:24+08:00">2022-10-14</time></div><span class="post-busuanzi"><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读次数"><span class="icon iconify" data-icon="ri:eye-line"></span> <span id="busuanzi_value_page_pv"></span></span></span><span class="post-meta-divider">-</span><a href="#comment"><span class="post-meta-item-icon" title="评论数"><span class="icon iconify" data-icon="ri:chat-3-line"></span> <span class="waline-comment-count" id="/journal/mongodb-crud/"></span></span></a><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><span class="icon iconify" data-icon="ri:folder-line"></span></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">后端开发</span></a></span> > <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AD%A6%E4%B9%A0/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">数据库学习</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/MongoDB/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">MongoDB</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body"><h2 id="MongoDB-相关概念"><a href="#MongoDB-相关概念" class="headerlink" title="MongoDB 相关概念"></a>MongoDB 相关概念</h2><p>MongoDB 中基本的概念是文档、集合、数据库。</p>
-<h3 id="数据库"><a href="#数据库" class="headerlink" title="数据库"></a>数据库</h3><p>MongoDB 的单个实例可以容纳多个独立的数据库，每一个都有自己的集合和权限，不同的数据库也放置在不同的文件中。</p>
-<h3 id="文档"><a href="#文档" class="headerlink" title="文档"></a>文档</h3><p>文档类似于 MySQL 中的一条记录（row），其大小不能超过 16M。文档内的属性不能包含 null 字符，句点（.），美元符号（$），不能以 system 开头。</p>
-<p>文档的存储是以 JSON 的形式保存，在 MongoDB 中以 BSON（二进制的 JSON）的形式存储着。</p>
-<span id="more"></span>
-
-<pre class="language-json" data-language="json"><code class="language-json"><span class="token punctuation">&#123;</span><span class="token property">"site"</span><span class="token operator">:</span><span class="token string">"www.bestguo.top"</span><span class="token punctuation">,</span> <span class="token property">"name"</span><span class="token operator">:</span><span class="token string">"BestGuo 的小窝"</span><span class="token punctuation">&#125;</span></code></pre>
-
-<h3 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h3><p>集合中保存着一组文档，类似于 MySQL 中的表。集合存在于数据库中，没有固定的表结构。存储的方式可以如下。</p>
-<pre class="language-json" data-language="json"><code class="language-json"><span class="token punctuation">&#123;</span><span class="token property">"site"</span><span class="token operator">:</span><span class="token string">"www.bestguo.top"</span><span class="token punctuation">,</span> <span class="token property">"name"</span><span class="token operator">:</span><span class="token string">"BestGuo 的小窝"</span><span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span><span class="token property">"site"</span><span class="token operator">:</span><span class="token string">"www.bestguo.top"</span><span class="token punctuation">,</span> <span class="token property">"name"</span><span class="token operator">:</span><span class="token string">"BestGuo 的小窝"</span><span class="token punctuation">,</span> <span class="token property">"create"</span><span class="token operator">:</span> <span class="token string">"2019-01-01"</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span><span class="token property">"site"</span><span class="token operator">:</span><span class="token string">"www.bestguo.top"</span><span class="token punctuation">,</span> <span class="token property">"name"</span><span class="token operator">:</span><span class="token string">"BestGuo 的小窝"</span><span class="token punctuation">,</span> <span class="token property">"views"</span><span class="token operator">:</span> <span class="token string">"6672"</span><span class="token punctuation">,</span> <span class="token property">"clients"</span><span class="token operator">:</span> <span class="token string">"2835"</span><span class="token punctuation">&#125;</span></code></pre>
-
-<h2 id="SQL-与-NoSQL-对比"><a href="#SQL-与-NoSQL-对比" class="headerlink" title="SQL 与 NoSQL 对比"></a>SQL 与 NoSQL 对比</h2><p>SQL 与 NoSQL 的概念对比如下，这样就更好的理解 MongoDB 了。</p>
-<table>
-<thead>
-<tr>
-<th align="left">SQL术语/概念</th>
-<th align="left">MongoDB术语/概念</th>
-<th align="left">解释/说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="left">database</td>
-<td align="left">database</td>
-<td align="left">数据库</td>
-</tr>
-<tr>
-<td align="left">table</td>
-<td align="left">collection</td>
-<td align="left">数据库表/集合</td>
-</tr>
-<tr>
-<td align="left">row</td>
-<td align="left">document</td>
-<td align="left">数据记录行/文档</td>
-</tr>
-<tr>
-<td align="left">column</td>
-<td align="left">field</td>
-<td align="left">数据字段/域</td>
-</tr>
-<tr>
-<td align="left">index</td>
-<td align="left">index</td>
-<td align="left">索引</td>
-</tr>
-<tr>
-<td align="left">table joins</td>
-<td align="left"></td>
-<td align="left">表连接，MongoDB 不支持</td>
-</tr>
-<tr>
-<td align="left">primary key</td>
-<td align="left">primary key</td>
-<td align="left">主键，MongoDB 自动将 _id 字段设置为主键</td>
-</tr>
-</tbody></table>
-<h2 id="MongoDB-数据库操作"><a href="#MongoDB-数据库操作" class="headerlink" title="MongoDB 数据库操作"></a>MongoDB 数据库操作</h2><h3 id="show-命令"><a href="#show-命令" class="headerlink" title="show 命令"></a>show 命令</h3><p>使用 show 命令查看全部的数据库</p>
-<pre class="language-sh" data-language="sh"><code class="language-sh">show databases
-show dbs
-# &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; Run Results &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; #
-admin   0.000GB
-config  0.000GB
-local   0.000GB
-test    0.001GB</code></pre>
-
-<p>使用 show 命令显示集合</p>
-<pre class="language-sh" data-language="sh"><code class="language-sh">show collections
-# &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; Run Results &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; #
-a
-item
-mythings
-students
-user</code></pre>
-
-<h3 id="use-命令"><a href="#use-命令" class="headerlink" title="use 命令"></a>use 命令</h3><p>使用 use 命令切换数据库</p>
-<pre class="language-sh" data-language="sh"><code class="language-sh">use admin # 切换至 admin 数据库
-use test # 切换至 test 数据库</code></pre>
-
-<h3 id="db-命令"><a href="#db-命令" class="headerlink" title="db 命令"></a>db 命令</h3><p>使用 db 命令查看正在使用的数据库</p>
-<pre class="language-sh" data-language="sh"><code class="language-sh">db
-# &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; Run Results &#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D;&#x3D; #
-test</code></pre>
-
-<h3 id="创建集合-数据库"><a href="#创建集合-数据库" class="headerlink" title="创建集合/数据库"></a>创建集合/数据库</h3><blockquote>
-<p>这些操作在 BestGuo 数据库中</p>
-</blockquote>
-<p>MongoDB 中没有直接创建数据库的命令，但是使用 use 命令之后，并且执行添加集合的操作，数据库才算是真正意义上的创建。</p>
-<p>使用 <strong>db.createCollection()</strong> 方法来创建集合。</p>
-<pre class="language-javascript" data-language="javascript"><code class="language-javascript">db<span class="token punctuation">.</span><span class="token function">createCollection</span><span class="token punctuation">(</span><span class="token string">"user"</span><span class="token punctuation">)</span></code></pre>
-
-<p>或者从一个不存在的集合中插入一个文档时，它也会自动创建该集合。插入文档的操作将在后面介绍。</p>
-<pre class="language-javascript" data-language="javascript"><code class="language-javascript">db<span class="token punctuation">.</span>user_2_0<span class="token punctuation">.</span><span class="token function">insert</span><span class="token punctuation">(</span><span class="token punctuation">&#123;</span><span class="token string">"name"</span><span class="token operator">:</span> <span class="token string">"bestguo2020"</span>， <span class="token string">"age"</span><span class="token operator">:</span> <span class="token number">18</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
-<span class="token comment">/*********** Run Results ***********/</span>
-<span class="token function">WriteResult</span><span class="token punctuation">(</span><span class="token punctuation">&#123;</span> <span class="token string">"nInserted"</span> <span class="token operator">:</span> <span class="token number">1</span> <span class="token punctuation">&#125;</span><span class="token punctuation">)</span></code></pre>
-
-<h3 id="删除集合"><a href="#删除集合" class="headerlink" title="删除集合"></a>删除集合</h3><p>使用 <strong>db.collectionName.drop()</strong> 来删除集合，其中 collectionName 指的是集合名字。</p>
-<pre class="language-javascript" data-language="javascript"><code class="language-javascript">db<span class="token punctuation">.</span>user<span class="token punctuation">.</span><span class="token function">drop</span><span class="token punctuation">(</span><span class="token punctuation">)</span></code></pre>
-
-<h3 id="插入文档"><a href="#插入文档" class="headerlink" title="插入文档"></a>插入文档</h3><p>插入文档可以使用 <strong>db.collectionName.save()</strong> 方法和 <strong>db.collectionName.insert()</strong> 方法插入数据。</p>
-<blockquote>
-<p>在插入整数时，由于 json 格式只有 number 类型，mongodb 为了保证不出错将 shell 中所有的 int、double 类型都存为 double。当然官方也考虑到用户实际想保存整型的问题，故允许在 json 中增加整型函数 NumberInt() 。</p>
-<pre class="language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">var</span> data <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
-
-<span class="token keyword">for</span><span class="token punctuation">(</span><span class="token keyword">var</span> i <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">11</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    data<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token punctuation">&#123;</span>
-        <span class="token string">"name"</span><span class="token operator">:</span> <span class="token string">"德川"</span> <span class="token operator">+</span> i<span class="token punctuation">,</span>
-        <span class="token string">"age"</span><span class="token operator">:</span> <span class="token function">NumberInt</span><span class="token punctuation">(</span><span class="token number">17</span> <span class="token operator">+</span> i<span class="token punctuation">)</span><span class="token punctuation">,</span>
-        <span class="token string">"gender"</span><span class="token operator">:</span> <span class="token string">"男"</span><span class="token punctuation">,</span>
-        <span class="token string">"phone"</span><span class="token operator">:</span> <span class="token string">"0592-114514"</span>
-    <span class="token punctuation">&#125;</span><span class="token punctuation">)</span>    
-<span class="token punctuation">&#125;</span>
-
-db<span class="token punctuation">.</span>user_2_0<span class="token punctuation">.</span><span class="token function">insertMany</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span></code></pre>
-</blockquote>
-<h4 id="insert-方法"><a href="#insert-方法" class="headerlink" title="insert 方法"></a>insert 方法</h4><p>插入一条数据</p>
-<pre class="language-javascript" data-language="javascript"><code class="language-javascript">db<span class="token punctuation">.</span>user_2_0<span class="token punctuation">.</span><span class="token function">save</span><span class="token punctuation">(</span>
-    <span class="token punctuation">&#123;</span>
-        <span class="token string">"name"</span><span class="token operator">:</span> <span class="token string">"田所浩二"</span><span class="token punctuation">,</span>
-        <span class="token string">"age"</span><span class="token operator">:</span> <span class="token number">24</span><span class="token punctuation">,</span>
-        <span class="token string">"gender"</span><span class="token operator">:</span> <span class="token string">"男"</span><span class="token punctuation">,</span>
-        <span class="token string">"phone"</span><span class="token operator">:</span> <span class="token string">"0592-114514"</span>
-    <span class="token punctuation">&#125;</span>
-<span class="token punctuation">)</span></code></pre>
-
-<p>插入多条数据，由于 MongoDB 的 shell 界面是 JavaScript，因此可以编写 JavaScript 的代码。</p>
-<pre class="language-javascript" data-language="javascript"><code class="language-javascript"><span class="token keyword">var</span> data <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
-
-<span class="token keyword">for</span><span class="token punctuation">(</span><span class="token keyword">var</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">1000</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
-    data<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token punctuation">&#123;</span>
-        <span class="token string">"name"</span><span class="token operator">:</span> <span class="token string">"德川"</span> <span class="token operator">+</span> i<span class="token punctuation">,</span>
-        <span class="token string">"age"</span><span class="token operator">:</span> <span class="token number">42</span> <span class="token operator">+</span> i<span class="token punctuation">,</span>
-        <span class="token string">"gender"</span><span class="token operator">:</span> <span class="token string">"男"</span><span class="token punctuation">,</span>
-        <span class="token string">"phone"</span><span class="token operator">:</span> <span class="token string">"0592-114514"</span>
-    <span class="token punctuation">&#125;</span><span class="token punctuation">)</span>    
-<span class="token punctuation">&#125;</span>
-
-db<span class="token punctuation">.</span>user_2_0<span class="token punctuation">.</span><span class="token function">insert</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span>
-
-<span class="token comment">/***** Run Results *****/</span>
-<span class="token number">1000</span>
-Inserted <span class="token number">1</span> <span class="token function">record</span><span class="token punctuation">(</span>s<span class="token punctuation">)</span> <span class="token keyword">in</span> <span class="token number">15</span>ms</code></pre>
-
-<h4 id="save-方法"><a href="#save-方法" class="headerlink" title="save 方法"></a>save 方法</h4><pre class="language-javascript" data-language="javascript"><code class="language-javascript">db<span class="token punctuation">.</span>user_2_0<span class="token punctuation">.</span><span class="token function">save</span><span class="token punctuation">(</span>
-    <span class="token punctuation">&#123;</span>
-        <span class="token string">"name"</span><span class="token operator">:</span> <span class="token string">"lisi"</span><span class="token punctuation">,</span>
-        <span class="token string">"age"</span><span class="token operator">:</span> <span class="token number">21</span><span class="token punctuation">,</span>
-        <span class="token string">"gender"</span><span class="token operator">:</span> <span class="token string">"男"</span><span class="token punctuation">,</span>
-        <span class="token string">"phone"</span><span class="token operator">:</span> <span class="token string">"1145141919811"</span>
-    <span class="token punctuation">&#125;</span>
-<span class="token punctuation">)</span></code></pre>
-
-<p>两个方法的区别：若指定的 id 存在时，save 方法会将原有的文档进行替换，不存在则和 insert 方法是一样的。</p>
-<p><strong>使用 save 方法</strong></p>
-<p>第一次插入的数据</p>
-<pre class="language-javascript" data-language="javascript"><code class="language-javascript">db<span class="token punctuation">.</span>user_2_0<span class="token punctuation">.</span><span class="token function">save</span><span class="token punctuation">(</span>
-    <span class="token punctuation">&#123;</span>
-        <span class="token string">"_id"</span><span class="token operator">:</span> <span class="token string">"114514"</span><span class="token punctuation">,</span>
-        <span class="token string">"name"</span><span class="token operator">:</span> <span class="token string">"我修院"</span><span class="token punctuation">,</span>
-        <span class="token string">"age"</span><span class="token operator">:</span> <span class="token number">24</span><span class="token punctuation">,</span>
-        <span class="token string">"gender"</span><span class="token operator">:</span> <span class="token string">"男"</span><span class="token punctuation">,</span>
-        <span class="token string">"phone"</span><span class="token operator">:</span> <span class="token string">"0592-114514"</span>
-    <span class="token punctuation">&#125;</span>
-<span class="token punctuation">)</span></code></pre>
-
-<p>第二次插入的数据时，会有如下的提示信息。</p>
-<pre class="language-javascript" data-language="javascript"><code class="language-javascript">db<span class="token punctuation">.</span>user_2_0<span class="token punctuation">.</span><span class="token function">save</span><span class="token punctuation">(</span>
-    <span class="token punctuation">&#123;</span>
-        <span class="token string">"_id"</span><span class="token operator">:</span> <span class="token string">"114514"</span><span class="token punctuation">,</span>
-        <span class="token string">"name"</span><span class="token operator">:</span> <span class="token string">"德川"</span><span class="token punctuation">,</span>
-        <span class="token string">"age"</span><span class="token operator">:</span> <span class="token number">24</span><span class="token punctuation">,</span>
-        <span class="token string">"gender"</span><span class="token operator">:</span> <span class="token string">"男"</span><span class="token punctuation">,</span>
-        <span class="token string">"phone"</span><span class="token operator">:</span> <span class="token string">"0592-114514"</span>
-    <span class="token punctuation">&#125;</span>
-<span class="token punctuation">)</span>
-<span class="token comment">/***** Run Results *****/</span>
-Updated <span class="token number">1</span> existing <span class="token function">record</span><span class="token punctuation">(</span>s<span class="token punctuation">)</span> <span class="token keyword">in</span> <span class="token number">2</span>ms</code></pre>
-
-<p><strong>使用 insert 方法</strong></p>
-<p>再次插入数据时，会出现 <strong>duplicate key error collection</strong> 的错误信息。</p>
-<pre class="language-javascript" data-language="javascript"><code class="language-javascript">db<span class="token punctuation">.</span>user_2_0<span class="token punctuation">.</span><span class="token function">insert</span><span class="token punctuation">(</span>
-    <span class="token punctuation">&#123;</span>
-        <span class="token string">"_id"</span><span class="token operator">:</span> <span class="token string">"114514"</span><span class="token punctuation">,</span>
-        <span class="token string">"name"</span><span class="token operator">:</span> <span class="token string">"德川"</span><span class="token punctuation">,</span>
-        <span class="token string">"age"</span><span class="token operator">:</span> <span class="token number">24</span><span class="token punctuation">,</span>
-        <span class="token string">"gender"</span><span class="token operator">:</span> <span class="token string">"男"</span><span class="token punctuation">,</span>
-        <span class="token string">"phone"</span><span class="token operator">:</span> <span class="token string">"0592-114514"</span>
-    <span class="token punctuation">&#125;</span>
-<span class="token punctuation">)</span>
-<span class="token comment">/***** Run Results *****/</span>
-<span class="token constant">E11000</span> duplicate key error collection<span class="token operator">:</span> BestGuo<span class="token punctuation">.</span>user_2_0 index<span class="token operator">:</span> _id_ dup key<span class="token operator">:</span> <span class="token punctuation">&#123;</span> _id<span class="token operator">:</span> <span class="token string">"114514"</span> <span class="token punctuation">&#125;</span></code></pre>
-
-<h3 id="更新文档"><a href="#更新文档" class="headerlink" title="更新文档"></a>更新文档</h3><p>使用 <strong>db.collectionName.update()</strong> 方法对文档进行更新。使用 $set 来修改原有文档的内容</p>
-<pre class="language-javascript" data-language="javascript"><code class="language-javascript">db<span class="token punctuation">.</span>user_2_0<span class="token punctuation">.</span><span class="token function">update</span><span class="token punctuation">(</span>
-    <span class="token comment">// 修改的条件</span>
-    <span class="token punctuation">&#123;</span>
-        <span class="token string">"_id"</span><span class="token operator">:</span> <span class="token string">"114514"</span>
-    <span class="token punctuation">&#125;</span><span class="token punctuation">,</span> 
-    <span class="token comment">// 修改的内容</span>
-    <span class="token punctuation">&#123;</span>
-        $set<span class="token operator">:</span> <span class="token punctuation">&#123;</span>
-            <span class="token string">"name"</span><span class="token operator">:</span> <span class="token string">"德川我修院"</span>
-        <span class="token punctuation">&#125;</span>
-    <span class="token punctuation">&#125;</span>
-<span class="token punctuation">)</span>
-<span class="token comment">/***** Run Results *****/</span>
-Updated <span class="token number">1</span> existing <span class="token function">record</span><span class="token punctuation">(</span>s<span class="token punctuation">)</span> <span class="token keyword">in</span> <span class="token number">1</span>ms</code></pre>
-
-<p>在使用 $set 更新时，如果文档中不存在这个属性则会将不存在的属性添加进来。</p>
-<pre class="language-javascript" data-language="javascript"><code class="language-javascript">db<span class="token punctuation">.</span>user_2_0<span class="token punctuation">.</span><span class="token function">update</span><span class="token punctuation">(</span>
-    <span class="token punctuation">&#123;</span>
-        <span class="token string">"_id"</span><span class="token operator">:</span> <span class="token string">"114514"</span>
-    <span class="token punctuation">&#125;</span><span class="token punctuation">,</span> 
-    <span class="token punctuation">&#123;</span>
-        $set<span class="token operator">:</span> <span class="token punctuation">&#123;</span>
-            <span class="token string">"name"</span><span class="token operator">:</span> <span class="token string">"德川我修院"</span><span class="token punctuation">,</span>
-            <span class="token string">"vip"</span><span class="token operator">:</span> <span class="token boolean">true</span>
-        <span class="token punctuation">&#125;</span>
-    <span class="token punctuation">&#125;</span>
-<span class="token punctuation">)</span>
-<span class="token comment">/***** Run Results *****/</span>
-Updated <span class="token number">1</span> existing <span class="token function">record</span><span class="token punctuation">(</span>s<span class="token punctuation">)</span> <span class="token keyword">in</span> <span class="token number">1</span>ms
-
-<span class="token punctuation">&#123;</span>
-    <span class="token string">"_id"</span> <span class="token operator">:</span> <span class="token string">"114514"</span><span class="token punctuation">,</span>
-    <span class="token string">"name"</span> <span class="token operator">:</span> <span class="token string">"德川我修院"</span><span class="token punctuation">,</span>
-    <span class="token string">"age"</span> <span class="token operator">:</span> <span class="token number">24.0</span><span class="token punctuation">,</span>
-    <span class="token string">"gender"</span> <span class="token operator">:</span> <span class="token string">"男"</span><span class="token punctuation">,</span>
-    <span class="token string">"phone"</span> <span class="token operator">:</span> <span class="token string">"0592-114514"</span><span class="token punctuation">,</span>
-    <span class="token string">"vip"</span> <span class="token operator">:</span> <span class="token boolean">true</span>
-<span class="token punctuation">&#125;</span></code></pre>
-
-<h3 id="查询文档"><a href="#查询文档" class="headerlink" title="查询文档"></a>查询文档</h3><p>使用 <strong>db.collectionName.find()</strong> 方法来查询出文档数据。未限制条件时则查询出全部的数据。</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token operator">></span> db.user_2_0.<span class="token function-name function">find</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62b97a2e305de3247a4e89cc"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"bestguo2020"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">18</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62b97eace2bf2e431a87d8f6"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"zhangsan"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">18</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"1145141919810"</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62b97f23e2bf2e431a87d8f7"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"lisi"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">21</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"1145141919811"</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62b97fd4e2bf2e431a87d8f8"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"田所浩二"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">24</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> <span class="token string">"114514"</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"德川我修院"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">24</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span>, <span class="token string">"vip"</span> <span class="token builtin class-name">:</span> <span class="token boolean">true</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62b984cfe2bf2e431a87d8f9"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"德川0"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">42</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62b984cfe2bf2e431a87d8fa"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"德川1"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">43</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span>
-Type <span class="token string">"it"</span> <span class="token keyword">for</span> <span class="token function">more</span></code></pre>
-
-<p>使用 <strong>findOne()</strong> 方法查询出一条数据</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token operator">></span> db.user_2_0.<span class="token function-name function">findOne</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-        <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62b97a2e305de3247a4e89cc"</span><span class="token punctuation">)</span>,
-        <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"bestguo2020"</span>,
-        <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">18</span>
-<span class="token punctuation">&#125;</span></code></pre>
-
-<p>调用 <strong>pretty()</strong> 方法将文档以格式化之后展示出来。</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token operator">></span> db.user_2_0.find<span class="token punctuation">(</span><span class="token punctuation">)</span>.<span class="token function-name function">pretty</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
-<span class="token punctuation">&#123;</span>
-        <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62b97a2e305de3247a4e89cc"</span><span class="token punctuation">)</span>,
-        <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"bestguo2020"</span>,
-        <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">18</span>
-<span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span>
-        <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62b97eace2bf2e431a87d8f6"</span><span class="token punctuation">)</span>,
-        <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"zhangsan"</span>,
-        <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">18</span>,
-        <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>,
-        <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"1145141919810"</span>
-<span class="token punctuation">&#125;</span>
-Type <span class="token string">"it"</span> <span class="token keyword">for</span> <span class="token function">more</span></code></pre>
-
-<h4 id="显示指定的字段"><a href="#显示指定的字段" class="headerlink" title="显示指定的字段"></a>显示指定的字段</h4><p>若要指定显示某些字段，可以在第二个参数中指定出想要的字段，不指定时则全部显示。若指定的字段不存在，则不显示。</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash">db.user_2_0.find<span class="token punctuation">(</span>
-	<span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span>, <span class="token comment"># 查询的条件</span>
-    <span class="token punctuation">&#123;</span> <span class="token comment"># 需要显示的字段</span>
-        name: <span class="token number">1</span>, 
-        age: <span class="token number">1</span>, 
-        asd: <span class="token number">1</span> <span class="token comment"># 这个字段不存在，就不显示</span>
-    <span class="token punctuation">&#125;</span>
-<span class="token punctuation">)</span></code></pre>
-
-<h4 id="AND-条件"><a href="#AND-条件" class="headerlink" title="AND 条件"></a>AND 条件</h4><p>AND 条件很简单，只需在 find 方法中传入 JSON 格式即可。比如我找一个 name 为”田所浩二“，age 为”24“的人。可以写成<code>&#123;name: &quot;田所浩二&quot;, age: 24&#125;</code>。下面的语句可以理解成 <code>where name = &#39;田所浩二&#39; and age = 24</code>。第一层的<code>&#123;&#125;</code>所代表的就是 AND了。</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token operator">></span> db.user_2_0.find<span class="token punctuation">(</span>
-<span class="token punctuation">..</span>.     <span class="token punctuation">&#123;</span>
-<span class="token punctuation">..</span>.         name: <span class="token string">"田所浩二"</span>,
-<span class="token punctuation">..</span>.         age: <span class="token number">24</span>
-<span class="token punctuation">..</span>.     <span class="token punctuation">&#125;</span>
-<span class="token punctuation">..</span>. <span class="token punctuation">)</span>
-<span class="token comment"># ============= Run Results ============= #</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62b97fd4e2bf2e431a87d8f8"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"田所浩二"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">24</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span></code></pre>
-
-<h4 id="OR-条件"><a href="#OR-条件" class="headerlink" title="OR 条件"></a>OR 条件</h4><p>OR 条件需要使用 $or 来设置。下面的例子展示了查询姓名为”田所浩二“或者”德川我修院“的人。可以理解为<code>where name = &#39;田所浩二&#39; or name = &#39;德川我修院&#39;</code>，</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash">db.user_2_0.find<span class="token punctuation">(</span>
-    <span class="token punctuation">&#123;</span>
-        <span class="token variable">$or</span><span class="token builtin class-name">:</span> <span class="token punctuation">[</span>
-            <span class="token punctuation">&#123;</span>
-                name: <span class="token string">"田所浩二"</span>
-            <span class="token punctuation">&#125;</span>,
-            <span class="token punctuation">&#123;</span>
-                name: <span class="token string">"德川我修院"</span>
-            <span class="token punctuation">&#125;</span>
-        <span class="token punctuation">]</span>
-    <span class="token punctuation">&#125;</span>
-<span class="token punctuation">)</span></code></pre>
-
-<h4 id="操作符"><a href="#操作符" class="headerlink" title="操作符"></a>操作符</h4><p>MongoDB中条件操作符有：</p>
-<ul>
-<li>(&gt;) 大于（great than） - $gt</li>
-<li>(&lt;) 小于 （less than）- $lt</li>
-<li>(&gt;=) 大于等于（great than or equals）- $gte</li>
-<li>(&lt;= ) 小于等于（less than or equals）- $lte</li>
-</ul>
-<h5 id="great-than"><a href="#great-than" class="headerlink" title="great than"></a>great than</h5><p>大于操作符 $gt，比如我要查询出大于 100 岁的人。</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token operator">></span> db.user_2_0.find<span class="token punctuation">(</span><span class="token punctuation">&#123;</span>
-<span class="token punctuation">..</span>.     age: <span class="token punctuation">&#123;</span>
-<span class="token punctuation">..</span>.         <span class="token variable">$gt</span><span class="token builtin class-name">:</span> <span class="token number">100</span>
-<span class="token punctuation">..</span>.     <span class="token punctuation">&#125;</span>
-<span class="token punctuation">..</span>. <span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
-<span class="token comment"># ============= Run Results ============= #</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62b984cfe2bf2e431a87d934"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"德川59"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">101</span>,
-<span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62b984cfe2bf2e431a87d935"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"德川60"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">102</span>,
-<span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62b984cfe2bf2e431a87d936"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"德川61"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">103</span>,
-<span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62b984cfe2bf2e431a87d937"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"德川62"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">104</span>,
-<span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span>
-Type <span class="token string">"it"</span> <span class="token keyword">for</span> <span class="token function">more</span></code></pre>
-
-<h5 id="less-than"><a href="#less-than" class="headerlink" title="less than"></a>less than</h5><p>小于操作符 $lt，查询出大于 30 小于 50 岁的人。</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token operator">></span> db.user_2_0.find<span class="token punctuation">(</span><span class="token punctuation">&#123;</span>
-	age: <span class="token punctuation">&#123;</span> 
-		<span class="token variable">$gt</span><span class="token builtin class-name">:</span> <span class="token number">30</span>, 
-		<span class="token variable">$lt</span><span class="token builtin class-name">:</span> <span class="token number">50</span> 
-	<span class="token punctuation">&#125;</span> 
-<span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
-<span class="token comment"># ============= Run Results ============= #</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62b984cfe2bf2e431a87d8f9"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"德川0"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">42</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62b984cfe2bf2e431a87d8fa"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"德川1"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">43</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62b984cfe2bf2e431a87d8fb"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"德川2"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">44</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62b984cfe2bf2e431a87d8fc"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"德川3"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">45</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62b984cfe2bf2e431a87d8fd"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"德川4"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">46</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span>
-Type <span class="token string">"it"</span> <span class="token keyword">for</span> <span class="token function">more</span>
-</code></pre>
-
-<h5 id="great-than-or-equals"><a href="#great-than-or-equals" class="headerlink" title="great than or equals"></a>great than or equals</h5><p>大于等于操作符 $gte，比如我要查询出大于等于 200 岁，小于 210 岁的人。、</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token operator">></span> db.user_2_0.find<span class="token punctuation">(</span><span class="token punctuation">&#123;</span>
-    age: <span class="token punctuation">&#123;</span>
-        <span class="token variable">$gte</span><span class="token builtin class-name">:</span> <span class="token number">200</span>,
-        <span class="token variable">$lt</span><span class="token builtin class-name">:</span> <span class="token number">210</span>
-    <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
-<span class="token comment"># ============= Run Results ============= #</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62b984cfe2bf2e431a87d997"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"德川158"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">200</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62b984cfe2bf2e431a87d998"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"德川159"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">201</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62b984cfe2bf2e431a87d999"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"德川160"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">202</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62b984cfe2bf2e431a87d99a"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"德川161"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">203</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62b984cfe2bf2e431a87d99b"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"德川162"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">204</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62b984cfe2bf2e431a87d99c"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"德川163"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">205</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span>
-Type <span class="token string">"it"</span> <span class="token keyword">for</span> <span class="token function">more</span></code></pre>
-
-<h5 id="less-than-or-equals"><a href="#less-than-or-equals" class="headerlink" title="less than or equals"></a>less than or equals</h5><p> 小于等于操作符 $gte，比如我要查询出大于 200 岁，小于等于 205 岁的人。</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token operator">></span> db.user_2_0.find<span class="token punctuation">(</span><span class="token punctuation">&#123;</span>
-    age: <span class="token punctuation">&#123;</span>
-        <span class="token variable">$gt</span><span class="token builtin class-name">:</span> <span class="token number">200</span>,
-        <span class="token variable">$lte</span><span class="token builtin class-name">:</span> <span class="token number">205</span>
-    <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
-<span class="token comment"># ============= Run Results ============= #</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62b984cfe2bf2e431a87d998"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"德川159"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">201</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62b984cfe2bf2e431a87d999"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"德川160"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">202</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62b984cfe2bf2e431a87d99a"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"德川161"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">203</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62b984cfe2bf2e431a87d99b"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"德川162"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">204</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62b984cfe2bf2e431a87d99c"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"德川163"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">205</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span></code></pre>
-
-<h4 id="模糊查询"><a href="#模糊查询" class="headerlink" title="模糊查询"></a>模糊查询</h4><p>在 MongoDB 中没有专门的模糊查询关键字，但是可以使用正则的方式来实现模糊查询。</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token operator">></span> db.user_2_0.find<span class="token punctuation">(</span><span class="token punctuation">&#123;</span>
-<span class="token punctuation">..</span>.     age: <span class="token punctuation">&#123;</span>
-<span class="token punctuation">..</span>.         <span class="token variable">$gte</span><span class="token builtin class-name">:</span> <span class="token number">200</span>,
-<span class="token punctuation">..</span>.         <span class="token variable">$lt</span><span class="token builtin class-name">:</span> <span class="token number">205</span>
-<span class="token punctuation">..</span>.     <span class="token punctuation">&#125;</span>,
-<span class="token punctuation">..</span>.     name: /田所/
-<span class="token punctuation">..</span>. <span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
-<span class="token comment"># ============= Run Results ============= #</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62b985d9e2bf2e431a87dd7f"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"田所浩二158"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">200</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62b985d9e2bf2e431a87dd80"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"田所浩二159"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">201</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62b985d9e2bf2e431a87dd81"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"田所浩二160"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">202</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62b985d9e2bf2e431a87dd82"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"田所浩二161"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">203</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62b985d9e2bf2e431a87dd83"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"田所浩二162"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">204</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62b985f6e2bf2e431a87e167"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"田所浩二158"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">200</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62b985f6e2bf2e431a87e168"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"田所浩二159"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">201</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62b985f6e2bf2e431a87e169"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"田所浩二160"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">202</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62b985f6e2bf2e431a87e16a"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"田所浩二161"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">203</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62b985f6e2bf2e431a87e16b"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"田所浩二162"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">204</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span></code></pre>
-
-<h4 id="联动"><a href="#联动" class="headerlink" title="联动"></a>联动</h4><p>查询出名字为”田所浩二x“（x表示数字，比如田所浩二114、田所浩二115）这一类的姓名，且年龄 18 ~ 24 岁（不含 24 岁含 18 岁）或在 114 ~ 119 （都包含） 之间。</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token operator">></span> db.user_2_0.find<span class="token punctuation">(</span><span class="token punctuation">&#123;</span>
-<span class="token punctuation">..</span>.     name: /田所浩二<span class="token punctuation">\</span>d+$/,
-<span class="token punctuation">..</span>.     <span class="token variable">$or</span><span class="token builtin class-name">:</span> <span class="token punctuation">[</span>
-<span class="token punctuation">..</span>.         <span class="token punctuation">&#123;</span>
-<span class="token punctuation">..</span>.             age: <span class="token punctuation">&#123;</span>
-<span class="token punctuation">..</span>.                 <span class="token variable">$gt</span><span class="token builtin class-name">:</span> <span class="token number">18</span>,
-<span class="token punctuation">..</span>.                 <span class="token variable">$lte</span><span class="token builtin class-name">:</span> <span class="token number">24</span>
-<span class="token punctuation">..</span>.             <span class="token punctuation">&#125;</span>
-<span class="token punctuation">..</span>.         <span class="token punctuation">&#125;</span>,
-<span class="token punctuation">..</span>.         <span class="token punctuation">&#123;</span>
-<span class="token punctuation">..</span>.             age: <span class="token punctuation">&#123;</span>
-<span class="token punctuation">..</span>.                 <span class="token variable">$gte</span><span class="token builtin class-name">:</span> <span class="token number">114</span>,
-<span class="token punctuation">..</span>.                 <span class="token variable">$lte</span><span class="token builtin class-name">:</span> <span class="token number">119</span>
-<span class="token punctuation">..</span>.             <span class="token punctuation">&#125;</span>
-<span class="token punctuation">..</span>.         <span class="token punctuation">&#125;</span>,
-<span class="token punctuation">..</span>.     <span class="token punctuation">]</span>
-<span class="token punctuation">..</span>. <span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
-<span class="token comment"># ============= Run Results ============= #</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62b985d9e2bf2e431a87dd29"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"田所浩二72"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">114</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62b985d9e2bf2e431a87dd2a"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"田所浩二73"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">115</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62b985d9e2bf2e431a87dd2b"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"田所浩二74"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">116</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62b985d9e2bf2e431a87dd2c"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"田所浩二75"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">117</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62b985d9e2bf2e431a87dd2d"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"田所浩二76"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">118</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62b985d9e2bf2e431a87dd2e"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"田所浩二77"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">119</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62baa3dae2bf2e431a87e4ba"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"田所浩二19"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">19</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62baa3dae2bf2e431a87e4bb"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"田所浩二20"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">20</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62baa3dae2bf2e431a87e4bc"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"田所浩二21"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">21</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62baa3dae2bf2e431a87e4bd"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"田所浩二22"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">22</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62baa3dae2bf2e431a87e4be"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"田所浩二23"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">23</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62baa3dae2bf2e431a87e4bf"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"田所浩二24"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">24</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span></code></pre>
-
-<h3 id="删除文档"><a href="#删除文档" class="headerlink" title="删除文档"></a>删除文档</h3><p>删除文档可以使用 <strong>remove</strong> 方法、<strong>deleteOne</strong> 方法和 <strong>deleteMany</strong> 方法。</p>
-<p>使用 remove 删除一条文档，需要传入一个参数 <code>&#123;justOne: 1&#125;</code> ，若不传递或者设置成 0，则会删除集合中的全部文档。</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token operator">></span> db.user_2_0.remove<span class="token punctuation">(</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span>, <span class="token punctuation">&#123;</span>justOne: <span class="token number">1</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
-<span class="token comment"># ============= Run Results ============= #</span>
-WriteResult<span class="token punctuation">(</span><span class="token punctuation">&#123;</span> <span class="token string">"nRemoved"</span> <span class="token builtin class-name">:</span> <span class="token number">1</span> <span class="token punctuation">&#125;</span><span class="token punctuation">)</span></code></pre>
-
-<p>使用 deleteOne 能达到删除一条数据的效果。remove 传入参数 <code>&#123;justOne: 1&#125;</code> 和 deleteOne 删除一条信息的规则是第一条数据。</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token operator">></span> db.user_2_0.deleteOne<span class="token punctuation">(</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
-<span class="token comment"># ============= Run Results ============= #</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"acknowledged"</span> <span class="token builtin class-name">:</span> true, <span class="token string">"deletedCount"</span> <span class="token builtin class-name">:</span> <span class="token number">1</span> <span class="token punctuation">&#125;</span></code></pre>
-
-<p>也可以按照条件删除元素，比如删除 114 ~ 514 岁（都包含）的人，使用 deleteOne 。</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token operator">></span> db.user_2_0.deleteMany<span class="token punctuation">(</span><span class="token punctuation">&#123;</span>
-    age: <span class="token punctuation">&#123;</span>
-        <span class="token variable">$gte</span><span class="token builtin class-name">:</span> <span class="token number">114</span>,
-        <span class="token variable">$lte</span><span class="token builtin class-name">:</span> <span class="token number">514</span>,
-    <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#125;</span><span class="token punctuation">)</span>
-<span class="token comment"># ============= Run Results ============= #</span>
-<span class="token punctuation">&#123;</span>
-    <span class="token string">"acknowledged"</span> <span class="token builtin class-name">:</span> true,
-    <span class="token string">"deletedCount"</span> <span class="token builtin class-name">:</span> <span class="token number">1211.0</span>
-<span class="token punctuation">&#125;</span></code></pre>
-
-<h3 id="排序"><a href="#排序" class="headerlink" title="排序"></a>排序</h3><p>排序使用 <strong>sort()</strong> 方法，该方法作用于查询之后。比如我要查询姓名为”田所浩二x“（x表示数字，比如田所浩二114、田所浩二115）这一类的姓名，且按年龄升序排序。使用 1 和 -1 来指定排序的方式，其中 1 为升序排列，而 -1 是用于降序排列。</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token operator">></span> db.user_2_0.find<span class="token punctuation">(</span><span class="token punctuation">&#123;</span>name: /田所浩二<span class="token punctuation">\</span>d+$/<span class="token punctuation">&#125;</span><span class="token punctuation">)</span>.sort<span class="token punctuation">(</span><span class="token punctuation">&#123;</span>age: <span class="token number">1</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span>.pretty<span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-<span class="token comment"># ============= Run Results ============= #</span>
-<span class="token punctuation">&#123;</span>
-        <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62baa3dae2bf2e431a87e4b9"</span><span class="token punctuation">)</span>,
-        <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"田所浩二18"</span>,
-        <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">18</span>,
-        <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>,
-        <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span>
-<span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span>
-        <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62baa3dae2bf2e431a87e4ba"</span><span class="token punctuation">)</span>,
-        <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"田所浩二19"</span>,
-        <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">19</span>,
-        <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>,
-        <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span>
-<span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span>
-        <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62baa3dae2bf2e431a87e4bb"</span><span class="token punctuation">)</span>,
-        <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"田所浩二20"</span>,
-        <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">20</span>,
-        <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>,
-        <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span>
-<span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span>
-        <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62baa3dae2bf2e431a87e4bc"</span><span class="token punctuation">)</span>,
-        <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"田所浩二21"</span>,
-        <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">21</span>,
-        <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>,
-        <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span>
-<span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span>
-        <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62baa3dae2bf2e431a87e4bd"</span><span class="token punctuation">)</span>,
-        <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"田所浩二22"</span>,
-        <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">22</span>,
-        <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>,
-        <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span>
-<span class="token punctuation">&#125;</span>
-Type <span class="token string">"it"</span> <span class="token keyword">for</span> <span class="token function">more</span></code></pre>
-
-<h3 id="Limit-与-Skip"><a href="#Limit-与-Skip" class="headerlink" title="Limit 与 Skip"></a>Limit 与 Skip</h3><p><strong>limit()</strong> 方法就是从查询的结果中取出前几条文档，<strong>skip()</strong> 方法就是从查询的结果中跳过几个文档，从第几个文档开始查询。</p>
-<p>使用 limit 查询前 5 条数据。</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token operator">></span> db.user_2_0.find<span class="token punctuation">(</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span>.limit<span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span>
-<span class="token comment"># ============= Run Results ============= #</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62babe68dc0663b7a70c6daf"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"德川1"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">18</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62babe68dc0663b7a70c6db0"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"德川2"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">19</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62babe68dc0663b7a70c6db1"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"德川3"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">20</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62babe68dc0663b7a70c6db2"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"德川4"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">21</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62babe68dc0663b7a70c6db3"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"德川5"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">22</span>, <span class="token string">"gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span></code></pre>
-
-<p>使用 skip，跳过前两条数据，从第三条数据开始查询。</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token operator">></span> db.user_2_0.find<span class="token punctuation">(</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span>.skip<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span>
-<span class="token comment"># ============= Run Results ============= #</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62babe68dc0663b7a70c6db1"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"德川3"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">20</span>, <span class="token string">"g
-ender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62babe68dc0663b7a70c6db2"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"德川4"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">21</span>, <span class="token string">"g
-ender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62babe68dc0663b7a70c6db3"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"德川5"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">22</span>, <span class="token string">"g
-ender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62babe68dc0663b7a70c6db4"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"德川6"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">23</span>, <span class="token string">"g
-ender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62babe68dc0663b7a70c6db5"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"德川7"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">24</span>, <span class="token string">"g
-ender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62babe68dc0663b7a70c6db6"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"德川8"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">25</span>, <span class="token string">"g
-ender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62babe68dc0663b7a70c6db7"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"德川9"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">26</span>, <span class="token string">"g
-ender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> ObjectId<span class="token punctuation">(</span><span class="token string">"62babe68dc0663b7a70c6db8"</span><span class="token punctuation">)</span>, <span class="token string">"name"</span> <span class="token builtin class-name">:</span> <span class="token string">"德川10"</span>, <span class="token string">"age"</span> <span class="token builtin class-name">:</span> <span class="token number">27</span>, <span class="token string">"
-gender"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"phone"</span> <span class="token builtin class-name">:</span> <span class="token string">"0592-114514"</span> <span class="token punctuation">&#125;</span></code></pre>
-
-<p>limit 和 skip 方法联动可实现分页的功能，每一页有 4 条数据。要显示出 4 条数据 limit 一定是 4，每一页的话，就应该是 4 的倍数。</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash">db.user_2_0.find<span class="token punctuation">(</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span>.skip<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>.limit<span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span>
-db.user_2_0.find<span class="token punctuation">(</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span>.skip<span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span>.limit<span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span>
-db.user_2_0.find<span class="token punctuation">(</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span>.skip<span class="token punctuation">(</span><span class="token number">8</span><span class="token punctuation">)</span>.limit<span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span>
-<span class="token comment">#......</span>
-db.user_2_0.find<span class="token punctuation">(</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span>.skip<span class="token punctuation">(</span>4n<span class="token punctuation">)</span>.limit<span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span></code></pre>
-
-<h3 id="聚合"><a href="#聚合" class="headerlink" title="聚合"></a>聚合</h3><p>MongoDB 中聚合（aggregate）主要用于处理数据（诸如统计平均值，求和等），并返回计算后的数据结果。和关系型数据库 MySQL 类似。MySQL 有很多聚合函数，在 MongoDB 中采用的方式是以 <code>$函数名</code> 的形式来表示的。</p>
-<h4 id="利用分组统计个数"><a href="#利用分组统计个数" class="headerlink" title="利用分组统计个数"></a>利用分组统计个数</h4><blockquote>
-<p>在指定使用哪个字段分组时，记得要加上”$“</p>
-</blockquote>
-<p>接下来使用 aggregate 来统计集合中”男“、”女“性别个数。</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token operator">></span> db.user_2_0.aggregate<span class="token punctuation">(</span>
-	<span class="token punctuation">&#123;</span>
-	    <span class="token comment"># $group 指的是将查询结果进行分组</span>
-		<span class="token variable">$group</span><span class="token builtin class-name">:</span> <span class="token punctuation">&#123;</span>
-			_id: <span class="token string">"<span class="token variable">$gender</span>"</span>, <span class="token comment"># 使用文档中的哪个字段进行分组</span>
-			gender_count: <span class="token punctuation">&#123;</span>
-				<span class="token variable">$sum</span><span class="token builtin class-name">:</span> NumberInt<span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token comment"># 使用 $sum 进行求和</span>
-			<span class="token punctuation">&#125;</span>
-		<span class="token punctuation">&#125;</span>
-	<span class="token punctuation">&#125;</span>
-<span class="token punctuation">)</span>
-<span class="token comment"># ============= Run Results ============= #</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> <span class="token string">"女"</span>, <span class="token string">"gender_count"</span> <span class="token builtin class-name">:</span> <span class="token number">6</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"gender_count"</span> <span class="token builtin class-name">:</span> <span class="token number">10</span> <span class="token punctuation">&#125;</span></code></pre>
-
-<p>为什么统计的时候，要写个 1 在这里？</p>
-<pre class="language-javascript" data-language="javascript"><code class="language-javascript">gender_count<span class="token operator">:</span> <span class="token punctuation">&#123;</span>
-    $sum<span class="token operator">:</span> <span class="token function">NumberInt</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span> # 使用 $sum 进行求和
-<span class="token punctuation">&#125;</span></code></pre>
-
-<p>若写成 0 或者 2 的时候，那么得出的结果是什么样的呢？</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># ============= $sum: 2 ============= #</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> <span class="token string">"女"</span>, <span class="token string">"gender_count"</span> <span class="token builtin class-name">:</span> <span class="token number">12</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"gender_count"</span> <span class="token builtin class-name">:</span> <span class="token number">20</span> <span class="token punctuation">&#125;</span>
-<span class="token comment"># ============= $sum: 0 ============= #</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> <span class="token string">"女"</span>, <span class="token string">"gender_count"</span> <span class="token builtin class-name">:</span> <span class="token number">0</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"gender_count"</span> <span class="token builtin class-name">:</span> <span class="token number">0</span> <span class="token punctuation">&#125;</span></code></pre>
-
-<p>看到上面的结果，就明白了，这个设置 <code>$sum: 1</code> 的意义在于分组之后，性别”男“中有几个 1 ，性别”女“中有几个 1，但是这里出现了 10  个性别为”男“，所以 <code>1 * 10 = 10 </code> 。通过设置  <code>$sum: 1</code> 可以统计个数。设置  <code>$sum: 2</code> 也就不难理解了。</p>
-<p>上面的写法，在 SQL 语句中可以理解成</p>
-<pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">select</span> gender<span class="token punctuation">,</span> <span class="token function">count</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span> <span class="token keyword">from</span> user_2_0 <span class="token keyword">group</span> <span class="token keyword">by</span> gender</code></pre>
-
-<h4 id="利用分组求平均值、最小值和最大值"><a href="#利用分组求平均值、最小值和最大值" class="headerlink" title="利用分组求平均值、最小值和最大值"></a>利用分组求平均值、最小值和最大值</h4><p>平均值使用 <strong>$avg</strong>，最小值和最大值分别为 <strong>$min</strong> 和 <strong>$max</strong> 。获取男女中的平均年龄、最大值和最小值。</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash">db.user_2_0.aggregate<span class="token punctuation">(</span><span class="token punctuation">[</span>
-    <span class="token punctuation">&#123;</span>
-        <span class="token variable">$group</span><span class="token builtin class-name">:</span> <span class="token punctuation">&#123;</span> <span class="token comment"># group 里面存着的是分组之后的字段</span>
-            _id: <span class="token string">"<span class="token variable">$gender</span>"</span>,
-            <span class="token comment"># 最大年龄</span>
-            max_age: <span class="token punctuation">&#123;</span>
-                <span class="token variable">$max</span><span class="token builtin class-name">:</span> <span class="token string">"<span class="token variable">$age</span>"</span> 
-            <span class="token punctuation">&#125;</span>,
-            <span class="token comment"># 最小年龄</span>
-            min_age: <span class="token punctuation">&#123;</span>
-                <span class="token variable">$min</span><span class="token builtin class-name">:</span> <span class="token string">"<span class="token variable">$age</span>"</span>
-            <span class="token punctuation">&#125;</span>,
-            <span class="token comment"># 平均年龄</span>
-            avg_age: <span class="token punctuation">&#123;</span>
-                <span class="token variable">$avg</span><span class="token builtin class-name">:</span> <span class="token string">"<span class="token variable">$age</span>"</span>
-            <span class="token punctuation">&#125;</span>
-        <span class="token punctuation">&#125;</span>
-    <span class="token punctuation">&#125;</span>
-<span class="token punctuation">]</span><span class="token punctuation">)</span>
-<span class="token comment"># ============= Run Results ============= #</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"max_age"</span> <span class="token builtin class-name">:</span> <span class="token number">27</span>, <span class="token string">"min_age"</span> <span class="token builtin class-name">:</span> <span class="token number">18</span>, <span class="token string">"avg_age"</span> <span class="token builtin class-name">:</span> <span class="token number">22.5</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> <span class="token string">"女"</span>, <span class="token string">"max_age"</span> <span class="token builtin class-name">:</span> <span class="token number">23</span>, <span class="token string">"min_age"</span> <span class="token builtin class-name">:</span> <span class="token number">18</span>, <span class="token string">"avg_age"</span> <span class="token builtin class-name">:</span> <span class="token number">20.5</span> <span class="token punctuation">&#125;</span></code></pre>
-
-<h4 id="分组结果排序"><a href="#分组结果排序" class="headerlink" title="分组结果排序"></a>分组结果排序</h4><p>若要对分组结果进行排序，不能直接调用 sort 方法，而是需要在聚合方法中加一个 <strong>$sort</strong> 即可，然后去指定分组之后的字段</p>
-<pre class="language-bash" data-language="bash"><code class="language-bash">db.user_2_0.aggregate<span class="token punctuation">(</span><span class="token punctuation">[</span>
-    <span class="token punctuation">&#123;</span>
-        <span class="token variable">$group</span><span class="token builtin class-name">:</span> <span class="token punctuation">&#123;</span>
-            _id: <span class="token string">"<span class="token variable">$gender</span>"</span>,
-            max_age: <span class="token punctuation">&#123;</span>
-                <span class="token variable">$max</span><span class="token builtin class-name">:</span> <span class="token string">"<span class="token variable">$age</span>"</span> 
-            <span class="token punctuation">&#125;</span>,
-            min_age: <span class="token punctuation">&#123;</span>
-                <span class="token variable">$min</span><span class="token builtin class-name">:</span> <span class="token string">"<span class="token variable">$age</span>"</span>
-            <span class="token punctuation">&#125;</span>,
-            avg_age: <span class="token punctuation">&#123;</span>
-                <span class="token variable">$avg</span><span class="token builtin class-name">:</span> <span class="token string">"<span class="token variable">$age</span>"</span>
-            <span class="token punctuation">&#125;</span>
-        <span class="token punctuation">&#125;</span>
-    <span class="token punctuation">&#125;</span>,
-    <span class="token punctuation">&#123;</span>
-        <span class="token variable">$sort</span><span class="token builtin class-name">:</span> <span class="token punctuation">&#123;</span> <span class="token comment"># 排序</span>
-            avg_age: <span class="token number">1</span> <span class="token comment"># 指定分组之后的哪个字段进行排序</span>
-        <span class="token punctuation">&#125;</span>
-    <span class="token punctuation">&#125;</span>
-<span class="token punctuation">]</span><span class="token punctuation">)</span>
-<span class="token comment"># ============= Run Results ============= #</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> <span class="token string">"女"</span>, <span class="token string">"max_age"</span> <span class="token builtin class-name">:</span> <span class="token number">23</span>, <span class="token string">"min_age"</span> <span class="token builtin class-name">:</span> <span class="token number">18</span>, <span class="token string">"avg_age"</span> <span class="token builtin class-name">:</span> <span class="token number">20.5</span> <span class="token punctuation">&#125;</span>
-<span class="token punctuation">&#123;</span> <span class="token string">"_id"</span> <span class="token builtin class-name">:</span> <span class="token string">"男"</span>, <span class="token string">"max_age"</span> <span class="token builtin class-name">:</span> <span class="token number">27</span>, <span class="token string">"min_age"</span> <span class="token builtin class-name">:</span> <span class="token number">18</span>, <span class="token string">"avg_age"</span> <span class="token builtin class-name">:</span> <span class="token number">22.5</span> <span class="token punctuation">&#125;</span></code></pre></div></section><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>BestGuo2020</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="https://www.bestguo.top/journal/mongodb-crud/" title="MongoDB 学习笔记">https://www.bestguo.top/journal/mongodb-crud/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><span class="icon iconify" data-icon="ri:creative-commons-line"></span><span class="icon iconify" data-icon="ri:creative-commons-by-line"></span><span class="icon iconify" data-icon="ri:creative-commons-nc-line"></span><span class="icon iconify" data-icon="ri:creative-commons-sa-line"></span></a> 许可协议。</li></ul></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/journal/gradle-study/" rel="prev" title="Gradle 学习小记"><span class="icon iconify" data-icon="ri:arrow-left-s-line"></span><span class="post-nav-text">Gradle 学习小记</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/journal/design-pattern-singleton/" rel="next" title="设计模式之单例设计模式"><span class="post-nav-text">设计模式之单例设计模式</span><span class="icon iconify" data-icon="ri:arrow-right-s-line"></span></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>请诸位理性发言！</span><br><span>请勿发布违反中国大陆地区法律的言论，请勿人身攻击、谩骂、侮辱和煽动式的语言。</span><br></div><div id="waline"></div><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/@waline/client@v2/dist/waline.css"><script>window.CONFIG.waline.config.path = "/journal/mongodb-crud/"</script><div class="js-Pjax"><script src="/js/comments/waline.js" type="module" defer></script></div></div></main><footer class="sidebar-translate" id="footer"><div class="beian"><a rel="noopener" href="https://beian.miit.gov.cn/" target="_blank">赣 ICP 备 20009988 号</a></div><div class="copyright"><span>&copy; 2019 – 2023 </span><span class="with-love" id="animate"><span class="icon iconify" data-icon="ri:cloud-line"></span></span><span class="author"> BestGuo2020</span></div><div class="powered"><span>由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v6.2.0</span><span class="footer-separator">|</span><span>主题 - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.10.9</span></div><div class="live-time"><span>本站点已正常地运行</span><span id="display_live_time"></span><span class="moe-text"><br/>♬(ノ゜∇゜)ノ♩<br></span><script>function blog_live_time() {
-  setTimeout(blog_live_time, 1000);
-  const start = new Date('2019-01-01T00:00:00');
-  const now = new Date();
-  const timeDiff = (now.getTime() - start.getTime());
-  const msPerMinute = 60 * 1000;
-  const msPerHour = 60 * msPerMinute;
-  const msPerDay = 24 * msPerHour;
-  const passDay = Math.floor(timeDiff / msPerDay);
-  const passHour = Math.floor((timeDiff % msPerDay) / 60 / 60 / 1000);
-  const passMinute = Math.floor((timeDiff % msPerHour) / 60 / 1000);
-  const passSecond = Math.floor((timeDiff % msPerMinute) / 1000);
-  display_live_time.innerHTML = ` ${passDay} 天 ${passHour} 小时 ${passMinute} 分 ${passSecond} 秒`;
+.post-body {
+  padding: 0 5rem;
+tablet()
+mobile()
 }
-blog_live_time();
-</script></div><div id="busuanzi"><span id="busuanzi_container_site_uv" title="总访客量"><span><span class="icon iconify" data-icon="ri:user-line"></span></span><span id="busuanzi_value_site_uv"></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv" title="总访问量"><span><span class="icon iconify" data-icon="ri:eye-line"></span></span><span id="busuanzi_value_site_pv"></span></span><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div class="footer-support"><span>本网站由</span><a class="footer-support-logo" href="https://www.upyun.com/?utm_source=lianmeng&amp;utm_medium=referral" target="blank" title="又拍云"><img height="30" src="https://cdn.yunyoujun.cn/img/logo/upyun-logo.png" alt="又拍云"></a><span>提供 CDN 加速服务</span></div></footer></div><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><span class="icon iconify" data-icon="ri:arrow-up-s-line"></span><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a><a class="popup-trigger hty-icon-button icon-search" id="search" href="javascript:;" title="搜索"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:search-line"></span></span></a><script>window.addEventListener("DOMContentLoaded", () => {
-  // Handle and trigger popup window
-  document.querySelector(".popup-trigger").addEventListener("click", () => {
-    document.querySelector(".popup").classList.add("show");
-    setTimeout(() => {
-      document.querySelector(".search-input").focus();
-    }, 100);
-  });
-
-  // Monitor main search box
-  const onPopupClose = () => {
-    document.querySelector(".popup").classList.remove("show");
-  };
-
-  document.querySelector(".popup-btn-close").addEventListener("click", () => {
-    onPopupClose();
-  });
-
-  window.addEventListener("keyup", event => {
-    if (event.key === "Escape") {
-      onPopupClose();
-    }
-  });
-});
-</script><script src="https://fastly.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js"></script><script src="/js/search/local-search.js" defer type="module"></script><div class="popup search-popup"><div class="search-header"><span class="popup-btn-close close-icon hty-icon-button"><span class="icon iconify" data-icon="ri:close-line"></span></span></div><div class="search-input-container"><input class="search-input" id="local-search-input" type="text" placeholder="搜索..." value=""></div><div class="search-result-container"></div></div></body></html>
+.post-meta {
+  font-size: 14px;
+  color: var(--hty-secondary-text-color);
+}
+.post-meta .icon {
+  margin-bottom: -1px;
+}
+.post-description {
+  font-weight: normal;
+  padding: 0.5rem;
+}
+.post-author {
+  display: flex;
+  justify-content: center;
+}
+.post-author .author-avatar {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 0;
+}
+.post-author .author-avatar img {
+  border-radius: 50%;
+  height: 1rem;
+  width: 1rem;
+  padding: 2px;
+  border: 2px solid #d3d3d3;
+}
+.post-author .author-name {
+  margin-left: 0.5rem;
+  font-size: 1rem;
+}
+.post-meta-item-icon {
+  display: inline-block;
+  color: var(--text-color, --hty-secondary-text-color);
+}
+.post-meta-divider {
+  height: 25px;
+  color: var(--hty-secondary-text-color);
+  margin: 0 0.5rem;
+}
+.post-eof {
+  margin: 50px auto;
+  width: 50%;
+  height: 1px;
+  background: $blue;
+  opacity: 0.1;
+}
+.post-copyright {
+  font-size: 0.9rem;
+  margin: 0.5rem 5rem 1rem 5rem;
+  padding: 0.5rem 1rem;
+  border-left: 4px solid #ff5252;
+  background-color: var(--hty-bg-color);
+  list-style: none;
+  word-break: break-all;
+  position: relative;
+  overflow: hidden;
+mobile()
+}
+.post-copyright::after {
+  position: absolute;
+  color: #fff;
+  background: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 496 512'%3E%3Cpath fill='gray' d='M245.8 214.9l-33.2 17.3c-9.4-19.6-25.2-20-27.4-20-22.2 0-33.3 14.6-33.3 43.9 0 23.5 9.2 43.8 33.3 43.8 14.4 0 24.6-7 30.5-21.3l30.6 15.5a73.2 73.2 0 01-65.1 39c-22.6 0-74-10.3-74-77 0-58.7 43-77 72.6-77 30.8-.1 52.7 11.9 66 35.8zm143 0l-32.7 17.3c-9.5-19.8-25.7-20-27.9-20-22.1 0-33.2 14.6-33.2 43.9 0 23.5 9.2 43.8 33.2 43.8 14.5 0 24.7-7 30.5-21.3l31 15.5c-2 3.8-21.3 39-65 39-22.7 0-74-9.9-74-77 0-58.7 43-77 72.6-77C354 179 376 191 389 214.8zM247.7 8C104.7 8 0 123 0 256c0 138.4 113.6 248 247.6 248C377.5 504 496 403 496 256 496 118 389.4 8 247.6 8zm.8 450.8c-112.5 0-203.7-93-203.7-202.8 0-105.5 85.5-203.3 203.8-203.3A201.7 201.7 0 01451.3 256c0 121.7-99.7 202.9-202.9 202.9z'/%3E%3C/svg%3E");
+  content: ' ';
+  height: 10rem;
+  width: 10rem;
+  right: -2rem;
+  top: -2rem;
+  opacity: 0.1;
+}
+.tag-name {
+  padding: 0 0.1rem;
+}
