@@ -1,86 +1,348 @@
-.post-block {
-  color: var(--hty-text-color);
-  margin: 0 1rem;
-  padding: 1rem;
-  background-color: var(--post-block-bg-color);
-mobile()
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="BestGuo2020"><meta name="copyright" content="BestGuo2020"><meta name="generator" content="Hexo 6.2.0"><meta name="theme" content="hexo-theme-yun"><title>了解 NoSQL 和 Redis 安装 | BestGuo 的小窝</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/star-markdown-css@0.4.1/dist/yun/yun-markdown.min.css"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/prism-theme-vars/base.css"><script src="https://fastly.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>function initScrollReveal() {
+  [".post-card",".markdown-body img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
 }
-.post-body {
-  padding: 0 5rem;
-tablet()
-mobile()
+document.addEventListener("DOMContentLoaded", initScrollReveal);
+document.addEventListener("pjax:success", initScrollReveal);
+</script><link rel="icon" type="image/png" href="/favicon.ico"><link rel="mask-icon" href="/favicon.ico" color="#0078E7"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="preconnect" href="https://fastly.jsdelivr.net/npm/" crossorigin><script id="yun-config">
+    window.Yun = {}
+    window.CONFIG = {"hostname":"www.bestguo.top","root":"/","title":["Best","Guo","的","小","窝"],"version":"1.10.9","mode":"time","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"搜索...","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）"},"anonymous_image":"https://cdn.yunyoujun.cn/img/avatar/none.jpg","say":{"api":"https://el-bot-api.vercel.app/api/words/young"},"local_search":{"path":"/search.xml"},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false,"src":"/js/search/local-search.js"},"fireworks":{"colors":null},"waline":{"config":{"enable":true,"serverURL":"https://comment.bestguo.top","comment":true,"requiredFields":["nick","mail"],"placeholder":"有什么想要对 BestGuo 说的呢，输入正确有效的邮箱有机会收到回复哟😊😊","avatarCDN":"https://seccdn.libravatar.org/avatar/","emoji":["https://unpkg.com/@waline/emojis@1.0.1/weibo/","https://unpkg.com/@waline/emojis@1.0.1/bilibili/","https://unpkg.com/@waline/emojis@1.0.1/qq/","https://unpkg.com/@waline/emojis@1.0.1/tieba/"],"avatar":"monsterid","el":"#waline","lang":"zh-CN"},"cdn":"https://fastly.jsdelivr.net/npm/@waline/client@v2/dist/waline.js","dark":"html.dark"},"vendors":{"host":"https://fastly.jsdelivr.net/npm/","darken":"https://fastly.jsdelivr.net/npm/darken@1.5.0"}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/hexo-theme-yun.js" type="module"></script><link rel="preconnect" href="https://www.google-analytics.com" crossorigin><script async src="https://www.googletagmanager.com/gtag/js?id=G-907LWSSHLS"></script><script>if (CONFIG.hostname === location.hostname) {
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-907LWSSHLS');
+}</script><script>(function(){
+  var bp = document.createElement('script');
+  var curProtocol = window.location.protocol.split(':')[0];
+  if (curProtocol === 'https') {
+    bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+  }
+  else {
+    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+  }
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(bp, s);
+})();</script><meta name="description" content="既然要学习 Redis，那么就先了解一下什么是 NoSQL 吧。  NoSQL 的全称是 Not Only SQL，不仅是 SQL。  什么是 NoSQLNoSQL 泛指非关系型数据库，伴随着 web2.0 互联网的诞生。传统的关系型数据库早已很难对付 web2.0 时代，尤其是超大规模的高并发舍弃，暴露出来很多难以克服的问题，NoSQL 在当今大数据环境下发展的十分迅速，Redis 是发展最快的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="了解 NoSQL 和 Redis 安装">
+<meta property="og:url" content="https://www.bestguo.top/journal/redis-tutoral/index.html">
+<meta property="og:site_name" content="BestGuo 的小窝">
+<meta property="og:description" content="既然要学习 Redis，那么就先了解一下什么是 NoSQL 吧。  NoSQL 的全称是 Not Only SQL，不仅是 SQL。  什么是 NoSQLNoSQL 泛指非关系型数据库，伴随着 web2.0 互联网的诞生。传统的关系型数据库早已很难对付 web2.0 时代，尤其是超大规模的高并发舍弃，暴露出来很多难以克服的问题，NoSQL 在当今大数据环境下发展的十分迅速，Redis 是发展最快的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.bestguo.top/journal/redis-tutoral/84ec07ee9fb648e5bac595e1c1ee250d.png">
+<meta property="article:published_time" content="2021-09-19T02:09:03.000Z">
+<meta property="article:modified_time" content="2022-05-25T10:47:49.025Z">
+<meta property="article:author" content="BestGuo2020">
+<meta property="article:tag" content="Redis">
+<meta property="article:tag" content="NoSQL">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.bestguo.top/journal/redis-tutoral/84ec07ee9fb648e5bac595e1c1ee250d.png"><script>(function() {
+  if (CONFIG.mode !== 'auto') return
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+  const setting = localStorage.getItem('darken-mode') || 'auto'
+  if (setting === 'dark' || (prefersDark && setting !== 'light'))
+    document.documentElement.classList.toggle('dark', true)
+})()</script></head><body><script src="https://code.iconify.design/2/2.1.1/iconify.min.js"></script><script>// Define global variable
+IconifyProviders = {
+  // Empty prefix: overwrite default API provider configuration
+  '': {
+    // Use custom API first, use Iconify public API as backup
+    resources: [
+        'https://api.iconify.design',
+    ],
+    // Wait for 1 second before switching API hosts
+    rotate: 1000,
+  },
+};</script><script defer src="https://fastly.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js" type="module"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js" type="module"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><span class="icon iconify" data-icon="ri:list-ordered"></span></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><span class="icon iconify" data-icon="ri:passport-line"></span></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="BestGuo2020"><img width="96" loading="lazy" src="/images/avatar.png" alt="BestGuo2020"><span class="site-author-status" title="在找工作">👨‍💻</span></a><div class="site-author-name"><a href="/about/">BestGuo2020</a></div><a class="site-name" href="/about/site.html">BestGuo 的小窝</a><sub class="site-subtitle">善良、勇敢、可爱</sub><div class="site-description">一个人的世界是如此的安静</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="首页"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:home-4-line"></span></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:archive-line"></span></span><span class="site-state-item-count">79</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:folder-2-line"></span></span><span class="site-state-item-count">23</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="site-state-item-count">49</span></a></div><a class="site-state-item hty-icon-button" href="/albums/" title="相册集"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:gallery-line"></span></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://wpa.qq.com/msgrd?v=3&amp;uin=1540113012&amp;site=qq&amp;menu=yes" title="QQ：xiaohehe2021" target="_blank" style="color:#12B7F5"><span class="icon iconify" data-icon="ri:qq-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/bestguo2020" title="GitHub：BestGuo2020" target="_blank" style="color:#8251e6"><span class="icon iconify" data-icon="ri:github-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/184681623" title="哔哩哔哩: 我叫人员外婆" target="_blank" style="color:#FF8EB3"><span class="icon iconify" data-icon="ri:bilibili-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:bestguo2020@foxmail.com" title="E-Mail" target="_blank" style="color:#8E71C1"><span class="icon iconify" data-icon="ri:mail-line"></span></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><span class="icon iconify" data-icon="ri:contrast-2-line"></span></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-NoSQL"><span class="toc-number">1.</span> <span class="toc-text">什么是 NoSQL</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%89%B9%E7%82%B9"><span class="toc-number">1.1.</span> <span class="toc-text">特点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#NoSQL-%E7%9A%84%E5%9B%9B%E5%A4%A7%E5%88%86%E7%B1%BB"><span class="toc-number">1.2.</span> <span class="toc-text">NoSQL 的四大分类</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis-%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">2.</span> <span class="toc-text">Redis 是什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis-%E8%83%BD%E5%81%9A%E4%BB%80%E4%B9%88"><span class="toc-number">3.</span> <span class="toc-text">Redis 能做什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-Redis"><span class="toc-number">4.</span> <span class="toc-text">安装 Redis</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8-Redis"><span class="toc-number">5.</span> <span class="toc-text">启动 Redis</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%8F%E8%AF%95%E4%B8%80%E4%B8%8B"><span class="toc-number">5.1.</span> <span class="toc-text">小试一下</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis-%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E5%92%8C%E5%9F%BA%E6%9C%AC%E5%91%BD%E4%BB%A4"><span class="toc-number">6.</span> <span class="toc-text">Redis 基础知识和基本命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis-%E6%98%AF%E5%8D%95%E7%BA%BF%E7%A8%8B%E7%9A%84"><span class="toc-number">7.</span> <span class="toc-text">Redis 是单线程的</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BE%88%E5%BF%AB"><span class="toc-number">8.</span> <span class="toc-text">Redis 为什么很快</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E6%9F%A5%E8%AF%A2"><span class="toc-number">9.</span> <span class="toc-text">命令查询</span></a></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article" style="--smc-primary:#0078E7;"><link itemprop="mainEntityOfPage" href="https://www.bestguo.top/journal/redis-tutoral/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="BestGuo2020"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="BestGuo 的小窝"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">了解 NoSQL 和 Redis 安装</h1><div class="post-meta"><div class="post-time"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:calendar-line"></span></span> <time title="创建时间：2021-09-19 10:09:03" itemprop="dateCreated datePublished" datetime="2021-09-19T10:09:03+08:00">2021-09-19</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:calendar-2-line"></span></span> <time title="修改时间：2022-05-25 18:47:49" itemprop="dateModified" datetime="2022-05-25T18:47:49+08:00">2022-05-25</time></div><span class="post-busuanzi"><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读次数"><span class="icon iconify" data-icon="ri:eye-line"></span> <span id="busuanzi_value_page_pv"></span></span></span><span class="post-meta-divider">-</span><a href="#comment"><span class="post-meta-item-icon" title="评论数"><span class="icon iconify" data-icon="ri:chat-3-line"></span> <span class="waline-comment-count" id="/journal/redis-tutoral/"></span></span></a><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><span class="icon iconify" data-icon="ri:folder-line"></span></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">后端开发</span></a></span> > <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/Redis-%E7%9A%84%E5%AD%A6%E4%B9%A0%E5%8E%86%E7%A8%8B/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">Redis 的学习历程</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/Redis/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">Redis</span></a><a class="tag-item" href="/tags/NoSQL/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">NoSQL</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body"><p>既然要学习 Redis，那么就先了解一下什么是 NoSQL 吧。</p>
+<blockquote>
+<p>NoSQL 的全称是 Not Only SQL，不仅是 SQL。</p>
+</blockquote>
+<h2 id="什么是-NoSQL"><a href="#什么是-NoSQL" class="headerlink" title="什么是 NoSQL"></a>什么是 NoSQL</h2><p>NoSQL 泛指非关系型数据库，伴随着 web2.0 互联网的诞生。传统的关系型数据库早已很难对付 web2.0 时代，尤其是超大规模的高并发舍弃，暴露出来很多难以克服的问题，NoSQL 在当今大数据环境下发展的十分迅速，Redis 是发展最快的。</p>
+<p>很多的数据类型用户的个人信息，社交网络，地理位盾。这些数据类型的存储不需要一个固定的格式！不需要多余的操作就可以横向扩展的！</p>
+<p>比如 Java 中的 Map&lt;String, Object&gt; 使用是键值对的方式来控制的，它是 NoSQL 的一种表现形式。</p>
+<span id="more"></span>
+
+<h3 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h3><ol>
+<li>方便扩展<ol>
+<li>数据之间没有关系</li>
+</ol>
+</li>
+<li>大数据量，高性能<ol>
+<li>一秒写 8 万次，读取 11 万，NoSQL 的缓存记录级，是一种细粒度的缓存，性能会比较高。</li>
+</ol>
+</li>
+<li>数据类型多样化<ol>
+<li>不需要事先设计数据库，随取随用，如果是数据量十分大的表，很多人就无法设计了！</li>
+</ol>
+</li>
+<li>传统 RDBMS 和 Nosql<ol>
+<li>传统的 RDBMS<ol>
+<li>结构化组织</li>
+<li>SQL</li>
+<li>数据和关系都在单独的表中</li>
+<li>DDL、DML、DCL、DQL</li>
+<li>严格的一致性</li>
+<li>基础的事务</li>
+<li>……</li>
+</ol>
+</li>
+<li>Nosql<ol>
+<li>没有固定的查询语言</li>
+<li>键值对存储，列存储，文档存储，图形数据库(社交关系)</li>
+<li>最终一致性，</li>
+<li>CAP 定理和 BASE (异地多活)初级架构师!（狂神理念:只要学不死，就往死里学!)</li>
+<li>高性能，高可用，高可扩</li>
+<li>……</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<p>目前，NoSQL 和 RDBMS 结合起来使用，使性能达到最佳。</p>
+<h3 id="NoSQL-的四大分类"><a href="#NoSQL-的四大分类" class="headerlink" title="NoSQL 的四大分类"></a>NoSQL 的四大分类</h3><p><strong>KV键值对：</strong></p>
+<ul>
+<li>新浪：Redis</li>
+<li>美团：Redis +Tair</li>
+<li>阿里、百度：Redis + memecache</li>
+</ul>
+<p><strong>文档型数据库 ( bson 格式和 json 一样)∶</strong></p>
+<ul>
+<li>MongoDB (一般必须要掌握)<ul>
+<li>MongoDB 是一个基于分布式文件存储的数据库，C++编写，主要用来处理大量的文档!</li>
+<li>MongoDB 是一个介于关系型数据库和非关系型数据中中间的产品!MongoDB是非关系型数据库中功能最丰富，最像关系型数据库的!</li>
+</ul>
+</li>
+<li>CouchDB</li>
+</ul>
+<p><strong>列存储数据库</strong></p>
+<ul>
+<li>HBase</li>
+<li>分布式文件系统</li>
+</ul>
+<p><strong>图关系数据库</strong></p>
+<p>图关系数据库存的是关系，而不是图形。</p>
+<p><img src="/journal/redis-tutoral/84ec07ee9fb648e5bac595e1c1ee250d.png" alt="img" loading="lazy"></p>
+<h2 id="Redis-是什么"><a href="#Redis-是什么" class="headerlink" title="Redis 是什么"></a>Redis 是什么</h2><p>Redis ( Remote Dictionary Server )，即远程字典服务!</p>
+<p>是一个开源的使用 ANSl C 语言编写、支持网络、可基于内存亦可持久化的日志型、Key-Value 数据库，并提供多种语言的 API。</p>
+<h2 id="Redis-能做什么"><a href="#Redis-能做什么" class="headerlink" title="Redis 能做什么"></a>Redis 能做什么</h2><ol>
+<li>内存存储、持久化（rdb、aof）</li>
+<li>效率高，可以用于高速缓存</li>
+<li>发布订阅系统</li>
+<li>地图信息分析</li>
+<li>计时器、计数器</li>
+<li>…</li>
+</ol>
+<h2 id="安装-Redis"><a href="#安装-Redis" class="headerlink" title="安装 Redis"></a>安装 Redis</h2><p>Redis 的安装有 Windows 版和 Linux 版，Windows 版解压直接运行 redis-server 即可。Linux 版只提供源代码，需要自己通过编译源代码的方式来安装。</p>
+<p>我在学习的时候用的是 Linux 版，安装时候有几个步骤。</p>
+<p>1、使用 wget 命令去下载，如果提示 <code>-bash: wget: command not found</code> ，则需要安装一下 wget，然后再下载。</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">31</span>  yum -y <span class="token function">install</span> <span class="token function">wget</span>
+<span class="token number">33</span>  <span class="token function">wget</span> https://download.redis.io/releases/redis-6.2.5.tar.gz</code></pre>
+
+<p>2、解压，进入目录</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token function">tar</span> zxvf redis-6.2.5.tar.gz 
+<span class="token builtin class-name">cd</span> redis-6.2.5</code></pre>
+
+<p>3、安装一下 c++ 的编译器，如果你有，就不用装。</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash">yum -y <span class="token function">install</span> gcc-c++</code></pre>
+
+<p>4、编译并安装</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token function">make</span> <span class="token assign-left variable">MALLOC</span><span class="token operator">=</span>libc
+<span class="token function">make</span> <span class="token function">install</span></code></pre>
+
+<p>这样，Redis 就安装完成了。</p>
+<h2 id="启动-Redis"><a href="#启动-Redis" class="headerlink" title="启动 Redis"></a>启动 Redis</h2><p>Redis 的默认的安装位置是在 <code>/usr/local/bin</code> ，里面有如下信息。</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token punctuation">[</span>root@localhost bin<span class="token punctuation">]</span><span class="token comment"># ls</span>
+redis-benchmark  redis-check-aof  redis-check-rdb  redis-cli  redis-sentinel  redis-server</code></pre>
+
+<p>Redis 的配置文件，默认是保存在解压文件中。建议将配置文件复制到上面提到的路径当中。</p>
+<p>由于 Redis 默认不是以后台运行的，所以要在配置文件中找到以下属性并配置成 yes。</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token comment">################################# GENERAL #####################################</span>
+
+<span class="token comment"># By default Redis does not run as a daemon. Use 'yes' if you need it.</span>
+<span class="token comment"># Note that Redis will write a pid file in /var/run/redis.pid when daemonized.</span>
+<span class="token comment"># When Redis is supervised by upstart or systemd, this parameter has no impact.</span>
+daemonize <span class="token function">yes</span></code></pre>
+
+<p>然后先运行服务端，再运行客户端，输入 ping 命令看看能不能联通，如果返回 PONG，说明连接成功了。</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token punctuation">[</span>root@localhost bin<span class="token punctuation">]</span><span class="token comment"># ./redis-server redis_conf/redis.conf </span>
+<span class="token punctuation">[</span>root@localhost bin<span class="token punctuation">]</span><span class="token comment"># redis-cli</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> <span class="token function">ping</span>
+PONG
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span></code></pre>
+
+<p>查看正在运行的 Redis 进程</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token punctuation">[</span>root@localhost ~<span class="token punctuation">]</span><span class="token comment"># ps -ef | grep redis</span>
+root       <span class="token number">1372</span>      <span class="token number">1</span>  <span class="token number">0</span> <span class="token number">16</span>:49 ?        00:00:00 ./redis-server <span class="token number">127.0</span>.0.1:6379
+root       <span class="token number">1376</span>   <span class="token number">1299</span>  <span class="token number">0</span> <span class="token number">16</span>:49 pts/0    00:00:00 redis-cli
+root       <span class="token number">1400</span>   <span class="token number">1382</span>  <span class="token number">0</span> <span class="token number">16</span>:52 pts/1    00:00:00 <span class="token function">grep</span> --color<span class="token operator">=</span>auto redis</code></pre>
+
+<h3 id="小试一下"><a href="#小试一下" class="headerlink" title="小试一下"></a>小试一下</h3><p>试用 set 和 get 命令，保存一些信息并获取。</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> <span class="token builtin class-name">set</span> name xiaohehe
+OK
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> get name
+<span class="token string">"xiaohehe"</span></code></pre>
+
+<p>试用 redis-benchmark 命令来测试 redis 的单机性能，redis 的性能会受到服务器的制约，来感受一下速度。</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token punctuation">[</span>root@localhost ~<span class="token punctuation">]</span><span class="token comment"># redis-benchmark -h localhost -p 6379 -c 100 -n 100000</span></code></pre>
+
+
+
+<p>比如，我们看一下 LPUSH 的处理请求。</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span> LPUSH <span class="token operator">==</span><span class="token operator">==</span><span class="token operator">==</span>                                                   
+  <span class="token number">100000</span> requests completed <span class="token keyword">in</span> <span class="token number">3.43</span> seconds
+  <span class="token number">100</span> parallel clients
+  <span class="token number">3</span> bytes payload
+  keep alive: <span class="token number">1</span>
+  <span class="token function">host</span> configuration <span class="token string">"save"</span><span class="token builtin class-name">:</span> <span class="token number">3600</span> <span class="token number">1</span> <span class="token number">300</span> <span class="token number">100</span> <span class="token number">60</span> <span class="token number">10000</span>
+  <span class="token function">host</span> configuration <span class="token string">"appendonly"</span><span class="token builtin class-name">:</span> no
+  multi-thread: no
+
+Latency by percentile distribution:
+<span class="token number">0.000</span>% <span class="token operator">&lt;</span><span class="token operator">=</span> <span class="token number">0.991</span> milliseconds <span class="token punctuation">(</span>cumulative count <span class="token number">2</span><span class="token punctuation">)</span>
+<span class="token number">50.000</span>% <span class="token operator">&lt;</span><span class="token operator">=</span> <span class="token number">2.287</span> milliseconds <span class="token punctuation">(</span>cumulative count <span class="token number">50170</span><span class="token punctuation">)</span>
+<span class="token number">75.000</span>% <span class="token operator">&lt;</span><span class="token operator">=</span> <span class="token number">2.895</span> milliseconds <span class="token punctuation">(</span>cumulative count <span class="token number">75016</span><span class="token punctuation">)</span>
+<span class="token number">87.500</span>% <span class="token operator">&lt;</span><span class="token operator">=</span> <span class="token number">3.471</span> milliseconds <span class="token punctuation">(</span>cumulative count <span class="token number">87608</span><span class="token punctuation">)</span>
+<span class="token number">93.750</span>% <span class="token operator">&lt;</span><span class="token operator">=</span> <span class="token number">3.951</span> milliseconds <span class="token punctuation">(</span>cumulative count <span class="token number">93756</span><span class="token punctuation">)</span>
+<span class="token number">96.875</span>% <span class="token operator">&lt;</span><span class="token operator">=</span> <span class="token number">4.351</span> milliseconds <span class="token punctuation">(</span>cumulative count <span class="token number">96879</span><span class="token punctuation">)</span>
+<span class="token number">98.438</span>% <span class="token operator">&lt;</span><span class="token operator">=</span> <span class="token number">4.695</span> milliseconds <span class="token punctuation">(</span>cumulative count <span class="token number">98458</span><span class="token punctuation">)</span>
+<span class="token number">99.219</span>% <span class="token operator">&lt;</span><span class="token operator">=</span> <span class="token number">5.031</span> milliseconds <span class="token punctuation">(</span>cumulative count <span class="token number">99224</span><span class="token punctuation">)</span>
+<span class="token number">99.609</span>% <span class="token operator">&lt;</span><span class="token operator">=</span> <span class="token number">5.399</span> milliseconds <span class="token punctuation">(</span>cumulative count <span class="token number">99610</span><span class="token punctuation">)</span>
+<span class="token number">99.805</span>% <span class="token operator">&lt;</span><span class="token operator">=</span> <span class="token number">5.847</span> milliseconds <span class="token punctuation">(</span>cumulative count <span class="token number">99805</span><span class="token punctuation">)</span>
+<span class="token number">99.902</span>% <span class="token operator">&lt;</span><span class="token operator">=</span> <span class="token number">6.303</span> milliseconds <span class="token punctuation">(</span>cumulative count <span class="token number">99903</span><span class="token punctuation">)</span>
+<span class="token number">99.951</span>% <span class="token operator">&lt;</span><span class="token operator">=</span> <span class="token number">10.199</span> milliseconds <span class="token punctuation">(</span>cumulative count <span class="token number">99952</span><span class="token punctuation">)</span>
+<span class="token number">99.976</span>% <span class="token operator">&lt;</span><span class="token operator">=</span> <span class="token number">10.535</span> milliseconds <span class="token punctuation">(</span>cumulative count <span class="token number">99976</span><span class="token punctuation">)</span>
+<span class="token number">99.988</span>% <span class="token operator">&lt;</span><span class="token operator">=</span> <span class="token number">10.703</span> milliseconds <span class="token punctuation">(</span>cumulative count <span class="token number">99988</span><span class="token punctuation">)</span>
+<span class="token number">99.994</span>% <span class="token operator">&lt;</span><span class="token operator">=</span> <span class="token number">10.791</span> milliseconds <span class="token punctuation">(</span>cumulative count <span class="token number">99994</span><span class="token punctuation">)</span>
+<span class="token number">99.997</span>% <span class="token operator">&lt;</span><span class="token operator">=</span> <span class="token number">10.839</span> milliseconds <span class="token punctuation">(</span>cumulative count <span class="token number">99997</span><span class="token punctuation">)</span>
+<span class="token number">99.998</span>% <span class="token operator">&lt;</span><span class="token operator">=</span> <span class="token number">10.871</span> milliseconds <span class="token punctuation">(</span>cumulative count <span class="token number">99999</span><span class="token punctuation">)</span>
+<span class="token number">99.999</span>% <span class="token operator">&lt;</span><span class="token operator">=</span> <span class="token number">10.911</span> milliseconds <span class="token punctuation">(</span>cumulative count <span class="token number">100000</span><span class="token punctuation">)</span>
+<span class="token number">100.000</span>% <span class="token operator">&lt;</span><span class="token operator">=</span> <span class="token number">10.911</span> milliseconds <span class="token punctuation">(</span>cumulative count <span class="token number">100000</span><span class="token punctuation">)</span></code></pre>
+
+<p>测试 LPUSH 时，在 请求次数为 100000 ，每次写入 3 个字节的数据，100个客户端同时并发的情况下，花费了 10.9 ms，如果不是在虚拟机也许会更快。</p>
+<h2 id="Redis-基础知识和基本命令"><a href="#Redis-基础知识和基本命令" class="headerlink" title="Redis 基础知识和基本命令"></a>Redis 基础知识和基本命令</h2><p>Redis 默认有 16 个数据库，可以在配置文件中查看并修改数据库个数，默认使用的数据库是第 0 个。</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># Set the number of databases. The default database is DB 0, you can select</span>
+<span class="token comment"># a different one on a per-connection basis using SELECT &lt;dbid> where</span>
+<span class="token comment"># dbid is a number between 0 and 'databases'-1</span>
+databases <span class="token number">16</span></code></pre>
+
+<p>select 命令是切换数据库。</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> <span class="token keyword">select</span> <span class="token number">4</span> <span class="token comment"># 切换到4号数据库</span>
+OK
+<span class="token number">127.0</span>.0.1:6379<span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">]</span><span class="token operator">></span></code></pre>
+
+<p>dbsize 查看数据库大小，每一组键值对占用一个单位。</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:6379<span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">]</span><span class="token operator">></span> <span class="token builtin class-name">set</span> name xiaohehe
+OK
+<span class="token number">127.0</span>.0.1:6379<span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">]</span><span class="token operator">></span> get name
+<span class="token string">"xiaohehe"</span>
+<span class="token number">127.0</span>.0.1:6379<span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">]</span><span class="token operator">></span> dbsize
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">1</span></code></pre>
+
+<p>查看数据库中的键</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:6379<span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">]</span><span class="token operator">></span> keys *
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"name"</span>
+<span class="token number">127.0</span>.0.1:6379<span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">]</span><span class="token operator">></span></code></pre>
+
+<p>flushdb 清空当前数据库</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:6379<span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">]</span><span class="token operator">></span> flushdb
+OK
+<span class="token number">127.0</span>.0.1:6379<span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">]</span><span class="token operator">></span> dbsize
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">0</span>
+</code></pre>
+
+<p>flushall 清空全部数据库</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:6379<span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">]</span><span class="token operator">></span> flushall
+OK
+<span class="token number">127.0</span>.0.1:6379<span class="token punctuation">[</span><span class="token number">4</span><span class="token punctuation">]</span><span class="token operator">></span> <span class="token keyword">select</span> <span class="token number">0</span>
+OK
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> DBSIZE
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">0</span></code></pre>
+
+<p>exists 判断当前的 key 是否存在</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> exists name
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">0</span></code></pre>
+
+<p>move 移除当前的 key 到其它数据库中</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> <span class="token builtin class-name">set</span> name2 xiaohehe
+OK
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> move name2 <span class="token number">2</span>
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">1</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> <span class="token keyword">select</span> <span class="token number">2</span>
+OK
+<span class="token number">127.0</span>.0.1:6379<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token operator">></span> get name2
+<span class="token string">"xiaohehe"</span></code></pre>
+
+<p>expire 设置 key 的过期时间，单位是秒</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:6379<span class="token punctuation">[</span><span class="token number">2</span><span class="token punctuation">]</span><span class="token operator">></span> expire name2 <span class="token number">10</span>
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">1</span></code></pre>
+
+<p>ttl 查看 key 的剩余时间，单位是秒，-1 为永久，-2 为不存在。</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> ttl name2
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">6</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> ttl name2
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">3</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> ttl name2
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">1</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> ttl name2
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">0</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> ttl name2
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> -2</code></pre>
+
+<p>type 查看 key 中所保存的值的类型。</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> <span class="token builtin class-name">set</span> age <span class="token number">20</span>
+OK
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> <span class="token builtin class-name">type</span> age
+string</code></pre>
+
+<h2 id="Redis-是单线程的"><a href="#Redis-是单线程的" class="headerlink" title="Redis 是单线程的"></a>Redis 是单线程的</h2><p>为什么？</p>
+<p>明白 Redis 是很快的，因为 Redis 是基于内存操作，CPU 并不是 Redis 性能瓶颈，真正的 Redis 的性能瓶颈是在机器的内存和网络带宽，既然可以使用单线程来实现，就使用单线程了。</p>
+<blockquote>
+<p>QPS（Query Per Second），QPS 其实是衡量吞吐量（Throughput）的一个常用指标，就是说服务器在一秒的时间内处理了多少个请求 —— 我们通常是指 HTTP 请求，显然数字越大代表服务器的负荷越高、处理能力越强。作为参考，一个有着简单业务逻辑（包括数据库访问）的程序在单核心运行时可以提供 50 - 100 左右的 QPS，即每秒可以处理 50 - 100 个请求。</p>
+</blockquote>
+<p>Redis 是 C 语言写的，官方提供的数据为 100000+ 的 QPS，完全不比同样是使用 key-value 的 Memecache 差。</p>
+<h2 id="Redis-为什么很快"><a href="#Redis-为什么很快" class="headerlink" title="Redis 为什么很快"></a>Redis 为什么很快</h2><p>误区1∶高性能的服务器一定是多线程的?</p>
+<p>误区2∶多线程一定比单线程效率高！</p>
+<p>Redis 是将所有的数据全部放在内存中的，所以说使用单线程去操作效率就是最高的，由于多线程涉及到上下文切换，这对于内存系统来说就是浪费时间，如果没有上下文切换效率就是最高的！多次读写都是在一个 CPU 上的，在内存情况这个就是最佳的方案！</p>
+<h2 id="命令查询"><a href="#命令查询" class="headerlink" title="命令查询"></a>命令查询</h2><p><a target="_blank" rel="noopener" href="http://www.redis.cn/commands.html">http://www.redis.cn/commands.html</a></p>
+</div></section><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>BestGuo2020</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="https://www.bestguo.top/journal/redis-tutoral/" title="了解 NoSQL 和 Redis 安装">https://www.bestguo.top/journal/redis-tutoral/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><span class="icon iconify" data-icon="ri:creative-commons-line"></span><span class="icon iconify" data-icon="ri:creative-commons-by-line"></span><span class="icon iconify" data-icon="ri:creative-commons-nc-line"></span><span class="icon iconify" data-icon="ri:creative-commons-sa-line"></span></a> 许可协议。</li></ul></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/journal/redis-type-of-data/" rel="prev" title="Redis 基本数据类型的操作"><span class="icon iconify" data-icon="ri:arrow-left-s-line"></span><span class="post-nav-text">Redis 基本数据类型的操作</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/journal/imitate-bilibili/" rel="next" title="一个仿 bilibili 的 web 移动端网页"><span class="post-nav-text">一个仿 bilibili 的 web 移动端网页</span><span class="icon iconify" data-icon="ri:arrow-right-s-line"></span></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>请诸位理性发言！</span><br><span>请勿发布违反中国大陆地区法律的言论，请勿人身攻击、谩骂、侮辱和煽动式的语言。</span><br></div><div id="waline"></div><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/@waline/client@v2/dist/waline.css"><script>window.CONFIG.waline.config.path = "/journal/redis-tutoral/"</script><div class="js-Pjax"><script src="/js/comments/waline.js" type="module" defer></script></div></div></main><footer class="sidebar-translate" id="footer"><div class="beian"><a rel="noopener" href="https://beian.miit.gov.cn/" target="_blank">赣 ICP 备 20009988 号</a></div><div class="copyright"><span>&copy; 2019 – 2023 </span><span class="with-love" id="animate"><span class="icon iconify" data-icon="ri:cloud-line"></span></span><span class="author"> BestGuo2020</span></div><div class="powered"><span>由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v6.2.0</span><span class="footer-separator">|</span><span>主题 - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.10.9</span></div><div class="live-time"><span>本站点已正常地运行</span><span id="display_live_time"></span><span class="moe-text"><br/>♬(ノ゜∇゜)ノ♩<br></span><script>function blog_live_time() {
+  setTimeout(blog_live_time, 1000);
+  const start = new Date('2019-01-01T00:00:00');
+  const now = new Date();
+  const timeDiff = (now.getTime() - start.getTime());
+  const msPerMinute = 60 * 1000;
+  const msPerHour = 60 * msPerMinute;
+  const msPerDay = 24 * msPerHour;
+  const passDay = Math.floor(timeDiff / msPerDay);
+  const passHour = Math.floor((timeDiff % msPerDay) / 60 / 60 / 1000);
+  const passMinute = Math.floor((timeDiff % msPerHour) / 60 / 1000);
+  const passSecond = Math.floor((timeDiff % msPerMinute) / 1000);
+  display_live_time.innerHTML = ` ${passDay} 天 ${passHour} 小时 ${passMinute} 分 ${passSecond} 秒`;
 }
-.post-meta {
-  font-size: 14px;
-  color: var(--hty-secondary-text-color);
-}
-.post-meta .icon {
-  margin-bottom: -1px;
-}
-.post-description {
-  font-weight: normal;
-  padding: 0.5rem;
-}
-.post-author {
-  display: flex;
-  justify-content: center;
-}
-.post-author .author-avatar {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  line-height: 0;
-}
-.post-author .author-avatar img {
-  border-radius: 50%;
-  height: 1rem;
-  width: 1rem;
-  padding: 2px;
-  border: 2px solid #d3d3d3;
-}
-.post-author .author-name {
-  margin-left: 0.5rem;
-  font-size: 1rem;
-}
-.post-meta-item-icon {
-  display: inline-block;
-  color: var(--text-color, --hty-secondary-text-color);
-}
-.post-meta-divider {
-  height: 25px;
-  color: var(--hty-secondary-text-color);
-  margin: 0 0.5rem;
-}
-.post-eof {
-  margin: 50px auto;
-  width: 50%;
-  height: 1px;
-  background: $blue;
-  opacity: 0.1;
-}
-.post-copyright {
-  font-size: 0.9rem;
-  margin: 0.5rem 5rem 1rem 5rem;
-  padding: 0.5rem 1rem;
-  border-left: 4px solid #ff5252;
-  background-color: var(--hty-bg-color);
-  list-style: none;
-  word-break: break-all;
-  position: relative;
-  overflow: hidden;
-mobile()
-}
-.post-copyright::after {
-  position: absolute;
-  color: #fff;
-  background: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 496 512'%3E%3Cpath fill='gray' d='M245.8 214.9l-33.2 17.3c-9.4-19.6-25.2-20-27.4-20-22.2 0-33.3 14.6-33.3 43.9 0 23.5 9.2 43.8 33.3 43.8 14.4 0 24.6-7 30.5-21.3l30.6 15.5a73.2 73.2 0 01-65.1 39c-22.6 0-74-10.3-74-77 0-58.7 43-77 72.6-77 30.8-.1 52.7 11.9 66 35.8zm143 0l-32.7 17.3c-9.5-19.8-25.7-20-27.9-20-22.1 0-33.2 14.6-33.2 43.9 0 23.5 9.2 43.8 33.2 43.8 14.5 0 24.7-7 30.5-21.3l31 15.5c-2 3.8-21.3 39-65 39-22.7 0-74-9.9-74-77 0-58.7 43-77 72.6-77C354 179 376 191 389 214.8zM247.7 8C104.7 8 0 123 0 256c0 138.4 113.6 248 247.6 248C377.5 504 496 403 496 256 496 118 389.4 8 247.6 8zm.8 450.8c-112.5 0-203.7-93-203.7-202.8 0-105.5 85.5-203.3 203.8-203.3A201.7 201.7 0 01451.3 256c0 121.7-99.7 202.9-202.9 202.9z'/%3E%3C/svg%3E");
-  content: ' ';
-  height: 10rem;
-  width: 10rem;
-  right: -2rem;
-  top: -2rem;
-  opacity: 0.1;
-}
-.tag-name {
-  padding: 0 0.1rem;
-}
+blog_live_time();
+</script></div><div id="busuanzi"><span id="busuanzi_container_site_uv" title="总访客量"><span><span class="icon iconify" data-icon="ri:user-line"></span></span><span id="busuanzi_value_site_uv"></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv" title="总访问量"><span><span class="icon iconify" data-icon="ri:eye-line"></span></span><span id="busuanzi_value_site_pv"></span></span><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div class="footer-support"><span>本网站由</span><a class="footer-support-logo" href="https://www.upyun.com/?utm_source=lianmeng&amp;utm_medium=referral" target="blank" title="又拍云"><img height="30" src="https://cdn.yunyoujun.cn/img/logo/upyun-logo.png" alt="又拍云"></a><span>提供 CDN 加速服务</span></div></footer></div><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><span class="icon iconify" data-icon="ri:arrow-up-s-line"></span><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a><a class="popup-trigger hty-icon-button icon-search" id="search" href="javascript:;" title="搜索"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:search-line"></span></span></a><script>window.addEventListener("DOMContentLoaded", () => {
+  // Handle and trigger popup window
+  document.querySelector(".popup-trigger").addEventListener("click", () => {
+    document.querySelector(".popup").classList.add("show");
+    setTimeout(() => {
+      document.querySelector(".search-input").focus();
+    }, 100);
+  });
+
+  // Monitor main search box
+  const onPopupClose = () => {
+    document.querySelector(".popup").classList.remove("show");
+  };
+
+  document.querySelector(".popup-btn-close").addEventListener("click", () => {
+    onPopupClose();
+  });
+
+  window.addEventListener("keyup", event => {
+    if (event.key === "Escape") {
+      onPopupClose();
+    }
+  });
+});
+</script><script src="https://fastly.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js"></script><script src="/js/search/local-search.js" defer type="module"></script><div class="popup search-popup"><div class="search-header"><span class="popup-btn-close close-icon hty-icon-button"><span class="icon iconify" data-icon="ri:close-line"></span></span></div><div class="search-input-container"><input class="search-input" id="local-search-input" type="text" placeholder="搜索..." value=""></div><div class="search-result-container"></div></div></body></html>

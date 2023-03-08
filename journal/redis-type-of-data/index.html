@@ -1,86 +1,813 @@
-.post-block {
-  color: var(--hty-text-color);
-  margin: 0 1rem;
-  padding: 1rem;
-  background-color: var(--post-block-bg-color);
-mobile()
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="BestGuo2020"><meta name="copyright" content="BestGuo2020"><meta name="generator" content="Hexo 6.2.0"><meta name="theme" content="hexo-theme-yun"><title>Redis 基本数据类型的操作 | BestGuo 的小窝</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/star-markdown-css@0.4.1/dist/yun/yun-markdown.min.css"><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/prism-theme-vars/base.css"><script src="https://fastly.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>function initScrollReveal() {
+  [".post-card",".markdown-body img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
 }
-.post-body {
-  padding: 0 5rem;
-tablet()
-mobile()
+document.addEventListener("DOMContentLoaded", initScrollReveal);
+document.addEventListener("pjax:success", initScrollReveal);
+</script><link rel="icon" type="image/png" href="/favicon.ico"><link rel="mask-icon" href="/favicon.ico" color="#0078E7"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><link rel="preconnect" href="https://fastly.jsdelivr.net/npm/" crossorigin><script id="yun-config">
+    window.Yun = {}
+    window.CONFIG = {"hostname":"www.bestguo.top","root":"/","title":["Best","Guo","的","小","窝"],"version":"1.10.9","mode":"time","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"搜索...","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）"},"anonymous_image":"https://cdn.yunyoujun.cn/img/avatar/none.jpg","say":{"api":"https://el-bot-api.vercel.app/api/words/young"},"local_search":{"path":"/search.xml"},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false,"src":"/js/search/local-search.js"},"fireworks":{"colors":null},"waline":{"config":{"enable":true,"serverURL":"https://comment.bestguo.top","comment":true,"requiredFields":["nick","mail"],"placeholder":"有什么想要对 BestGuo 说的呢，输入正确有效的邮箱有机会收到回复哟😊😊","avatarCDN":"https://seccdn.libravatar.org/avatar/","emoji":["https://unpkg.com/@waline/emojis@1.0.1/weibo/","https://unpkg.com/@waline/emojis@1.0.1/bilibili/","https://unpkg.com/@waline/emojis@1.0.1/qq/","https://unpkg.com/@waline/emojis@1.0.1/tieba/"],"avatar":"monsterid","el":"#waline","lang":"zh-CN"},"cdn":"https://fastly.jsdelivr.net/npm/@waline/client@v2/dist/waline.js","dark":"html.dark"},"vendors":{"host":"https://fastly.jsdelivr.net/npm/","darken":"https://fastly.jsdelivr.net/npm/darken@1.5.0"}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/hexo-theme-yun.js" type="module"></script><link rel="preconnect" href="https://www.google-analytics.com" crossorigin><script async src="https://www.googletagmanager.com/gtag/js?id=G-907LWSSHLS"></script><script>if (CONFIG.hostname === location.hostname) {
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-907LWSSHLS');
+}</script><script>(function(){
+  var bp = document.createElement('script');
+  var curProtocol = window.location.protocol.split(':')[0];
+  if (curProtocol === 'https') {
+    bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+  }
+  else {
+    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+  }
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(bp, s);
+})();</script><meta name="description" content="Redis 有这些数据类型，基本数据类型：String、List、Hash、Set、Zset，特殊的数据类型：Geospatial、Hyperloglog、Bitmap。 命令并未包含全部的，可供参考，要查询更多命令，请点此。 StringString，也叫字符串，是基本的数据类型之一。 基本操作set设置值 127.0.0.1:6379&gt; set name xiaohehe OK  get获得值">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis 基本数据类型的操作">
+<meta property="og:url" content="https://www.bestguo.top/journal/redis-type-of-data/index.html">
+<meta property="og:site_name" content="BestGuo 的小窝">
+<meta property="og:description" content="Redis 有这些数据类型，基本数据类型：String、List、Hash、Set、Zset，特殊的数据类型：Geospatial、Hyperloglog、Bitmap。 命令并未包含全部的，可供参考，要查询更多命令，请点此。 StringString，也叫字符串，是基本的数据类型之一。 基本操作set设置值 127.0.0.1:6379&gt; set name xiaohehe OK  get获得值">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-09-20T02:35:40.000Z">
+<meta property="article:modified_time" content="2022-05-25T10:47:49.027Z">
+<meta property="article:author" content="BestGuo2020">
+<meta property="article:tag" content="Redis">
+<meta name="twitter:card" content="summary"><script>(function() {
+  if (CONFIG.mode !== 'auto') return
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+  const setting = localStorage.getItem('darken-mode') || 'auto'
+  if (setting === 'dark' || (prefersDark && setting !== 'light'))
+    document.documentElement.classList.toggle('dark', true)
+})()</script></head><body><script src="https://code.iconify.design/2/2.1.1/iconify.min.js"></script><script>// Define global variable
+IconifyProviders = {
+  // Empty prefix: overwrite default API provider configuration
+  '': {
+    // Use custom API first, use Iconify public API as backup
+    resources: [
+        'https://api.iconify.design',
+    ],
+    // Wait for 1 second before switching API hosts
+    rotate: 1000,
+  },
+};</script><script defer src="https://fastly.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js" type="module"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js" type="module"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><span class="icon iconify" data-icon="ri:list-ordered"></span></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><span class="icon iconify" data-icon="ri:passport-line"></span></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info fix-top"><a class="site-author-avatar" href="/about/" title="BestGuo2020"><img width="96" loading="lazy" src="/images/avatar.png" alt="BestGuo2020"><span class="site-author-status" title="在找工作">👨‍💻</span></a><div class="site-author-name"><a href="/about/">BestGuo2020</a></div><a class="site-name" href="/about/site.html">BestGuo 的小窝</a><sub class="site-subtitle">善良、勇敢、可爱</sub><div class="site-description">一个人的世界是如此的安静</div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="首页"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:home-4-line"></span></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:archive-line"></span></span><span class="site-state-item-count">79</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:folder-2-line"></span></span><span class="site-state-item-count">23</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="site-state-item-count">49</span></a></div><a class="site-state-item hty-icon-button" href="/albums/" title="相册集"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:gallery-line"></span></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://wpa.qq.com/msgrd?v=3&amp;uin=1540113012&amp;site=qq&amp;menu=yes" title="QQ：xiaohehe2021" target="_blank" style="color:#12B7F5"><span class="icon iconify" data-icon="ri:qq-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/bestguo2020" title="GitHub：BestGuo2020" target="_blank" style="color:#8251e6"><span class="icon iconify" data-icon="ri:github-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/184681623" title="哔哩哔哩: 我叫人员外婆" target="_blank" style="color:#FF8EB3"><span class="icon iconify" data-icon="ri:bilibili-line"></span></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="mailto:bestguo2020@foxmail.com" title="E-Mail" target="_blank" style="color:#8E71C1"><span class="icon iconify" data-icon="ri:mail-line"></span></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><span class="icon iconify" data-icon="ri:contrast-2-line"></span></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#String"><span class="toc-number">1.</span> <span class="toc-text">String</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C"><span class="toc-number">1.1.</span> <span class="toc-text">基本操作</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#set"><span class="toc-number">1.1.1.</span> <span class="toc-text">set</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#get"><span class="toc-number">1.1.2.</span> <span class="toc-text">get</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#append"><span class="toc-number">1.1.3.</span> <span class="toc-text">append</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#strlen"><span class="toc-number">1.1.4.</span> <span class="toc-text">strlen</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#mset"><span class="toc-number">1.1.5.</span> <span class="toc-text">mset</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#mget"><span class="toc-number">1.1.6.</span> <span class="toc-text">mget</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#getset"><span class="toc-number">1.1.7.</span> <span class="toc-text">getset</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%88%AA%E5%8F%96%E4%B8%8E%E6%9B%BF%E6%8D%A2"><span class="toc-number">1.2.</span> <span class="toc-text">截取与替换</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#getrange"><span class="toc-number">1.2.1.</span> <span class="toc-text">getrange</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#setrange"><span class="toc-number">1.2.2.</span> <span class="toc-text">setrange</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%8C%E6%97%B6%E8%AE%BE%E7%BD%AE"><span class="toc-number">1.3.</span> <span class="toc-text">同时设置</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#setex"><span class="toc-number">1.3.1.</span> <span class="toc-text">setex</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#setnx"><span class="toc-number">1.3.2.</span> <span class="toc-text">setnx</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#msetnx"><span class="toc-number">1.3.3.</span> <span class="toc-text">msetnx</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A2%9E%E5%8A%A0%E4%B8%8E%E5%87%8F%E5%B0%91"><span class="toc-number">1.4.</span> <span class="toc-text">增加与减少</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#incr"><span class="toc-number">1.4.1.</span> <span class="toc-text">incr</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#decr"><span class="toc-number">1.4.2.</span> <span class="toc-text">decr</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#incrby"><span class="toc-number">1.4.3.</span> <span class="toc-text">incrby</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#decrby"><span class="toc-number">1.4.4.</span> <span class="toc-text">decrby</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%80%E5%8D%95%E7%A4%BA%E4%BE%8B"><span class="toc-number">1.5.</span> <span class="toc-text">简单示例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">1.6.</span> <span class="toc-text">使用场景</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#List"><span class="toc-number">2.</span> <span class="toc-text">List</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0"><span class="toc-number">2.1.</span> <span class="toc-text">添加</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#lpush"><span class="toc-number">2.1.1.</span> <span class="toc-text">lpush</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#lrange"><span class="toc-number">2.1.2.</span> <span class="toc-text">lrange</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#rpush"><span class="toc-number">2.1.3.</span> <span class="toc-text">rpush</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A7%BB%E9%99%A4"><span class="toc-number">2.2.</span> <span class="toc-text">移除</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#lpop"><span class="toc-number">2.2.1.</span> <span class="toc-text">lpop</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#rpop"><span class="toc-number">2.2.2.</span> <span class="toc-text">rpop</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%A4%E8%80%85%E7%BB%93%E5%90%88"><span class="toc-number">2.3.</span> <span class="toc-text">两者结合</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#rpoplpush"><span class="toc-number">2.3.1.</span> <span class="toc-text">rpoplpush</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B6%E5%AE%83%E5%91%BD%E4%BB%A4"><span class="toc-number">2.4.</span> <span class="toc-text">其它命令</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#lindex"><span class="toc-number">2.4.1.</span> <span class="toc-text">lindex</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#llen"><span class="toc-number">2.4.2.</span> <span class="toc-text">llen</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#lrem"><span class="toc-number">2.4.3.</span> <span class="toc-text">lrem</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ltrim"><span class="toc-number">2.4.4.</span> <span class="toc-text">ltrim</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#exists"><span class="toc-number">2.4.5.</span> <span class="toc-text">exists</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#lset"><span class="toc-number">2.4.6.</span> <span class="toc-text">lset</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#linsert"><span class="toc-number">2.4.7.</span> <span class="toc-text">linsert</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#lmove"><span class="toc-number">2.4.8.</span> <span class="toc-text">lmove</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Set"><span class="toc-number">3.</span> <span class="toc-text">Set</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C-1"><span class="toc-number">3.1.</span> <span class="toc-text">基本操作</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#sadd"><span class="toc-number">3.1.1.</span> <span class="toc-text">sadd</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#scard"><span class="toc-number">3.1.2.</span> <span class="toc-text">scard</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#smembers"><span class="toc-number">3.1.3.</span> <span class="toc-text">smembers</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#sismember"><span class="toc-number">3.1.4.</span> <span class="toc-text">sismember</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#srandmember"><span class="toc-number">3.1.5.</span> <span class="toc-text">srandmember</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#spop"><span class="toc-number">3.1.6.</span> <span class="toc-text">spop</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#smove"><span class="toc-number">3.1.7.</span> <span class="toc-text">smove</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E8%BF%90%E7%AE%97"><span class="toc-number">3.2.</span> <span class="toc-text">相关运算</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#sdiff"><span class="toc-number">3.2.1.</span> <span class="toc-text">sdiff</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#sinter"><span class="toc-number">3.2.2.</span> <span class="toc-text">sinter</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#sunion"><span class="toc-number">3.2.3.</span> <span class="toc-text">sunion</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hash"><span class="toc-number">4.</span> <span class="toc-text">Hash</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C-2"><span class="toc-number">4.1.</span> <span class="toc-text">基本操作</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#hset"><span class="toc-number">4.1.1.</span> <span class="toc-text">hset</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#hget"><span class="toc-number">4.1.2.</span> <span class="toc-text">hget</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#hmset"><span class="toc-number">4.1.3.</span> <span class="toc-text">hmset</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#hmget"><span class="toc-number">4.1.4.</span> <span class="toc-text">hmget</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#hgetall"><span class="toc-number">4.1.5.</span> <span class="toc-text">hgetall</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#hdel"><span class="toc-number">4.1.6.</span> <span class="toc-text">hdel</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#hlen"><span class="toc-number">4.1.7.</span> <span class="toc-text">hlen</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#hexists"><span class="toc-number">4.1.8.</span> <span class="toc-text">hexists</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#hkeys"><span class="toc-number">4.1.9.</span> <span class="toc-text">hkeys</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#hvals"><span class="toc-number">4.1.10.</span> <span class="toc-text">hvals</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A2%9E%E5%8A%A0%E5%92%8C%E5%87%8F%E5%B0%91"><span class="toc-number">4.2.</span> <span class="toc-text">增加和减少</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#hincrby"><span class="toc-number">4.2.1.</span> <span class="toc-text">hincrby</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%8C%E6%97%B6%E8%AE%BE%E7%BD%AE-1"><span class="toc-number">4.3.</span> <span class="toc-text">同时设置</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#hsetnx"><span class="toc-number">4.3.1.</span> <span class="toc-text">hsetnx</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Zset"><span class="toc-number">5.</span> <span class="toc-text">Zset</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C-3"><span class="toc-number">5.1.</span> <span class="toc-text">基本操作</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#zadd"><span class="toc-number">5.1.1.</span> <span class="toc-text">zadd</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#zrange"><span class="toc-number">5.1.2.</span> <span class="toc-text">zrange</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#zrevrange"><span class="toc-number">5.1.3.</span> <span class="toc-text">zrevrange</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#zrem"><span class="toc-number">5.1.4.</span> <span class="toc-text">zrem</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#zcard"><span class="toc-number">5.1.5.</span> <span class="toc-text">zcard</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#zcount"><span class="toc-number">5.1.6.</span> <span class="toc-text">zcount</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%92%E5%BA%8F"><span class="toc-number">5.2.</span> <span class="toc-text">排序</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#zrangebyscore"><span class="toc-number">5.2.1.</span> <span class="toc-text">zrangebyscore</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#zrevrangebyscore"><span class="toc-number">5.2.2.</span> <span class="toc-text">zrevrangebyscore</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Geospatial"><span class="toc-number">6.</span> <span class="toc-text">Geospatial</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C-4"><span class="toc-number">6.1.</span> <span class="toc-text">基本操作</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#geoadd"><span class="toc-number">6.1.1.</span> <span class="toc-text">geoadd</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#getpos"><span class="toc-number">6.1.2.</span> <span class="toc-text">getpos</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#geodist"><span class="toc-number">6.1.3.</span> <span class="toc-text">geodist</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#georadius"><span class="toc-number">6.1.4.</span> <span class="toc-text">georadius</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#georadiusbymember"><span class="toc-number">6.1.5.</span> <span class="toc-text">georadiusbymember</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#geohash"><span class="toc-number">6.1.6.</span> <span class="toc-text">geohash</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B6%E5%AE%83%E6%93%8D%E4%BD%9C"><span class="toc-number">6.2.</span> <span class="toc-text">其它操作</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%9B%86%E5%90%88%E4%B8%AD%E6%9C%89%E5%87%A0%E6%89%80%E5%A4%A7%E5%AD%A6"><span class="toc-number">6.2.1.</span> <span class="toc-text">集合中有几所大学</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%97%E5%87%BA%E8%BF%99%E4%BA%9B%E5%A4%A7%E5%AD%A6%E7%9A%84%E5%90%8D%E5%AD%97"><span class="toc-number">6.2.2.</span> <span class="toc-text">列出这些大学的名字</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%A0%E9%99%A4"><span class="toc-number">6.2.3.</span> <span class="toc-text">删除</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hyperloglog"><span class="toc-number">7.</span> <span class="toc-text">Hyperloglog</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C-5"><span class="toc-number">7.1.</span> <span class="toc-text">基本操作</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#pfadd"><span class="toc-number">7.1.1.</span> <span class="toc-text">pfadd</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pfcount"><span class="toc-number">7.1.2.</span> <span class="toc-text">pfcount</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pfmerge"><span class="toc-number">7.1.3.</span> <span class="toc-text">pfmerge</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Bitmap"><span class="toc-number">8.</span> <span class="toc-text">Bitmap</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8"><span class="toc-number">8.1.</span> <span class="toc-text">基本使用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#setbit"><span class="toc-number">8.1.1.</span> <span class="toc-text">setbit</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#getbit"><span class="toc-number">8.1.2.</span> <span class="toc-text">getbit</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#bitcount"><span class="toc-number">8.1.3.</span> <span class="toc-text">bitcount</span></a></li></ol></li></ol></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article" style="--smc-primary:#0078E7;"><link itemprop="mainEntityOfPage" href="https://www.bestguo.top/journal/redis-type-of-data/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="BestGuo2020"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="BestGuo 的小窝"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">Redis 基本数据类型的操作</h1><div class="post-meta"><div class="post-time"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:calendar-line"></span></span> <time title="创建时间：2021-09-20 10:35:40" itemprop="dateCreated datePublished" datetime="2021-09-20T10:35:40+08:00">2021-09-20</time><span class="post-meta-divider">-</span><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:calendar-2-line"></span></span> <time title="修改时间：2022-05-25 18:47:49" itemprop="dateModified" datetime="2022-05-25T18:47:49+08:00">2022-05-25</time></div><span class="post-busuanzi"><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读次数"><span class="icon iconify" data-icon="ri:eye-line"></span> <span id="busuanzi_value_page_pv"></span></span></span><span class="post-meta-divider">-</span><a href="#comment"><span class="post-meta-item-icon" title="评论数"><span class="icon iconify" data-icon="ri:chat-3-line"></span> <span class="waline-comment-count" id="/journal/redis-type-of-data/"></span></span></a><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><span class="icon iconify" data-icon="ri:folder-line"></span></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">后端开发</span></a></span> > <span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/%E5%90%8E%E7%AB%AF%E5%BC%80%E5%8F%91/Redis-%E7%9A%84%E5%AD%A6%E4%B9%A0%E5%8E%86%E7%A8%8B/" style="--text-color:var(--hty-text-color)" itemprop="url" rel="index"><span itemprop="text">Redis 的学习历程</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/Redis/" style="--text-color:var(--hty-text-color)"><span class="post-meta-item-icon"><span class="icon iconify" data-icon="ri:price-tag-3-line"></span></span><span class="tag-name">Redis</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body"><p>Redis 有这些数据类型，基本数据类型：String、List、Hash、Set、Zset，特殊的数据类型：Geospatial、Hyperloglog、Bitmap。</p>
+<p>命令并未包含全部的，可供参考，要查询更多命令，请<a target="_blank" rel="noopener" href="http://www.redis.cn/commands.htm">点此</a>。</p>
+<h2 id="String"><a href="#String" class="headerlink" title="String"></a>String</h2><p>String，也叫字符串，是基本的数据类型之一。</p>
+<h3 id="基本操作"><a href="#基本操作" class="headerlink" title="基本操作"></a>基本操作</h3><h4 id="set"><a href="#set" class="headerlink" title="set"></a>set</h4><p>设置值</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> <span class="token builtin class-name">set</span> name xiaohehe
+OK</code></pre>
+
+<h4 id="get"><a href="#get" class="headerlink" title="get"></a>get</h4><p>获得值</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> get name
+<span class="token string">"xiaohehe"</span></code></pre>
+
+<span id="more"></span>
+
+<h4 id="append"><a href="#append" class="headerlink" title="append"></a>append</h4><p>追加字符串，如果当前 key 不存在，它的用法和 set 命令一样。</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> append name <span class="token number">2021</span>
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">12</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> get name
+<span class="token string">"xiaohehe2021"</span></code></pre>
+
+<h4 id="strlen"><a href="#strlen" class="headerlink" title="strlen"></a>strlen</h4><p>得到字符串的长度</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> strlen name
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">12</span></code></pre>
+
+<h4 id="mset"><a href="#mset" class="headerlink" title="mset"></a>mset</h4><p>设置多组 key : value</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> mset age <span class="token number">23</span> sex <span class="token number">0</span> address bestguo.top
+OK</code></pre>
+
+<h4 id="mget"><a href="#mget" class="headerlink" title="mget"></a>mget</h4><p>输入多个 key，获取对应的 value</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> mget age sex address
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"23"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"0"</span>
+<span class="token number">3</span><span class="token punctuation">)</span> <span class="token string">"bestguo.top"</span></code></pre>
+
+<h4 id="getset"><a href="#getset" class="headerlink" title="getset"></a>getset</h4><p>获取 key 中的值并替换 key 中的值，如果 key 在数据库不存在，则返回 null，并且给 key 设置值。</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> getset name2 <span class="token number">1111</span>
+<span class="token punctuation">(</span>nil<span class="token punctuation">)</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> get name2
+<span class="token string">"1111"</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> getset age <span class="token number">18</span>
+<span class="token string">"23"</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> get age
+<span class="token string">"18"</span></code></pre>
+
+<h3 id="截取与替换"><a href="#截取与替换" class="headerlink" title="截取与替换"></a>截取与替换</h3><h4 id="getrange"><a href="#getrange" class="headerlink" title="getrange"></a>getrange</h4><p>提取字符串中介于两个指定下标之间的字符，类比 substring</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> getrange name <span class="token number">0</span> <span class="token number">3</span>
+<span class="token string">"xiao"</span></code></pre>
+
+<h4 id="setrange"><a href="#setrange" class="headerlink" title="setrange"></a>setrange</h4><p>替换指定位置开始的字符串位置，并且之后的字符会被替换掉</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> get name
+<span class="token string">"xiaxiaoe2021"</span></code></pre>
+
+<h3 id="同时设置"><a href="#同时设置" class="headerlink" title="同时设置"></a>同时设置</h3><h4 id="setex"><a href="#setex" class="headerlink" title="setex"></a>setex</h4><p>设置值的时候，同时设置过期时间</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> setex tel <span class="token number">10</span> <span class="token number">123456789</span>
+OK
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> get tel
+<span class="token string">"123456789"</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> ttl tel
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">3</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> ttl tel
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">2</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> ttl tel
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">0</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> ttl tel
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> -2
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> get tel
+<span class="token punctuation">(</span>nil<span class="token punctuation">)</span></code></pre>
+
+<h4 id="setnx"><a href="#setnx" class="headerlink" title="setnx"></a>setnx</h4><p>key 不存在时，则设置值，反之则不设置值。</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> setex tel <span class="token number">10</span> <span class="token number">123456789</span>
+OK
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> setnx tel <span class="token number">111</span>
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">0</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> setnx tel <span class="token number">111</span>
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">0</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> setnx tel <span class="token number">111</span>
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">1</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> get tel
+<span class="token string">"111"</span></code></pre>
+
+<h4 id="msetnx"><a href="#msetnx" class="headerlink" title="msetnx"></a>msetnx</h4><p>设置多个值的时候，同时设置过期时间。他是一个原子性的操作，要么一起成功，要么一起失败。</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 由于house不存在，肯定设置失败</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> msetnx name xiaohehe2020 house <span class="token number">111</span>
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">0</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> get house
+<span class="token punctuation">(</span>nil<span class="token punctuation">)</span>
+<span class="token comment"># 之前我把 tel 的值给删除了，然后再重新设置值，此时都设置成功了</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> msetnx tel <span class="token number">1234</span> house <span class="token number">111</span>
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">1</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> mget tel house
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"1234"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"111"</span></code></pre>
+
+<h3 id="增加与减少"><a href="#增加与减少" class="headerlink" title="增加与减少"></a>增加与减少</h3><h4 id="incr"><a href="#incr" class="headerlink" title="incr"></a>incr</h4><p>自增命令，每次增加1</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> get age
+<span class="token string">"18"</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> incr age
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">19</span>
+<span class="token comment"># 不能是英文</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> getset age a
+<span class="token string">"19"</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> incr age
+<span class="token punctuation">(</span>error<span class="token punctuation">)</span> ERR value is not an integer or out of range</code></pre>
+
+<h4 id="decr"><a href="#decr" class="headerlink" title="decr"></a>decr</h4><p>自减命令，每次减少1</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> decr age
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">18</span></code></pre>
+
+<h4 id="incrby"><a href="#incrby" class="headerlink" title="incrby"></a>incrby</h4><p>增加命令，指定设置自增量</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> incrby age <span class="token number">10</span>
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">28</span></code></pre>
+
+<h4 id="decrby"><a href="#decrby" class="headerlink" title="decrby"></a>decrby</h4><p>减少命令，指定设置自减量</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> decrby age <span class="token number">8</span>
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">20</span></code></pre>
+
+<h3 id="简单示例"><a href="#简单示例" class="headerlink" title="简单示例"></a>简单示例</h3><p>设置 user1 对象，值为 json 字符串来保存</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">set</span> user:1 <span class="token punctuation">&#123;</span>name: zhangsan, age: <span class="token number">3</span><span class="token punctuation">&#125;</span>
+<span class="token builtin class-name">set</span> user:1:name zhangsan user:1:age <span class="token number">3</span></code></pre>
+
+<h3 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h3><ul>
+<li>计数器</li>
+<li>对象缓存存储</li>
+</ul>
+<h2 id="List"><a href="#List" class="headerlink" title="List"></a>List</h2><p>List，也叫列表，是基本的数据类型之一，Redis 的列表可以当成栈、队列。因为有这些操作命令。在 Redis 中，它的实现方式是双向链表。因此，它有双向链表的特点。</p>
+<blockquote>
+<p>提示：绝大部分的 List 命令都是由 L 开头的。</p>
+</blockquote>
+<h3 id="添加"><a href="#添加" class="headerlink" title="添加"></a>添加</h3><h4 id="lpush"><a href="#lpush" class="headerlink" title="lpush"></a>lpush</h4><p>从第一个位置插入元素</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> lpush words one two three four
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">4</span></code></pre>
+
+<h4 id="lrange"><a href="#lrange" class="headerlink" title="lrange"></a>lrange</h4><p>通过区间取得元素</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> lrange words <span class="token number">0</span> -1
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"four"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"three"</span>
+<span class="token number">3</span><span class="token punctuation">)</span> <span class="token string">"two"</span>
+<span class="token number">4</span><span class="token punctuation">)</span> <span class="token string">"one"</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> lrange words <span class="token number">0</span> <span class="token number">2</span>
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"four"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"three"</span>
+<span class="token number">3</span><span class="token punctuation">)</span> <span class="token string">"two"</span></code></pre>
+
+<h4 id="rpush"><a href="#rpush" class="headerlink" title="rpush"></a>rpush</h4><p>从最后一个位置插入元素</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> lrange words <span class="token number">0</span> -1
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"four"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"three"</span>
+<span class="token number">3</span><span class="token punctuation">)</span> <span class="token string">"two"</span>
+<span class="token number">4</span><span class="token punctuation">)</span> <span class="token string">"one"</span>
+<span class="token number">5</span><span class="token punctuation">)</span> <span class="token string">"five"</span></code></pre>
+
+<h3 id="移除"><a href="#移除" class="headerlink" title="移除"></a>移除</h3><h4 id="lpop"><a href="#lpop" class="headerlink" title="lpop"></a>lpop</h4><p>从第一个位置移除元素</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> lpop words
+<span class="token string">"four"</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> lrange words <span class="token number">0</span> -1
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"three"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"two"</span>
+<span class="token number">3</span><span class="token punctuation">)</span> <span class="token string">"one"</span>
+<span class="token number">4</span><span class="token punctuation">)</span> <span class="token string">"five"</span>
+<span class="token comment"># 从第一个位置开始，移除2个元素</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> lpop words <span class="token number">2</span>
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"three"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"two"</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> lrange words <span class="token number">0</span> -1
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"five"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"one"</span></code></pre>
+
+<h4 id="rpop"><a href="#rpop" class="headerlink" title="rpop"></a>rpop</h4><p>从最后一个位置移除元素</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> rpop words
+<span class="token string">"one"</span></code></pre>
+
+<h3 id="两者结合"><a href="#两者结合" class="headerlink" title="两者结合"></a>两者结合</h3><h4 id="rpoplpush"><a href="#rpoplpush" class="headerlink" title="rpoplpush"></a>rpoplpush</h4><p>从最后一个位置移除元素，将该元素放到另一个列表中的第一个位置</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> rpoplpush words words2
+<span class="token string">"five"</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> lrange words <span class="token number">0</span> -1
+<span class="token punctuation">(</span>empty array<span class="token punctuation">)</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> lrange words2 <span class="token number">0</span> -1
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"five"</span></code></pre>
+
+<h3 id="其它命令"><a href="#其它命令" class="headerlink" title="其它命令"></a>其它命令</h3><blockquote>
+<p>现在，words 中有以下内容：five,four,three,two,one</p>
+</blockquote>
+<h4 id="lindex"><a href="#lindex" class="headerlink" title="lindex"></a>lindex</h4><p>指定下标获取元素</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> lindex words <span class="token number">1</span>
+<span class="token string">"four"</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> lindex words <span class="token number">0</span>
+<span class="token string">"five"</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> lindex words -2
+<span class="token string">"two"</span></code></pre>
+
+<h4 id="llen"><a href="#llen" class="headerlink" title="llen"></a>llen</h4><p>获取列表的长度</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> llen words
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">5</span></code></pre>
+
+<h4 id="lrem"><a href="#lrem" class="headerlink" title="lrem"></a>lrem</h4><p>移除列表中指定的元素，需要指定个数。</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> rpush words two
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">5</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> lrem words <span class="token number">2</span> two
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">2</span></code></pre>
+
+<h4 id="ltrim"><a href="#ltrim" class="headerlink" title="ltrim"></a>ltrim</h4><p>通过下标截取指定的长度，这个 list 已经被改变了、截断了只剩下截取的元素！</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> ltrim words <span class="token number">0</span> <span class="token number">2</span>
+OK
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> lrange words <span class="token number">0</span> -1
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"five"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"four"</span>
+<span class="token number">3</span><span class="token punctuation">)</span> <span class="token string">"three"</span></code></pre>
+
+<h4 id="exists"><a href="#exists" class="headerlink" title="exists"></a>exists</h4><p>判断列表是否存在</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> exists words
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">1</span></code></pre>
+
+<h4 id="lset"><a href="#lset" class="headerlink" title="lset"></a>lset</h4><p>指定列表中的下标设置元素，如果列表是空的，则会插入失败</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> lset words <span class="token number">0</span> five
+OK
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> lrange words <span class="token number">0</span> -1
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"five"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"three"</span>
+<span class="token number">3</span><span class="token punctuation">)</span> <span class="token string">"two"</span>
+<span class="token number">4</span><span class="token punctuation">)</span> <span class="token string">"one"</span>
+<span class="token number">5</span><span class="token punctuation">)</span> <span class="token string">"two"</span></code></pre>
+
+<h4 id="linsert"><a href="#linsert" class="headerlink" title="linsert"></a>linsert</h4><p>在指定的位置插入一个元素，可以在目标位置之前，也可以在目标位置之后</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 在 three 之前添加 six</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> linsert words before three six
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">6</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> lrange words <span class="token number">0</span> -1
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"five"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"six"</span>
+<span class="token number">3</span><span class="token punctuation">)</span> <span class="token string">"three"</span>
+<span class="token number">4</span><span class="token punctuation">)</span> <span class="token string">"two"</span>
+<span class="token number">5</span><span class="token punctuation">)</span> <span class="token string">"one"</span>
+<span class="token number">6</span><span class="token punctuation">)</span> <span class="token string">"two"</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> linsert words after one seven
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">7</span>
+<span class="token comment"># 在 one 之后添加 seven</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> lrange words <span class="token number">0</span> -1
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"five"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"six"</span>
+<span class="token number">3</span><span class="token punctuation">)</span> <span class="token string">"three"</span>
+<span class="token number">4</span><span class="token punctuation">)</span> <span class="token string">"two"</span>
+<span class="token number">5</span><span class="token punctuation">)</span> <span class="token string">"one"</span>
+<span class="token number">6</span><span class="token punctuation">)</span> <span class="token string">"seven"</span>
+<span class="token number">7</span><span class="token punctuation">)</span> <span class="token string">"two"</span></code></pre>
+
+<h4 id="lmove"><a href="#lmove" class="headerlink" title="lmove"></a>lmove</h4><p>将列表中的指定的元素移动到另外一个列表中。需要指定从列表的哪一边，移动到另一个列表的哪一边。</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 从列表的左边取出一个元素，再移入到另一个列表的左边。</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> lmove words words2 left left
+<span class="token string">"five"</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> lrange words2 <span class="token number">0</span> -1
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"five"</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> lmove words words2 left left
+<span class="token string">"six"</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> lrange words2 <span class="token number">0</span> -1
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"six"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"five"</span>
+<span class="token comment"># 从列表的左边取出一个元素，再移入到另一个列表的左边。</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> lmove words words2 left right
+<span class="token string">"three"</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> lrange words2 <span class="token number">0</span> -1
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"six"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"five"</span>
+<span class="token number">3</span><span class="token punctuation">)</span> <span class="token string">"three"</span>
+<span class="token comment"># 从列表的右边取出一个元素，再移入到另一个列表的左边。</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> lmove words words2 right left
+<span class="token string">"two"</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> lrange words2 <span class="token number">0</span> -1
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"two"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"six"</span>
+<span class="token number">3</span><span class="token punctuation">)</span> <span class="token string">"five"</span>
+<span class="token number">4</span><span class="token punctuation">)</span> <span class="token string">"three"</span>
+<span class="token comment"># 从列表的右边取出一个元素，再移入到另一个列表的右边。</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> lmove words words2 right right
+<span class="token string">"seven"</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> lrange words2 <span class="token number">0</span> -1
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"two"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"six"</span>
+<span class="token number">3</span><span class="token punctuation">)</span> <span class="token string">"five"</span>
+<span class="token number">4</span><span class="token punctuation">)</span> <span class="token string">"three"</span>
+<span class="token number">5</span><span class="token punctuation">)</span> <span class="token string">"seven"</span></code></pre>
+
+<h2 id="Set"><a href="#Set" class="headerlink" title="Set"></a>Set</h2><p>Set，也叫集合，是基本的数据类型之一，集合中的元素不重复且无序。</p>
+<blockquote>
+<p>提示：所有的 Set 命令都是由 s 开头的。</p>
+</blockquote>
+<h3 id="基本操作-1"><a href="#基本操作-1" class="headerlink" title="基本操作"></a>基本操作</h3><h4 id="sadd"><a href="#sadd" class="headerlink" title="sadd"></a>sadd</h4><p>添加一组元素</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> sadd s1 b g a o f c
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">6</span></code></pre>
+
+<h4 id="scard"><a href="#scard" class="headerlink" title="scard"></a>scard</h4><p>获取 set 集合中的内容元素个数</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> scard s1
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">6</span></code></pre>
+
+<h4 id="smembers"><a href="#smembers" class="headerlink" title="smembers"></a>smembers</h4><p>查看指定 set 集合中的所有元素</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> smembers s1
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"o"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"a"</span>
+<span class="token number">3</span><span class="token punctuation">)</span> <span class="token string">"b"</span>
+<span class="token number">4</span><span class="token punctuation">)</span> <span class="token string">"c"</span>
+<span class="token number">5</span><span class="token punctuation">)</span> <span class="token string">"g"</span>
+<span class="token number">6</span><span class="token punctuation">)</span> <span class="token string">"f"</span></code></pre>
+
+<h4 id="sismember"><a href="#sismember" class="headerlink" title="sismember"></a>sismember</h4><p>判断某一个值是不是在 set 集合中</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> smembers s1
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"o"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"a"</span>
+<span class="token number">3</span><span class="token punctuation">)</span> <span class="token string">"b"</span>
+<span class="token number">4</span><span class="token punctuation">)</span> <span class="token string">"c"</span>
+<span class="token number">5</span><span class="token punctuation">)</span> <span class="token string">"g"</span>
+<span class="token number">6</span><span class="token punctuation">)</span> <span class="token string">"f"</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> sismember s1 s
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">0</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> sismember s1 a
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">1</span></code></pre>
+
+<h4 id="srandmember"><a href="#srandmember" class="headerlink" title="srandmember"></a>srandmember</h4><p>随机抽取元素，默认取出一个。可以指定取出多个元素。</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 取出一个元素</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> srandmember s1
+<span class="token string">"f"</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> srandmember s1
+<span class="token string">"g"</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> srandmember s1
+<span class="token string">"o"</span>
+<span class="token comment"># 取出多个元素</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> srandmember s1 <span class="token number">3</span>
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"g"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"c"</span>
+<span class="token number">3</span><span class="token punctuation">)</span> <span class="token string">"a"</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> srandmember s1 <span class="token number">3</span>
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"g"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"c"</span>
+<span class="token number">3</span><span class="token punctuation">)</span> <span class="token string">"f"</span></code></pre>
+
+<h4 id="spop"><a href="#spop" class="headerlink" title="spop"></a>spop</h4><p>随机弹出一个元素</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> spop s1
+<span class="token string">"g"</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> spop s1
+<span class="token string">"b"</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> smembers s1
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"o"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"c"</span>
+<span class="token number">3</span><span class="token punctuation">)</span> <span class="token string">"a"</span>
+<span class="token number">4</span><span class="token punctuation">)</span> <span class="token string">"f"</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span></code></pre>
+
+<h4 id="smove"><a href="#smove" class="headerlink" title="smove"></a>smove</h4><p>将集合中的指定的元素移动到另外一个集合中。</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> smembers s1
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"o"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"c"</span>
+<span class="token number">3</span><span class="token punctuation">)</span> <span class="token string">"a"</span>
+<span class="token number">4</span><span class="token punctuation">)</span> <span class="token string">"f"</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> smove s1 s2 c
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">1</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> smembers s2
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"c"</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> smembers s1
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"o"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"a"</span>
+<span class="token number">3</span><span class="token punctuation">)</span> <span class="token string">"f"</span></code></pre>
+
+<h3 id="相关运算"><a href="#相关运算" class="headerlink" title="相关运算"></a>相关运算</h3><blockquote>
+<p>假设 s1 中有 “o”、”b”、”c”、”a”、”f” 5 个元素，s2 中有 “c”、”e”、”d”、”f” 4 个元素。</p>
+</blockquote>
+<p>集合中的运算分别有三种，分别是交集，并集和差集。</p>
+<h4 id="sdiff"><a href="#sdiff" class="headerlink" title="sdiff"></a>sdiff</h4><p>计算两个元素的差集</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> <span class="token function">sdiff</span> s1 s2
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"a"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"o"</span>
+<span class="token number">3</span><span class="token punctuation">)</span> <span class="token string">"b"</span></code></pre>
+
+<h4 id="sinter"><a href="#sinter" class="headerlink" title="sinter"></a>sinter</h4><p>计算两个元素的交集</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> sinter s1 s2
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"c"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"f"</span></code></pre>
+
+<h4 id="sunion"><a href="#sunion" class="headerlink" title="sunion"></a>sunion</h4><p>计算两个元素的并集</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> sunion s1 s2
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"d"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"e"</span>
+<span class="token number">3</span><span class="token punctuation">)</span> <span class="token string">"o"</span>
+<span class="token number">4</span><span class="token punctuation">)</span> <span class="token string">"b"</span>
+<span class="token number">5</span><span class="token punctuation">)</span> <span class="token string">"c"</span>
+<span class="token number">6</span><span class="token punctuation">)</span> <span class="token string">"a"</span>
+<span class="token number">7</span><span class="token punctuation">)</span> <span class="token string">"f"</span></code></pre>
+
+<h2 id="Hash"><a href="#Hash" class="headerlink" title="Hash"></a>Hash</h2><p>Hash 是什么呢？就类似于 Java 中的 Map 集合。Map 集合中都是以键值对的形式。在本质上和 String 类型没有太大的区别，还是一个简单的键值对形式。</p>
+<blockquote>
+<p>提示：所有的 Hash 命令都是由 h 开头的。</p>
+</blockquote>
+<h3 id="基本操作-2"><a href="#基本操作-2" class="headerlink" title="基本操作"></a>基本操作</h3><h4 id="hset"><a href="#hset" class="headerlink" title="hset"></a>hset</h4><p>设置一个哈希表，并且保存一对键值对。不过 hset 也可以多对键值对</p>
+<blockquote>
+<p>hset 命令：<code>hset key field value [field value ...]</code></p>
+<p>hmset 命令：<code>hmset key field value [field value ...]</code></p>
+</blockquote>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> hset user name xiaohehe age <span class="token number">18</span> sex <span class="token number">0</span> house <span class="token number">122</span> 
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">4</span></code></pre>
+
+<h4 id="hget"><a href="#hget" class="headerlink" title="hget"></a>hget</h4><p>从哈希表中的键中拿出一个值。</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> hget user age
+<span class="token string">"18"</span></code></pre>
+
+<h4 id="hmset"><a href="#hmset" class="headerlink" title="hmset"></a>hmset</h4><p>设置一个哈希表，并且保存多对键值对，用法和 hset 一样</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> hset user name xiaohehe age <span class="token number">18</span> sex <span class="token number">0</span> house <span class="token number">122</span> 
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">4</span></code></pre>
+
+<h4 id="hmget"><a href="#hmget" class="headerlink" title="hmget"></a>hmget</h4><p>从哈希表中使用多个键中拿出多个值。</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> hmget user name age asd
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"xiaohehe"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"18"</span>
+<span class="token number">3</span><span class="token punctuation">)</span> <span class="token punctuation">(</span>nil<span class="token punctuation">)</span></code></pre>
+
+<h4 id="hgetall"><a href="#hgetall" class="headerlink" title="hgetall"></a>hgetall</h4><p>获取全部的数据，包括键和值。</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> hgetall user
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"name"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"xiaohehe"</span>
+<span class="token number">3</span><span class="token punctuation">)</span> <span class="token string">"age"</span>
+<span class="token number">4</span><span class="token punctuation">)</span> <span class="token string">"18"</span>
+<span class="token number">5</span><span class="token punctuation">)</span> <span class="token string">"sex"</span>
+<span class="token number">6</span><span class="token punctuation">)</span> <span class="token string">"0"</span>
+<span class="token number">7</span><span class="token punctuation">)</span> <span class="token string">"house"</span>
+<span class="token number">8</span><span class="token punctuation">)</span> <span class="token string">"122"</span></code></pre>
+
+<h4 id="hdel"><a href="#hdel" class="headerlink" title="hdel"></a>hdel</h4><p>删除哈希表中指定的 key 字段</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> hdel user sex
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">1</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> hgetall user
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"name"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"xiaohehe"</span>
+<span class="token number">3</span><span class="token punctuation">)</span> <span class="token string">"age"</span>
+<span class="token number">4</span><span class="token punctuation">)</span> <span class="token string">"18"</span>
+<span class="token number">5</span><span class="token punctuation">)</span> <span class="token string">"house"</span>
+<span class="token number">6</span><span class="token punctuation">)</span> <span class="token string">"122"</span></code></pre>
+
+<h4 id="hlen"><a href="#hlen" class="headerlink" title="hlen"></a>hlen</h4><p>获取哈希表的长度</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> hlen user
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">3</span></code></pre>
+
+<h4 id="hexists"><a href="#hexists" class="headerlink" title="hexists"></a>hexists</h4><p>判断哈希表中指定的 key 是否存在</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> hexists user sex
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">0</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> hexists user name
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">1</span></code></pre>
+
+<h4 id="hkeys"><a href="#hkeys" class="headerlink" title="hkeys"></a>hkeys</h4><p>获取哈希表中所有的 key</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> hkeys user
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"name"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"age"</span>
+<span class="token number">3</span><span class="token punctuation">)</span> <span class="token string">"house"</span></code></pre>
+
+<h4 id="hvals"><a href="#hvals" class="headerlink" title="hvals"></a>hvals</h4><p>获取哈希表中所有的 value</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> hvals user
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"xiaohehe"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"18"</span>
+<span class="token number">3</span><span class="token punctuation">)</span> <span class="token string">"122"</span></code></pre>
+
+<h3 id="增加和减少"><a href="#增加和减少" class="headerlink" title="增加和减少"></a>增加和减少</h3><blockquote>
+<p>这和 String 数据类型中的增加和减少是一样的，但是它并没有 decrby 的命令。如果要减少的话，可以设置增加负数的目的来达到减少</p>
+</blockquote>
+<h4 id="hincrby"><a href="#hincrby" class="headerlink" title="hincrby"></a>hincrby</h4><pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> hincrby user age <span class="token number">2</span>
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">20</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> hincrby user age -1
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">19</span></code></pre>
+
+<h3 id="同时设置-1"><a href="#同时设置-1" class="headerlink" title="同时设置"></a>同时设置</h3><h4 id="hsetnx"><a href="#hsetnx" class="headerlink" title="hsetnx"></a>hsetnx</h4><p>哈希表中的 key 不存在时，则设置值，反之则不设置值。</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> hsetnx user age <span class="token number">100</span>
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">0</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> hsetnx user asd <span class="token string">"this is a redis"</span>
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">1</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> hget user asd
+<span class="token string">"this is a redis"</span></code></pre>
+
+<h2 id="Zset"><a href="#Zset" class="headerlink" title="Zset"></a>Zset</h2><p>在 set 的基础上，增加了一个值。</p>
+<blockquote>
+<p>提示：所有的 Zset 命令都是由 z 开头的。</p>
+</blockquote>
+<h3 id="基本操作-3"><a href="#基本操作-3" class="headerlink" title="基本操作"></a>基本操作</h3><blockquote>
+<p>开始有如下数据：</p>
+<p>85 xiaoqiang<br>90 zhangsan<br>91 lisi<br>95 wanwu<br>76 zhaoliu</p>
+</blockquote>
+<h4 id="zadd"><a href="#zadd" class="headerlink" title="zadd"></a>zadd</h4><p>向有序集中添加一个值，可以添加多个值</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> zadd grade a xiaoqiang
+<span class="token punctuation">(</span>error<span class="token punctuation">)</span> ERR value is not a valid float
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> zadd grade <span class="token number">85</span> xiaoqiang
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">1</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> zadd grade <span class="token number">90</span> zhangsan
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">1</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> zadd grade <span class="token number">90</span> zhangsan <span class="token number">91</span> lisi <span class="token number">95</span> wanwu <span class="token number">76</span> zhaoliu
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">3</span></code></pre>
+
+<h4 id="zrange"><a href="#zrange" class="headerlink" title="zrange"></a>zrange</h4><p>向有序集合中通过下标区间取得元素</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> zrange grade <span class="token number">0</span> -1
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"zhaoliu"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"xiaoqiang"</span>
+<span class="token number">3</span><span class="token punctuation">)</span> <span class="token string">"zhangsan"</span>
+<span class="token number">4</span><span class="token punctuation">)</span> <span class="token string">"lisi"</span>
+<span class="token number">5</span><span class="token punctuation">)</span> <span class="token string">"wanwu"</span>
+<span class="token comment"># 逆序</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> zrange grade <span class="token number">0</span> -1 <span class="token function">rev</span>
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"wanwu"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"lisi"</span>
+<span class="token number">3</span><span class="token punctuation">)</span> <span class="token string">"zhangsan"</span>
+<span class="token number">4</span><span class="token punctuation">)</span> <span class="token string">"xiaoqiang"</span>
+<span class="token number">5</span><span class="token punctuation">)</span> <span class="token string">"zhaoliu"</span>
+<span class="token comment"># 按照 score 截取，可以替换成 zrangebyscore</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> zrange grade <span class="token number">95</span> <span class="token number">100</span> byscore
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"wanwu"</span></code></pre>
+
+<h4 id="zrevrange"><a href="#zrevrange" class="headerlink" title="zrevrange"></a>zrevrange</h4><p>向有序集合中通过下标区间取得元素，并且是逆序的</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> zrevrange grade <span class="token number">0</span> -1
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"wanwu"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"lisi"</span>
+<span class="token number">3</span><span class="token punctuation">)</span> <span class="token string">"zhangsan"</span>
+<span class="token number">4</span><span class="token punctuation">)</span> <span class="token string">"xiaoqiang"</span>
+<span class="token number">5</span><span class="token punctuation">)</span> <span class="token string">"zhaoliu"</span></code></pre>
+
+<h4 id="zrem"><a href="#zrem" class="headerlink" title="zrem"></a>zrem</h4><p>移除有序集合中指定的元素</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> zrem grade zhaoliu xiaoqiang
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">2</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> zrange grade <span class="token number">0</span> -1
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"zhangsan"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"lisi"</span>
+<span class="token number">3</span><span class="token punctuation">)</span> <span class="token string">"wanwu"</span></code></pre>
+
+<h4 id="zcard"><a href="#zcard" class="headerlink" title="zcard"></a>zcard</h4><p>获取有序集合中的个数</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> zcard grade
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">3</span></code></pre>
+
+<h4 id="zcount"><a href="#zcount" class="headerlink" title="zcount"></a>zcount</h4><p>获取指定 score 区间的成员的数量</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> zcount grade <span class="token number">85</span> <span class="token number">1000</span>
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">3</span></code></pre>
+
+<h3 id="排序"><a href="#排序" class="headerlink" title="排序"></a>排序</h3><h4 id="zrangebyscore"><a href="#zrangebyscore" class="headerlink" title="zrangebyscore"></a>zrangebyscore</h4><p>给集合中的数据指定 score 的区间范围并从小到大排序</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> zrangebyscore grade <span class="token number">85</span> <span class="token number">100</span>
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"zhangsan"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"lisi"</span>
+<span class="token number">3</span><span class="token punctuation">)</span> <span class="token string">"wanwu"</span></code></pre>
+
+<h4 id="zrevrangebyscore"><a href="#zrevrangebyscore" class="headerlink" title="zrevrangebyscore"></a>zrevrangebyscore</h4><p>给集合中的数据指定 score 的区间范围并从大到小排序</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> zrevrangebyscore grade <span class="token number">100</span> <span class="token number">85</span>
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"wanwu"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"lisi"</span>
+<span class="token number">3</span><span class="token punctuation">)</span> <span class="token string">"zhangsan"</span></code></pre>
+
+<h2 id="Geospatial"><a href="#Geospatial" class="headerlink" title="Geospatial"></a>Geospatial</h2><p>Redis的 Geospatial 在 Redis 3.2 就已经有了，它可以推算出地理位置的信息，两地之间的距离，方圆之内的人。关于地理位置的可以参考它：<a target="_blank" rel="noopener" href="https://www.redis.net.cn/order/3685.html">Redis 地理位置(geo)</a></p>
+<blockquote>
+<p>注意：</p>
+<p>该命令以采用标准格式的参数 x（纬度），y（经度），所以经度必须在纬度之前。这些坐标的限制是可以被编入索引的，区域面积可以很接近极点但是不能索引。具体的限制，由 EPSG:900913 / EPSG:3785 / OSGEO:41001 规定如下：</p>
+<ul>
+<li>有效的经度从 -180 度到 180 度。</li>
+<li>有效的纬度从 -85.05112878 度到 85.05112878 度。</li>
+</ul>
+<p>当坐标位置超出上述指定范围时，该命令将会返回一个错误。</p>
+</blockquote>
+<h3 id="基本操作-4"><a href="#基本操作-4" class="headerlink" title="基本操作"></a>基本操作</h3><h4 id="geoadd"><a href="#geoadd" class="headerlink" title="geoadd"></a>geoadd</h4><p>添加元素的位置，包含（经度、纬度、名称）样板：<code>geoadd key [NX|XX] [CH] longitude（经度） latitude（纬度） member [longitude latitude member ...]</code></p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 厦门理工学院和集美大学</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> geoadd xiamen <span class="token number">118.08745238</span> <span class="token number">24.62416819</span> xmut <span class="token number">118.09534880</span> <span class="token number">24.57996881</span> jmu
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">2</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> geoadd xiamen <span class="token number">118.08518860</span> <span class="token number">24.60387997</span> huaqiao <span class="token comment"># 华侨大学</span>
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">1</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> geoadd xiamen <span class="token number">118.06637022</span> <span class="token number">24.61626788</span> xit <span class="token comment"># 厦门工学院</span>
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">1</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> geoadd xiamen <span class="token number">118.08278534</span> <span class="token number">24.63070263</span> huaxia <span class="token comment"># 厦门华夏学院</span>
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">1</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> geoadd xiamen <span class="token number">118.10268733</span> <span class="token number">24.43600074</span> xmu <span class="token comment"># 厦门大学</span>
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">1</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> geoadd xiamen <span class="token number">118.16647331</span> <span class="token number">24.46291879</span> xmcu <span class="token comment"># 厦门城市职业学院</span>
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">1</span></code></pre>
+
+<h4 id="getpos"><a href="#getpos" class="headerlink" title="getpos"></a>getpos</h4><p>获取元素的位置，获取到的是坐标值。</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> geopos xiamen xmut jmu huaqiao xit huaxia xmu xmcu
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"118.0874517560005188"</span>
+   <span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"24.62416844172170016"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"118.09534817934036255"</span>
+   <span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"24.57996797414514134"</span>
+<span class="token number">3</span><span class="token punctuation">)</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"118.08518797159194946"</span>
+   <span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"24.60388053356235361"</span>
+<span class="token number">4</span><span class="token punctuation">)</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"118.06636959314346313"</span>
+   <span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"24.61626771586804097"</span>
+<span class="token number">5</span><span class="token punctuation">)</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"118.08278471231460571"</span>
+   <span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"24.63070295287047173"</span>
+<span class="token number">6</span><span class="token punctuation">)</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"118.10268670320510864"</span>
+   <span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"24.43600088173700868"</span>
+<span class="token number">7</span><span class="token punctuation">)</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"118.16647499799728394"</span>
+   <span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"24.46291962044919188"</span></code></pre>
+
+<h4 id="geodist"><a href="#geodist" class="headerlink" title="geodist"></a>geodist</h4><p>比较两个点之间的直线距离。可以指定距离单位，Redis 提供了 4 个单位。</p>
+<ul>
+<li>m表示单位为米。</li>
+<li>km表示单位为千米。</li>
+<li>mi表示单位为英里。</li>
+<li>ft表示单位为英尺。</li>
+</ul>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 厦门理工学院与厦门大学的直线距离（千米）</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> geodist xiamen xmut xmu km
+<span class="token string">"20.9859"</span>
+<span class="token comment"># 厦门理工学院与厦门城市职业学院的直线距离（千米）</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> geodist xiamen xmut xmcu km
+<span class="token string">"19.6365"</span></code></pre>
+
+<h4 id="georadius"><a href="#georadius" class="headerlink" title="georadius"></a>georadius</h4><p>以给定的经纬度为中心，返回键包含的位置元素当中，与中心的距离不超过给定最大距离的所有位置元素。这就像是寻找附近的人。比如，在 20 km 范围内有哪些人。</p>
+<blockquote>
+<p>经度：118.08835144，纬度：24.63347195 所在的位置是厦门理工学院集美苑宿舍。</p>
+</blockquote>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 在厦门理工学院集美苑宿舍，方圆5公里内有哪些学校。</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> georadius xiamen <span class="token number">118.08835144</span> <span class="token number">24.63347195</span> <span class="token number">5</span> km
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"xit"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"huaqiao"</span>
+<span class="token number">3</span><span class="token punctuation">)</span> <span class="token string">"xmut"</span>
+<span class="token number">4</span><span class="token punctuation">)</span> <span class="token string">"huaxia"</span>
+<span class="token comment"># 在厦门理工学院集美苑宿舍，方圆2公里内有哪些学校。</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> GEORADIUS xiamen <span class="token number">118.08835144</span> <span class="token number">24.63347195</span> <span class="token number">2000</span> m
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"huaxia"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"xmut"</span>
+<span class="token comment"># 同时显示距离集美苑多少公里和他们的经纬度</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> GEORADIUS xiamen <span class="token number">118.08835144</span> <span class="token number">24.63347195</span> <span class="token number">2</span> km withcoord withdist
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"huaxia"</span>
+   <span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"0.6416"</span>
+   <span class="token number">3</span><span class="token punctuation">)</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"118.08278471231460571"</span>
+      <span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"24.63070295287047173"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"xmut"</span>
+   <span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"1.0388"</span>
+   <span class="token number">3</span><span class="token punctuation">)</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"118.0874517560005188"</span>
+      <span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"24.62416844172170016"</span></code></pre>
+
+<h4 id="georadiusbymember"><a href="#georadiusbymember" class="headerlink" title="georadiusbymember"></a>georadiusbymember</h4><p>找出位于指定元素周围的其他元素。</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 寻找厦门大学方圆10公里内有哪些学校</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> GEORADIUSBYMEMBER xiamen xmu <span class="token number">10</span> km withcoord withdist
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"xmu"</span>
+   <span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"0.0000"</span>
+   <span class="token number">3</span><span class="token punctuation">)</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"118.10268670320510864"</span>
+      <span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"24.43600088173700868"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"xmcu"</span>
+   <span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"7.1189"</span>
+   <span class="token number">3</span><span class="token punctuation">)</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"118.16647499799728394"</span>
+      <span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"24.46291962044919188"</span></code></pre>
+
+<h4 id="geohash"><a href="#geohash" class="headerlink" title="geohash"></a>geohash</h4><p>返回一个或多个位置元素的 geohash 表示，将二维的经纬度转换为一维的字符串，如果两个字符串越接近，那么则距离越近。</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> geohash xiamen xmu xmut
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"ws7gp2ry000"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"ws7up4swjj0"</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> geohash xiamen xmu huaxia
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"ws7gp2ry000"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"ws7up5ck0r0"</span>
+<span class="token comment"># 厦门理工学院和厦门华夏学院很近</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> geohash xiamen xmut huaxia
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"ws7up4swjj0"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"ws7up5ck0r0"</span></code></pre>
+
+<h3 id="其它操作"><a href="#其它操作" class="headerlink" title="其它操作"></a>其它操作</h3><p>geo 底层的实现原理其实就是 Zset，我们可以使用 Zset 命令来操作 geo！可以参照 <a href="#Zset">Zset</a> 的操作来。</p>
+<h4 id="集合中有几所大学"><a href="#集合中有几所大学" class="headerlink" title="集合中有几所大学"></a>集合中有几所大学</h4><pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> ZCARD xiamen
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">7</span></code></pre>
+
+<h4 id="列出这些大学的名字"><a href="#列出这些大学的名字" class="headerlink" title="列出这些大学的名字"></a>列出这些大学的名字</h4><pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> zrange xiamen <span class="token number">0</span> -1
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"xmu"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"jmu"</span>
+<span class="token number">3</span><span class="token punctuation">)</span> <span class="token string">"xit"</span>
+<span class="token number">4</span><span class="token punctuation">)</span> <span class="token string">"huaqiao"</span>
+<span class="token number">5</span><span class="token punctuation">)</span> <span class="token string">"xmut"</span>
+<span class="token number">6</span><span class="token punctuation">)</span> <span class="token string">"huaxia"</span>
+<span class="token number">7</span><span class="token punctuation">)</span> <span class="token string">"xmcu"</span></code></pre>
+
+<h4 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h4><pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> ZREM xiamen xit
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">1</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> zrange xiamen <span class="token number">0</span> -1
+<span class="token number">1</span><span class="token punctuation">)</span> <span class="token string">"xmu"</span>
+<span class="token number">2</span><span class="token punctuation">)</span> <span class="token string">"jmu"</span>
+<span class="token number">3</span><span class="token punctuation">)</span> <span class="token string">"huaqiao"</span>
+<span class="token number">4</span><span class="token punctuation">)</span> <span class="token string">"xmut"</span>
+<span class="token number">5</span><span class="token punctuation">)</span> <span class="token string">"huaxia"</span>
+<span class="token number">6</span><span class="token punctuation">)</span> <span class="token string">"xmcu"</span></code></pre>
+
+<h2 id="Hyperloglog"><a href="#Hyperloglog" class="headerlink" title="Hyperloglog"></a>Hyperloglog</h2><p>Redis 2.8.9版本就更新了 Hyperloglog 数据结构！</p>
+<p>Redis Hyperloglog 基数统计的算法！</p>
+<p>优点∶占用的内存是固定，2^64不同的元素的技术，只需要 12KB 内存！如果要从内存角度来比较的话 Hyperloglog 是首选，虽然 set 集合也能做到，可是它的内存并非是固定的！</p>
+<p>网页的 UV（一个人访问一个网站多次，但是还是算作一个人！）</p>
+<p>传统的方式，set 保存用户的 id，然后就可以统计 set 中的元素数量作为标准判断!</p>
+<p>这个方式如果保存大量的用户 id，就会比较麻烦!我们的目的是为了计数，而不是保存用户id;</p>
+<p>0.81% 错误率！统计 UV 任务，可以忽略不计！</p>
+<blockquote>
+<p>如果允许容错，那么一定可以使用 Hyperloglog，如果不允许容错，就使用 set 或者自己的数据类型。</p>
+</blockquote>
+<h3 id="基本操作-5"><a href="#基本操作-5" class="headerlink" title="基本操作"></a>基本操作</h3><h4 id="pfadd"><a href="#pfadd" class="headerlink" title="pfadd"></a>pfadd</h4><p>创建一组元素，可以重复。</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> PFADD online_users a s d f g h j q s
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">1</span></code></pre>
+
+<h4 id="pfcount"><a href="#pfcount" class="headerlink" title="pfcount"></a>pfcount</h4><p>统计 key 中元素的基数数量。</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> PFCOUNT online_users
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">8</span></code></pre>
+
+<h4 id="pfmerge"><a href="#pfmerge" class="headerlink" title="pfmerge"></a>pfmerge</h4><p>将两组元素进行合并</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> PFMERGE best_users online_users hot_users
+OK
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> PFCOUNT best_users
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">15</span></code></pre>
+
+<h2 id="Bitmap"><a href="#Bitmap" class="headerlink" title="Bitmap"></a>Bitmap</h2><p>位存储。统计用户信息，活跃，不活跃；登录、未登录；打卡，365 打卡。只要是涉及两个状态的，都可以使用 Bitmap。</p>
+<h3 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h3><h4 id="setbit"><a href="#setbit" class="headerlink" title="setbit"></a>setbit</h4><p>设置或者清空 key 的 value（字符串）在 offset 处的 bit 值。</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> setbit daka <span class="token number">0</span> <span class="token number">0</span>
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">0</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> setbit daka <span class="token number">1</span> <span class="token number">1</span>
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">0</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> setbit daka <span class="token number">2</span> <span class="token number">1</span>
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">0</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> setbit daka <span class="token number">3</span> <span class="token number">0</span>
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">0</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> setbit daka <span class="token number">4</span> <span class="token number">1</span>
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">0</span></code></pre>
+
+<h4 id="getbit"><a href="#getbit" class="headerlink" title="getbit"></a>getbit</h4><p>返回 key 对应的 string 在 offset 处的 bit 值。</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> getbit daka <span class="token number">1</span>
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">1</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> getbit daka <span class="token number">3</span>
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">0</span>
+<span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> getbit daka <span class="token number">4</span>
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">1</span></code></pre>
+
+<h4 id="bitcount"><a href="#bitcount" class="headerlink" title="bitcount"></a>bitcount</h4><p>统计字符串被设置为 1 的 bit 数。</p>
+<pre class="language-bash" data-language="bash"><code class="language-bash"><span class="token number">127.0</span>.0.1:637<span class="token operator"><span class="token file-descriptor important">9</span>></span> bitcount daka <span class="token number">0</span> <span class="token number">10</span>
+<span class="token punctuation">(</span>integer<span class="token punctuation">)</span> <span class="token number">3</span></code></pre>
+
+</div></section><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>BestGuo2020</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="https://www.bestguo.top/journal/redis-type-of-data/" title="Redis 基本数据类型的操作">https://www.bestguo.top/journal/redis-type-of-data/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><span class="icon iconify" data-icon="ri:creative-commons-line"></span><span class="icon iconify" data-icon="ri:creative-commons-by-line"></span><span class="icon iconify" data-icon="ri:creative-commons-nc-line"></span><span class="icon iconify" data-icon="ri:creative-commons-sa-line"></span></a> 许可协议。</li></ul></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/journal/redis-transaction/" rel="prev" title="Redis 事务"><span class="icon iconify" data-icon="ri:arrow-left-s-line"></span><span class="post-nav-text">Redis 事务</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/journal/redis-tutoral/" rel="next" title="了解 NoSQL 和 Redis 安装"><span class="post-nav-text">了解 NoSQL 和 Redis 安装</span><span class="icon iconify" data-icon="ri:arrow-right-s-line"></span></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>请诸位理性发言！</span><br><span>请勿发布违反中国大陆地区法律的言论，请勿人身攻击、谩骂、侮辱和煽动式的语言。</span><br></div><div id="waline"></div><link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/@waline/client@v2/dist/waline.css"><script>window.CONFIG.waline.config.path = "/journal/redis-type-of-data/"</script><div class="js-Pjax"><script src="/js/comments/waline.js" type="module" defer></script></div></div></main><footer class="sidebar-translate" id="footer"><div class="beian"><a rel="noopener" href="https://beian.miit.gov.cn/" target="_blank">赣 ICP 备 20009988 号</a></div><div class="copyright"><span>&copy; 2019 – 2023 </span><span class="with-love" id="animate"><span class="icon iconify" data-icon="ri:cloud-line"></span></span><span class="author"> BestGuo2020</span></div><div class="powered"><span>由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v6.2.0</span><span class="footer-separator">|</span><span>主题 - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.10.9</span></div><div class="live-time"><span>本站点已正常地运行</span><span id="display_live_time"></span><span class="moe-text"><br/>♬(ノ゜∇゜)ノ♩<br></span><script>function blog_live_time() {
+  setTimeout(blog_live_time, 1000);
+  const start = new Date('2019-01-01T00:00:00');
+  const now = new Date();
+  const timeDiff = (now.getTime() - start.getTime());
+  const msPerMinute = 60 * 1000;
+  const msPerHour = 60 * msPerMinute;
+  const msPerDay = 24 * msPerHour;
+  const passDay = Math.floor(timeDiff / msPerDay);
+  const passHour = Math.floor((timeDiff % msPerDay) / 60 / 60 / 1000);
+  const passMinute = Math.floor((timeDiff % msPerHour) / 60 / 1000);
+  const passSecond = Math.floor((timeDiff % msPerMinute) / 1000);
+  display_live_time.innerHTML = ` ${passDay} 天 ${passHour} 小时 ${passMinute} 分 ${passSecond} 秒`;
 }
-.post-meta {
-  font-size: 14px;
-  color: var(--hty-secondary-text-color);
-}
-.post-meta .icon {
-  margin-bottom: -1px;
-}
-.post-description {
-  font-weight: normal;
-  padding: 0.5rem;
-}
-.post-author {
-  display: flex;
-  justify-content: center;
-}
-.post-author .author-avatar {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  line-height: 0;
-}
-.post-author .author-avatar img {
-  border-radius: 50%;
-  height: 1rem;
-  width: 1rem;
-  padding: 2px;
-  border: 2px solid #d3d3d3;
-}
-.post-author .author-name {
-  margin-left: 0.5rem;
-  font-size: 1rem;
-}
-.post-meta-item-icon {
-  display: inline-block;
-  color: var(--text-color, --hty-secondary-text-color);
-}
-.post-meta-divider {
-  height: 25px;
-  color: var(--hty-secondary-text-color);
-  margin: 0 0.5rem;
-}
-.post-eof {
-  margin: 50px auto;
-  width: 50%;
-  height: 1px;
-  background: $blue;
-  opacity: 0.1;
-}
-.post-copyright {
-  font-size: 0.9rem;
-  margin: 0.5rem 5rem 1rem 5rem;
-  padding: 0.5rem 1rem;
-  border-left: 4px solid #ff5252;
-  background-color: var(--hty-bg-color);
-  list-style: none;
-  word-break: break-all;
-  position: relative;
-  overflow: hidden;
-mobile()
-}
-.post-copyright::after {
-  position: absolute;
-  color: #fff;
-  background: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 496 512'%3E%3Cpath fill='gray' d='M245.8 214.9l-33.2 17.3c-9.4-19.6-25.2-20-27.4-20-22.2 0-33.3 14.6-33.3 43.9 0 23.5 9.2 43.8 33.3 43.8 14.4 0 24.6-7 30.5-21.3l30.6 15.5a73.2 73.2 0 01-65.1 39c-22.6 0-74-10.3-74-77 0-58.7 43-77 72.6-77 30.8-.1 52.7 11.9 66 35.8zm143 0l-32.7 17.3c-9.5-19.8-25.7-20-27.9-20-22.1 0-33.2 14.6-33.2 43.9 0 23.5 9.2 43.8 33.2 43.8 14.5 0 24.7-7 30.5-21.3l31 15.5c-2 3.8-21.3 39-65 39-22.7 0-74-9.9-74-77 0-58.7 43-77 72.6-77C354 179 376 191 389 214.8zM247.7 8C104.7 8 0 123 0 256c0 138.4 113.6 248 247.6 248C377.5 504 496 403 496 256 496 118 389.4 8 247.6 8zm.8 450.8c-112.5 0-203.7-93-203.7-202.8 0-105.5 85.5-203.3 203.8-203.3A201.7 201.7 0 01451.3 256c0 121.7-99.7 202.9-202.9 202.9z'/%3E%3C/svg%3E");
-  content: ' ';
-  height: 10rem;
-  width: 10rem;
-  right: -2rem;
-  top: -2rem;
-  opacity: 0.1;
-}
-.tag-name {
-  padding: 0 0.1rem;
-}
+blog_live_time();
+</script></div><div id="busuanzi"><span id="busuanzi_container_site_uv" title="总访客量"><span><span class="icon iconify" data-icon="ri:user-line"></span></span><span id="busuanzi_value_site_uv"></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv" title="总访问量"><span><span class="icon iconify" data-icon="ri:eye-line"></span></span><span id="busuanzi_value_site_pv"></span></span><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><div class="footer-support"><span>本网站由</span><a class="footer-support-logo" href="https://www.upyun.com/?utm_source=lianmeng&amp;utm_medium=referral" target="blank" title="又拍云"><img height="30" src="https://cdn.yunyoujun.cn/img/logo/upyun-logo.png" alt="又拍云"></a><span>提供 CDN 加速服务</span></div></footer></div><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><span class="icon iconify" data-icon="ri:arrow-up-s-line"></span><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a><a class="popup-trigger hty-icon-button icon-search" id="search" href="javascript:;" title="搜索"><span class="site-state-item-icon"><span class="icon iconify" data-icon="ri:search-line"></span></span></a><script>window.addEventListener("DOMContentLoaded", () => {
+  // Handle and trigger popup window
+  document.querySelector(".popup-trigger").addEventListener("click", () => {
+    document.querySelector(".popup").classList.add("show");
+    setTimeout(() => {
+      document.querySelector(".search-input").focus();
+    }, 100);
+  });
+
+  // Monitor main search box
+  const onPopupClose = () => {
+    document.querySelector(".popup").classList.remove("show");
+  };
+
+  document.querySelector(".popup-btn-close").addEventListener("click", () => {
+    onPopupClose();
+  });
+
+  window.addEventListener("keyup", event => {
+    if (event.key === "Escape") {
+      onPopupClose();
+    }
+  });
+});
+</script><script src="https://fastly.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js"></script><script src="/js/search/local-search.js" defer type="module"></script><div class="popup search-popup"><div class="search-header"><span class="popup-btn-close close-icon hty-icon-button"><span class="icon iconify" data-icon="ri:close-line"></span></span></div><div class="search-input-container"><input class="search-input" id="local-search-input" type="text" placeholder="搜索..." value=""></div><div class="search-result-container"></div></div></body></html>
