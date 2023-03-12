@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://www.bestguo.top/journal/design-pattern-iterator-and-composite/</loc>
+    <lastmod>2023-03-12</lastmod>
+  </url>
+  <url>
+    <loc>https://www.bestguo.top/journal/design-pattern-tutoral/</loc>
+    <lastmod>2023-03-11</lastmod>
+  </url>
+  <url>
     <loc>https://www.bestguo.top/journal/design-pattern-adapter/</loc>
     <lastmod>2023-03-11</lastmod>
   </url>
@@ -254,10 +262,6 @@
   </url>
   <url>
     <loc>https://www.bestguo.top/journal/edittext-component/</loc>
-    <lastmod>2022-05-25</lastmod>
-  </url>
-  <url>
-    <loc>https://www.bestguo.top/journal/design-pattern-tutoral/</loc>
     <lastmod>2022-05-25</lastmod>
   </url>
   <url>

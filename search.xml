@@ -4,6 +4,37 @@
   
     
     <entry>
+      <title>设计模式之迭代器和组合模式</title>
+      <link href="/journal/design-pattern-iterator-and-composite/"/>
+      <url>/journal/design-pattern-iterator-and-composite/</url>
+      
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h2 id="何为迭代器模式"><a href="#何为迭代器模式" class="headerlink" title="何为迭代器模式"></a>何为迭代器模式</h2><p>迭代器模式用于顺序访问集合对象的元素，<strong>不需要知道</strong>集合对象的底层表示。迭代器模式是一种行为型设计模式，在 Java 的集合框架中使用到迭代器（Iterator）来遍历集合中的元素。</p><p>但是，迭代器模式将存储数据和遍历数据的职责分离，增加新的聚合类需要对应增加新的迭代器类，类的个数成对增加，这在一定程度上增加了系统的复杂性。</p><p>迭代器模式的类图如下所示。</p><p><img src="/journal/design-pattern-iterator-and-composite/14273501821.jpg" loading="lazy"></p><h2 id="何为组合模式"><a href="#何为组合模式" class="headerlink" title="何为组合模式"></a>何为组合模式</h2><p>组合模式允许你将对象表现组合成树形结构来表现“部分 - 整体”层次结构。组合让客户可以统一处理个别对象和对象组合。组合模式是一种结构型设计模式。</p><p>但是，在使用组合模式时，其叶子和树枝的声明都是实现类，而不是接口，违反了依赖倒置原则。</p><p>组合模式的类图如下所示。</p><p><img src="/journal/design-pattern-iterator-and-composite/322609617.webp" alt="322609617" loading="lazy"></p><h2 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h2><p>在本例子的迭代器模式中，菜单项用的是数组，数组默认没有迭代器，因此我们可以自己使用迭代器来对数组进行遍历，使用了迭代器模式，调用者在取出元素时就不必知道迭代的具体集合是哪一个了。</p><p>MenuItem 类如下。</p><pre class="language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@Data</span><span class="token annotation punctuation">@AllArgsConstructor</span><span class="token annotation punctuation">@NoArgsConstructor</span><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MenuItem</span> <span class="token punctuation">&#123;</span>    <span class="token keyword">private</span> <span class="token class-name">String</span> name<span class="token punctuation">;</span>    <span class="token keyword">private</span> <span class="token class-name">String</span> desc<span class="token punctuation">;</span>    <span class="token keyword">private</span> <span class="token keyword">double</span> price<span class="token punctuation">;</span><span class="token punctuation">&#125;</span></code></pre><p>需要一个 Menu 接口，必须要实现创建迭代器的方法。</p><pre class="language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">Menu</span> <span class="token punctuation">&#123;</span>    <span class="token comment">/**     * 创建必须的迭代器     *     * @return     */</span>    <span class="token class-name">Iterator</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">MenuItem</span><span class="token punctuation">></span></span> <span class="token function">createIterator</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token punctuation">&#125;</span></code></pre><p>对菜单接口的实现，同时有一个内部类用于创建迭代器对象，这个迭代器的具体实现不必知道可以为私有。</p><pre class="language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">LunchMenu</span> <span class="token keyword">implements</span> <span class="token class-name">Menu</span> <span class="token punctuation">&#123;</span>    <span class="token class-name">MenuItem</span><span class="token punctuation">[</span><span class="token punctuation">]</span> menuItems<span class="token punctuation">;</span>    <span class="token keyword">final</span> <span class="token keyword">int</span> max_size <span class="token operator">=</span> <span class="token number">10</span><span class="token punctuation">;</span>    <span class="token keyword">int</span> count <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>    <span class="token keyword">public</span> <span class="token class-name">LunchMenu</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>        menuItems <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">MenuItem</span><span class="token punctuation">[</span>max_size<span class="token punctuation">]</span><span class="token punctuation">;</span>        <span class="token function">addItem</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">MenuItem</span><span class="token punctuation">(</span><span class="token string">"金拱门豪华套餐"</span><span class="token punctuation">,</span> <span class="token string">"1个，带点番茄酱和黑椒"</span><span class="token punctuation">,</span> <span class="token number">35.40</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>        <span class="token function">addItem</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">MenuItem</span><span class="token punctuation">(</span><span class="token string">"必败客披萨"</span><span class="token punctuation">,</span> <span class="token string">"2个，一个榴莲味，一个火腿肠味"</span><span class="token punctuation">,</span> <span class="token number">22.13</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>        <span class="token function">addItem</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">MenuItem</span><span class="token punctuation">(</span><span class="token string">"可乐"</span><span class="token punctuation">,</span> <span class="token string">"2瓶，带吸管"</span><span class="token punctuation">,</span> <span class="token number">6.00</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token punctuation">&#125;</span>    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">addItem</span><span class="token punctuation">(</span><span class="token class-name">MenuItem</span> menuItem<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>        menuItems<span class="token punctuation">[</span>count<span class="token punctuation">]</span> <span class="token operator">=</span> menuItem<span class="token punctuation">;</span>        count<span class="token operator">++</span><span class="token punctuation">;</span>    <span class="token punctuation">&#125;</span>    <span class="token annotation punctuation">@Override</span>    <span class="token keyword">public</span> <span class="token class-name">Iterator</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">MenuItem</span><span class="token punctuation">></span></span> <span class="token function">createIterator</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>        <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">LunchIterator</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token punctuation">&#125;</span>    <span class="token comment">// 迭代器内部类，不必知道具体的迭代器实现</span>    <span class="token keyword">private</span> <span class="token keyword">class</span> <span class="token class-name">LunchIterator</span> <span class="token keyword">implements</span> <span class="token class-name">Iterator</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">MenuItem</span><span class="token punctuation">></span></span> <span class="token punctuation">&#123;</span>        <span class="token keyword">int</span> length <span class="token operator">=</span> count<span class="token punctuation">;</span>        <span class="token keyword">int</span> index <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>        <span class="token annotation punctuation">@Override</span>        <span class="token keyword">public</span> <span class="token keyword">boolean</span> <span class="token function">hasNext</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>            <span class="token keyword">return</span> index <span class="token operator">&lt;</span> length<span class="token punctuation">;</span>        <span class="token punctuation">&#125;</span>        <span class="token annotation punctuation">@Override</span>        <span class="token keyword">public</span> <span class="token class-name">MenuItem</span> <span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>            <span class="token class-name">MenuItem</span> item <span class="token operator">=</span> menuItems<span class="token punctuation">[</span>index<span class="token punctuation">]</span><span class="token punctuation">;</span>            <span class="token keyword">if</span><span class="token punctuation">(</span>item <span class="token operator">==</span> <span class="token keyword">null</span><span class="token punctuation">)</span> <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">NoSuchElementException</span><span class="token punctuation">(</span><span class="token string">"没有元素了"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>            index<span class="token operator">++</span><span class="token punctuation">;</span>            <span class="token keyword">return</span> item<span class="token punctuation">;</span>        <span class="token punctuation">&#125;</span>    <span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span></code></pre><p>调用者，服务员。</p><pre class="language-java" data-language="java"><code class="language-java"><span class="token keyword">import</span> <span class="token namespace">java<span class="token punctuation">.</span>util<span class="token punctuation">.</span></span><span class="token class-name">Iterator</span><span class="token punctuation">;</span><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Waitress</span> <span class="token punctuation">&#123;</span>    <span class="token class-name">LunchMenu</span> lunchMenu<span class="token punctuation">;</span>    <span class="token keyword">public</span> <span class="token class-name">Waitress</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>    <span class="token punctuation">&#125;</span>    <span class="token keyword">public</span> <span class="token class-name">Waitress</span><span class="token punctuation">(</span><span class="token class-name">LunchMenu</span> lunchMenu<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>        <span class="token keyword">this</span><span class="token punctuation">.</span>lunchMenu <span class="token operator">=</span> lunchMenu<span class="token punctuation">;</span>    <span class="token punctuation">&#125;</span>    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">printMenu</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>        <span class="token function">printMenu</span><span class="token punctuation">(</span>lunchMenu<span class="token punctuation">.</span><span class="token function">createIterator</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token punctuation">&#125;</span>    <span class="token keyword">private</span> <span class="token keyword">void</span> <span class="token function">printMenu</span><span class="token punctuation">(</span><span class="token class-name">Iterator</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">MenuItem</span><span class="token punctuation">></span></span> iterator<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>        <span class="token keyword">while</span> <span class="token punctuation">(</span>iterator<span class="token punctuation">.</span><span class="token function">hasNext</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>iterator<span class="token punctuation">.</span><span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>        <span class="token punctuation">&#125;</span>    <span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span></code></pre><p>测试一下</p><pre class="language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">IteratorTest</span> <span class="token punctuation">&#123;</span>    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>        <span class="token class-name">LunchMenu</span> lunchMenu <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">LunchMenu</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>        <span class="token class-name">Waitress</span> waitress <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Waitress</span><span class="token punctuation">(</span>lunchMenu<span class="token punctuation">)</span><span class="token punctuation">;</span>        waitress<span class="token punctuation">.</span><span class="token function">printMenu</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span><span class="token comment">// ======= 运行结果 =======</span><span class="token comment">// MenuItem(name=金拱门豪华套餐, desc=1个，带点番茄酱和黑椒, price=35.4)</span><span class="token comment">// MenuItem(name=必败客披萨, desc=2个，一个榴莲味，一个火腿肠味, price=22.13)</span><span class="token comment">// MenuItem(name=可乐, desc=2瓶，带吸管, price=6.0)</span></code></pre><hr><p>接下来有一个新的需求，就是菜单又包含着子菜单，如下所示。</p><ul><li>菜单 1<ul><li>菜单 1-1</li><li>菜单 1-2</li></ul></li></ul><p>比如 1 个员工（项目经理）要管理多个员工（程序员）。</p><pre class="language-java" data-language="java"><code class="language-java"><span class="token keyword">import</span> <span class="token namespace">java<span class="token punctuation">.</span>util<span class="token punctuation">.</span></span><span class="token class-name">ArrayList</span><span class="token punctuation">;</span><span class="token keyword">import</span> <span class="token namespace">java<span class="token punctuation">.</span>util<span class="token punctuation">.</span></span><span class="token class-name">List</span><span class="token punctuation">;</span> <span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Employee</span> <span class="token punctuation">&#123;</span>   <span class="token keyword">private</span> <span class="token class-name">String</span> name<span class="token punctuation">;</span>   <span class="token keyword">private</span> <span class="token class-name">String</span> dept<span class="token punctuation">;</span>   <span class="token keyword">private</span> <span class="token keyword">int</span> salary<span class="token punctuation">;</span>   <span class="token keyword">private</span> <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Employee</span><span class="token punctuation">></span></span> subordinates<span class="token punctuation">;</span>    <span class="token comment">//构造函数</span>   <span class="token keyword">public</span> <span class="token class-name">Employee</span><span class="token punctuation">(</span><span class="token class-name">String</span> name<span class="token punctuation">,</span><span class="token class-name">String</span> dept<span class="token punctuation">,</span> <span class="token keyword">int</span> sal<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>      <span class="token keyword">this</span><span class="token punctuation">.</span>name <span class="token operator">=</span> name<span class="token punctuation">;</span>      <span class="token keyword">this</span><span class="token punctuation">.</span>dept <span class="token operator">=</span> dept<span class="token punctuation">;</span>      <span class="token keyword">this</span><span class="token punctuation">.</span>salary <span class="token operator">=</span> sal<span class="token punctuation">;</span>      subordinates <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Employee</span><span class="token punctuation">></span></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token punctuation">&#125;</span>    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">add</span><span class="token punctuation">(</span><span class="token class-name">Employee</span> e<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>      subordinates<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token punctuation">&#125;</span>    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">remove</span><span class="token punctuation">(</span><span class="token class-name">Employee</span> e<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>      subordinates<span class="token punctuation">.</span><span class="token function">remove</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token punctuation">&#125;</span>    <span class="token keyword">public</span> <span class="token class-name">List</span><span class="token generics"><span class="token punctuation">&lt;</span><span class="token class-name">Employee</span><span class="token punctuation">></span></span> <span class="token function">getSubordinates</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>     <span class="token keyword">return</span> subordinates<span class="token punctuation">;</span>   <span class="token punctuation">&#125;</span>    <span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>      <span class="token keyword">return</span> <span class="token string">"Employee :[ Name : "</span><span class="token operator">+</span> name       <span class="token operator">+</span><span class="token string">", dept : "</span><span class="token operator">+</span> dept <span class="token operator">+</span> <span class="token string">", salary :"</span>      <span class="token operator">+</span> salary<span class="token operator">+</span><span class="token string">" ]"</span><span class="token punctuation">;</span>   <span class="token punctuation">&#125;</span>   <span class="token punctuation">&#125;</span></code></pre><p>创建和打印员工</p><pre class="language-java" data-language="java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">CompositePatternDemo</span> <span class="token punctuation">&#123;</span>   <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token class-name">String</span><span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>      <span class="token class-name">Employee</span> CEO <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Employee</span><span class="token punctuation">(</span><span class="token string">"John"</span><span class="token punctuation">,</span><span class="token string">"CEO"</span><span class="token punctuation">,</span> <span class="token number">30000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>       <span class="token class-name">Employee</span> headSales <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Employee</span><span class="token punctuation">(</span><span class="token string">"Robert"</span><span class="token punctuation">,</span><span class="token string">"Head Sales"</span><span class="token punctuation">,</span> <span class="token number">20000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>       <span class="token class-name">Employee</span> headMarketing <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Employee</span><span class="token punctuation">(</span><span class="token string">"Michel"</span><span class="token punctuation">,</span><span class="token string">"Head Marketing"</span><span class="token punctuation">,</span> <span class="token number">20000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>       <span class="token class-name">Employee</span> clerk1 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Employee</span><span class="token punctuation">(</span><span class="token string">"Laura"</span><span class="token punctuation">,</span><span class="token string">"Marketing"</span><span class="token punctuation">,</span> <span class="token number">10000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>      <span class="token class-name">Employee</span> clerk2 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Employee</span><span class="token punctuation">(</span><span class="token string">"Bob"</span><span class="token punctuation">,</span><span class="token string">"Marketing"</span><span class="token punctuation">,</span> <span class="token number">10000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>       <span class="token class-name">Employee</span> salesExecutive1 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Employee</span><span class="token punctuation">(</span><span class="token string">"Richard"</span><span class="token punctuation">,</span><span class="token string">"Sales"</span><span class="token punctuation">,</span> <span class="token number">10000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>      <span class="token class-name">Employee</span> salesExecutive2 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Employee</span><span class="token punctuation">(</span><span class="token string">"Rob"</span><span class="token punctuation">,</span><span class="token string">"Sales"</span><span class="token punctuation">,</span> <span class="token number">10000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>       CEO<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>headSales<span class="token punctuation">)</span><span class="token punctuation">;</span>      CEO<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>headMarketing<span class="token punctuation">)</span><span class="token punctuation">;</span>       headSales<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>salesExecutive1<span class="token punctuation">)</span><span class="token punctuation">;</span>      headSales<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>salesExecutive2<span class="token punctuation">)</span><span class="token punctuation">;</span>       headMarketing<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>clerk1<span class="token punctuation">)</span><span class="token punctuation">;</span>      headMarketing<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>clerk2<span class="token punctuation">)</span><span class="token punctuation">;</span>       <span class="token comment">//打印该组织的所有员工</span>      <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>CEO<span class="token punctuation">)</span><span class="token punctuation">;</span>       <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token class-name">Employee</span> headEmployee <span class="token operator">:</span> CEO<span class="token punctuation">.</span><span class="token function">getSubordinates</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>         <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>headEmployee<span class="token punctuation">)</span><span class="token punctuation">;</span>         <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token class-name">Employee</span> employee <span class="token operator">:</span> headEmployee<span class="token punctuation">.</span><span class="token function">getSubordinates</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>            <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>employee<span class="token punctuation">)</span><span class="token punctuation">;</span>         <span class="token punctuation">&#125;</span>      <span class="token punctuation">&#125;</span>           <span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span></code></pre><p>运行一下</p><pre class="language-java" data-language="java"><code class="language-java"><span class="token class-name">Employee</span> <span class="token operator">:</span><span class="token punctuation">[</span> <span class="token class-name">Name</span> <span class="token operator">:</span> <span class="token class-name">John</span><span class="token punctuation">,</span> dept <span class="token operator">:</span> CEO<span class="token punctuation">,</span> salary <span class="token operator">:</span><span class="token number">30000</span> <span class="token punctuation">]</span><span class="token class-name">Employee</span> <span class="token operator">:</span><span class="token punctuation">[</span> <span class="token class-name">Name</span> <span class="token operator">:</span> <span class="token class-name">Robert</span><span class="token punctuation">,</span> dept <span class="token operator">:</span> <span class="token class-name">Head</span> <span class="token class-name">Sales</span><span class="token punctuation">,</span> salary <span class="token operator">:</span><span class="token number">20000</span> <span class="token punctuation">]</span><span class="token class-name">Employee</span> <span class="token operator">:</span><span class="token punctuation">[</span> <span class="token class-name">Name</span> <span class="token operator">:</span> <span class="token class-name">Richard</span><span class="token punctuation">,</span> dept <span class="token operator">:</span> <span class="token class-name">Sales</span><span class="token punctuation">,</span> salary <span class="token operator">:</span><span class="token number">10000</span> <span class="token punctuation">]</span><span class="token class-name">Employee</span> <span class="token operator">:</span><span class="token punctuation">[</span> <span class="token class-name">Name</span> <span class="token operator">:</span> <span class="token class-name">Rob</span><span class="token punctuation">,</span> dept <span class="token operator">:</span> <span class="token class-name">Sales</span><span class="token punctuation">,</span> salary <span class="token operator">:</span><span class="token number">10000</span> <span class="token punctuation">]</span><span class="token class-name">Employee</span> <span class="token operator">:</span><span class="token punctuation">[</span> <span class="token class-name">Name</span> <span class="token operator">:</span> <span class="token class-name">Michel</span><span class="token punctuation">,</span> dept <span class="token operator">:</span> <span class="token class-name">Head</span> <span class="token class-name">Marketing</span><span class="token punctuation">,</span> salary <span class="token operator">:</span><span class="token number">20000</span> <span class="token punctuation">]</span><span class="token class-name">Employee</span> <span class="token operator">:</span><span class="token punctuation">[</span> <span class="token class-name">Name</span> <span class="token operator">:</span> <span class="token class-name">Laura</span><span class="token punctuation">,</span> dept <span class="token operator">:</span> <span class="token class-name">Marketing</span><span class="token punctuation">,</span> salary <span class="token operator">:</span><span class="token number">10000</span> <span class="token punctuation">]</span><span class="token class-name">Employee</span> <span class="token operator">:</span><span class="token punctuation">[</span> <span class="token class-name">Name</span> <span class="token operator">:</span> <span class="token class-name">Bob</span><span class="token punctuation">,</span> dept <span class="token operator">:</span> <span class="token class-name">Marketing</span><span class="token punctuation">,</span> salary <span class="token operator">:</span><span class="token number">10000</span> <span class="token punctuation">]</span></code></pre>]]></content>
+      
+      
+      <categories>
+          
+          <category> 23 种设计模式 </category>
+          
+          <category> 结构型设计模式 </category>
+          
+          <category> 行为型设计模式 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Java </tag>
+            
+            <tag> 设计模式 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>设计模式之适配器模式</title>
       <link href="/journal/design-pattern-adapter/"/>
       <url>/journal/design-pattern-adapter/</url>
@@ -1057,9 +1088,9 @@
       
         <tags>
             
-            <tag> Java </tag>
-            
             <tag> Android </tag>
+            
+            <tag> Java </tag>
             
         </tags>
       
@@ -1101,7 +1132,7 @@
       <link href="/journal/springboot-best-coding/"/>
       <url>/journal/springboot-best-coding/</url>
       
-        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p>SpringBoot 虽然很多配置项都是自动配置的，但是有时候某些配置项需要手动配置。以及通过一些模块来简化 SpringBoot 的开发，提升开发的效率。</p><script src="https://cdn.jsdelivr.net/npm/aplayer@latest/dist/APlayer.min.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@latest/dist/APlayer.min.css"><span id="more"></span>        <div id="aplayer-tlCYtfkD" class="aplayer aplayer-tag-marker" style="margin-bottom: 20px;">            <pre class="aplayer-lrc-content"></pre>        </div>        <script>          var ap = new APlayer({            element: document.getElementById("aplayer-tlCYtfkD"),            narrow: false,            autoplay: true,            showlrc: false,            music: {              title: "跑跑卡丁车等待音乐",              author: "跑跑卡丁车官方BGM",              url: "wKgDZlXK1_LQ1kISAAKUa7tW3Rg221.mp3",              pic: "/journal/springboot-best-coding/109951163649852887.jpg",              lrc: ""            }          });          window.aplayers || (window.aplayers = []);          window.aplayers.push(ap);        </script><h2 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h2><ul><li>引入场景依赖<ul><li><a href="https://docs.spring.io/spring-boot/docs/current/reference/html/using-spring-boot.html#using-boot-starter">https://docs.spring.io/spring-boot/docs/current/reference/html/using-spring-boot.html#using-boot-starter</a></li></ul></li><li>查看自动配管了哪些(选做)<ul><li>自己分析，引入场景对应的自动配置一般都生效了</li><li>配置文件中 debug = true 开启自动配置报告。Negative (不生效) / Positive (生效)</li></ul></li><li>是否需要修改<ul><li>参照文档修改配置项<br><a href="https://docs.spring.io/spring-boot/docs/current/reference/html/appendix-application-properties.html#common-application-properties">https://docs.spring.io/spring-boot/docs/current/reference/html/appendix-application-properties.html#common-application-properties</a></li><li>自己分析。xxxxProperties绑定了配置文件的哪些。自定义加入或者替换组件<br>@Bean、@Component……</li><li>自定义器 XXXXXCustomizer; </li><li>…..</li></ul></li></ul><h2 id="开发小工具"><a href="#开发小工具" class="headerlink" title="开发小工具"></a>开发小工具</h2><p>非常实用的一些开发小工具</p><h3 id="Lombok"><a href="#Lombok" class="headerlink" title="Lombok"></a>Lombok</h3><p>简化 JavaBean 的开发，可以不用写重复的构造方法，getter 和 setter 以及 toString 方法。能写出这样的代码真的是天才👍👍。</p><pre class="language-markup" data-language="markup"><code class="language-markup"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>org.projectlombok<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>lombok<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactid</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span></code></pre><p>安装 idea 的 Lombok 插件。不过我这个版本它自己预装了，没有的话还是要去装一个。</p><p><img src="/journal/springboot-best-coding/QQ%E6%88%AA%E5%9B%BE20210628104113.png" alt="QQ截图20210628104113" loading="lazy"></p><p>相关的注解</p><ul><li>Data 注解：用于生成 JavaBean 中的 setter 、getter 和 toString 方法。</li><li>AllArgsConstructor 注解：用于生成 JavaBean 中的带全部参数的构造方法</li><li>NoArgsConstructor 注解：用于生成 JavaBean 中的带无参数的构造方法</li><li>ToString 注解：用于生成 toString 方法，在 Data 注解中已经包含过</li><li>Slf4j 注解：用于输出日志。</li></ul><h4 id="使用示例"><a href="#使用示例" class="headerlink" title="使用示例"></a>使用示例</h4><p>给 Car 类，自动生成 getter 和 setter 方法。</p><pre class="language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@Data</span><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Car</span> <span class="token punctuation">&#123;</span>    <span class="token keyword">private</span> <span class="token class-name">String</span> brand<span class="token punctuation">;</span>    <span class="token keyword">private</span> <span class="token class-name">Integer</span> price<span class="token punctuation">;</span><span class="token punctuation">&#125;</span></code></pre><p>给 Pet 类生成一个不带参数的构造方法、带全部参数的构造方法和 toString 方法。</p><pre class="language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@AllArgsConstructor</span> <span class="token comment">// 有参数的构造方法</span><span class="token annotation punctuation">@NoArgsConstructor</span> <span class="token comment">// 无参数的构造方法</span><span class="token annotation punctuation">@ToString</span><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Pet</span> <span class="token punctuation">&#123;</span>    <span class="token keyword">private</span> <span class="token class-name">String</span> name<span class="token punctuation">;</span><span class="token punctuation">&#125;</span></code></pre><p>在控制层中输出日志</p><pre class="language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@Controller</span><span class="token annotation punctuation">@RequestMapping</span><span class="token punctuation">(</span><span class="token string">"/hello"</span><span class="token punctuation">)</span><span class="token annotation punctuation">@Slf4j</span><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">HelloController</span> <span class="token punctuation">&#123;</span>        <span class="token annotation punctuation">@RequestMapping</span><span class="token punctuation">(</span><span class="token string">"/springboot2"</span><span class="token punctuation">)</span>    <span class="token annotation punctuation">@ResponseBody</span>    <span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">hello</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>        log<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"请求进来了~"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>        <span class="token keyword">return</span> <span class="token string">"Hello, SpringBoot2!"</span><span class="token punctuation">;</span>    <span class="token punctuation">&#125;</span>    <span class="token punctuation">&#125;</span></code></pre><h3 id="dev-tools"><a href="#dev-tools" class="headerlink" title="dev tools"></a>dev tools</h3><p>dev tools 可以在不点击 idea 的项目重启按钮的情况些，通过项目构建（ctrl + f9）的方式来对项目进行更新。不过这种项目更新实质上是重启 SpringBoot 项目。</p><p>相关的依赖</p><pre class="language-markup" data-language="markup"><code class="language-markup"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>org.springframework.boot<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>spring-boot-devtools<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>optional</span><span class="token punctuation">></span></span>true<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>optional</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span></code></pre><p>其实这不算是热更新部署，它仅仅是对项目进行重启而已。甚至在有些电脑，即使加载了 dev tools 重启也无济于事。</p><h3 id="Spring-Initializer"><a href="#Spring-Initializer" class="headerlink" title="Spring Initializer"></a>Spring Initializer</h3><p>它是一个 SpringBoot 的项目初始化向导，通过可视化界面，选择需要引入的场景即可成功的构建成为一个 SpringBoot 项目</p><p><img src="/journal/springboot-best-coding/QQ%E6%88%AA%E5%9B%BE20210628133709.png" alt="QQ截图20210628133709.png" loading="lazy"></p><p>设置项目名和包名</p><p><img src="/journal/springboot-best-coding/QQ%E6%88%AA%E5%9B%BE20210628133648.png" alt="QQ截图20210628133648.png" loading="lazy"></p><p>选择需要导入的场景</p><p><img src="/journal/springboot-best-coding/QQ%E6%88%AA%E5%9B%BE20210628133837.png" alt="QQ截图20210628133837.png" loading="lazy"></p><p>点击 Finish ，开始构建项目。即可构建成为一个 SpringBoot 项目。</p><p><img src="/journal/springboot-best-coding/QQ%E6%88%AA%E5%9B%BE20210628134128.png" alt="QQ截图20210628134128.png" loading="lazy"></p>]]></content>
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p>SpringBoot 虽然很多配置项都是自动配置的，但是有时候某些配置项需要手动配置。以及通过一些模块来简化 SpringBoot 的开发，提升开发的效率。</p><script src="https://cdn.jsdelivr.net/npm/aplayer@latest/dist/APlayer.min.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@latest/dist/APlayer.min.css"><span id="more"></span>        <div id="aplayer-SkLZnzIN" class="aplayer aplayer-tag-marker" style="margin-bottom: 20px;">            <pre class="aplayer-lrc-content"></pre>        </div>        <script>          var ap = new APlayer({            element: document.getElementById("aplayer-SkLZnzIN"),            narrow: false,            autoplay: true,            showlrc: false,            music: {              title: "跑跑卡丁车等待音乐",              author: "跑跑卡丁车官方BGM",              url: "wKgDZlXK1_LQ1kISAAKUa7tW3Rg221.mp3",              pic: "/journal/springboot-best-coding/109951163649852887.jpg",              lrc: ""            }          });          window.aplayers || (window.aplayers = []);          window.aplayers.push(ap);        </script><h2 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h2><ul><li>引入场景依赖<ul><li><a href="https://docs.spring.io/spring-boot/docs/current/reference/html/using-spring-boot.html#using-boot-starter">https://docs.spring.io/spring-boot/docs/current/reference/html/using-spring-boot.html#using-boot-starter</a></li></ul></li><li>查看自动配管了哪些(选做)<ul><li>自己分析，引入场景对应的自动配置一般都生效了</li><li>配置文件中 debug = true 开启自动配置报告。Negative (不生效) / Positive (生效)</li></ul></li><li>是否需要修改<ul><li>参照文档修改配置项<br><a href="https://docs.spring.io/spring-boot/docs/current/reference/html/appendix-application-properties.html#common-application-properties">https://docs.spring.io/spring-boot/docs/current/reference/html/appendix-application-properties.html#common-application-properties</a></li><li>自己分析。xxxxProperties绑定了配置文件的哪些。自定义加入或者替换组件<br>@Bean、@Component……</li><li>自定义器 XXXXXCustomizer; </li><li>…..</li></ul></li></ul><h2 id="开发小工具"><a href="#开发小工具" class="headerlink" title="开发小工具"></a>开发小工具</h2><p>非常实用的一些开发小工具</p><h3 id="Lombok"><a href="#Lombok" class="headerlink" title="Lombok"></a>Lombok</h3><p>简化 JavaBean 的开发，可以不用写重复的构造方法，getter 和 setter 以及 toString 方法。能写出这样的代码真的是天才👍👍。</p><pre class="language-markup" data-language="markup"><code class="language-markup"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>org.projectlombok<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>lombok<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactid</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span></code></pre><p>安装 idea 的 Lombok 插件。不过我这个版本它自己预装了，没有的话还是要去装一个。</p><p><img src="/journal/springboot-best-coding/QQ%E6%88%AA%E5%9B%BE20210628104113.png" alt="QQ截图20210628104113" loading="lazy"></p><p>相关的注解</p><ul><li>Data 注解：用于生成 JavaBean 中的 setter 、getter 和 toString 方法。</li><li>AllArgsConstructor 注解：用于生成 JavaBean 中的带全部参数的构造方法</li><li>NoArgsConstructor 注解：用于生成 JavaBean 中的带无参数的构造方法</li><li>ToString 注解：用于生成 toString 方法，在 Data 注解中已经包含过</li><li>Slf4j 注解：用于输出日志。</li></ul><h4 id="使用示例"><a href="#使用示例" class="headerlink" title="使用示例"></a>使用示例</h4><p>给 Car 类，自动生成 getter 和 setter 方法。</p><pre class="language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@Data</span><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Car</span> <span class="token punctuation">&#123;</span>    <span class="token keyword">private</span> <span class="token class-name">String</span> brand<span class="token punctuation">;</span>    <span class="token keyword">private</span> <span class="token class-name">Integer</span> price<span class="token punctuation">;</span><span class="token punctuation">&#125;</span></code></pre><p>给 Pet 类生成一个不带参数的构造方法、带全部参数的构造方法和 toString 方法。</p><pre class="language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@AllArgsConstructor</span> <span class="token comment">// 有参数的构造方法</span><span class="token annotation punctuation">@NoArgsConstructor</span> <span class="token comment">// 无参数的构造方法</span><span class="token annotation punctuation">@ToString</span><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Pet</span> <span class="token punctuation">&#123;</span>    <span class="token keyword">private</span> <span class="token class-name">String</span> name<span class="token punctuation">;</span><span class="token punctuation">&#125;</span></code></pre><p>在控制层中输出日志</p><pre class="language-java" data-language="java"><code class="language-java"><span class="token annotation punctuation">@Controller</span><span class="token annotation punctuation">@RequestMapping</span><span class="token punctuation">(</span><span class="token string">"/hello"</span><span class="token punctuation">)</span><span class="token annotation punctuation">@Slf4j</span><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">HelloController</span> <span class="token punctuation">&#123;</span>        <span class="token annotation punctuation">@RequestMapping</span><span class="token punctuation">(</span><span class="token string">"/springboot2"</span><span class="token punctuation">)</span>    <span class="token annotation punctuation">@ResponseBody</span>    <span class="token keyword">public</span> <span class="token class-name">String</span> <span class="token function">hello</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>        log<span class="token punctuation">.</span><span class="token function">info</span><span class="token punctuation">(</span><span class="token string">"请求进来了~"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>        <span class="token keyword">return</span> <span class="token string">"Hello, SpringBoot2!"</span><span class="token punctuation">;</span>    <span class="token punctuation">&#125;</span>    <span class="token punctuation">&#125;</span></code></pre><h3 id="dev-tools"><a href="#dev-tools" class="headerlink" title="dev tools"></a>dev tools</h3><p>dev tools 可以在不点击 idea 的项目重启按钮的情况些，通过项目构建（ctrl + f9）的方式来对项目进行更新。不过这种项目更新实质上是重启 SpringBoot 项目。</p><p>相关的依赖</p><pre class="language-markup" data-language="markup"><code class="language-markup"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>org.springframework.boot<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>spring-boot-devtools<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>optional</span><span class="token punctuation">></span></span>true<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>optional</span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span></code></pre><p>其实这不算是热更新部署，它仅仅是对项目进行重启而已。甚至在有些电脑，即使加载了 dev tools 重启也无济于事。</p><h3 id="Spring-Initializer"><a href="#Spring-Initializer" class="headerlink" title="Spring Initializer"></a>Spring Initializer</h3><p>它是一个 SpringBoot 的项目初始化向导，通过可视化界面，选择需要引入的场景即可成功的构建成为一个 SpringBoot 项目</p><p><img src="/journal/springboot-best-coding/QQ%E6%88%AA%E5%9B%BE20210628133709.png" alt="QQ截图20210628133709.png" loading="lazy"></p><p>设置项目名和包名</p><p><img src="/journal/springboot-best-coding/QQ%E6%88%AA%E5%9B%BE20210628133648.png" alt="QQ截图20210628133648.png" loading="lazy"></p><p>选择需要导入的场景</p><p><img src="/journal/springboot-best-coding/QQ%E6%88%AA%E5%9B%BE20210628133837.png" alt="QQ截图20210628133837.png" loading="lazy"></p><p>点击 Finish ，开始构建项目。即可构建成为一个 SpringBoot 项目。</p><p><img src="/journal/springboot-best-coding/QQ%E6%88%AA%E5%9B%BE20210628134128.png" alt="QQ截图20210628134128.png" loading="lazy"></p>]]></content>
       
       
       <categories>
@@ -1511,9 +1542,9 @@
       
         <tags>
             
-            <tag> Java </tag>
-            
             <tag> Android </tag>
+            
+            <tag> Java </tag>
             
         </tags>
       
@@ -1563,9 +1594,9 @@
       
         <tags>
             
-            <tag> Java </tag>
-            
             <tag> Android </tag>
+            
+            <tag> Java </tag>
             
         </tags>
       
@@ -1590,9 +1621,9 @@
       
         <tags>
             
-            <tag> Java </tag>
-            
             <tag> Android </tag>
+            
+            <tag> Java </tag>
             
         </tags>
       
@@ -1671,9 +1702,9 @@
       
         <tags>
             
-            <tag> Java </tag>
-            
             <tag> Android </tag>
+            
+            <tag> Java </tag>
             
         </tags>
       
@@ -1698,9 +1729,9 @@
       
         <tags>
             
-            <tag> Java </tag>
-            
             <tag> Android </tag>
+            
+            <tag> Java </tag>
             
         </tags>
       
@@ -1725,9 +1756,9 @@
       
         <tags>
             
-            <tag> Java </tag>
-            
             <tag> Android </tag>
+            
+            <tag> Java </tag>
             
         </tags>
       
@@ -1752,9 +1783,9 @@
       
         <tags>
             
-            <tag> Java </tag>
-            
             <tag> Android </tag>
+            
+            <tag> Java </tag>
             
         </tags>
       
@@ -1779,9 +1810,9 @@
       
         <tags>
             
-            <tag> Java </tag>
-            
             <tag> Android </tag>
+            
+            <tag> Java </tag>
             
         </tags>
       
@@ -1806,9 +1837,9 @@
       
         <tags>
             
-            <tag> Java </tag>
-            
             <tag> Android </tag>
+            
+            <tag> Java </tag>
             
         </tags>
       
@@ -1833,9 +1864,9 @@
       
         <tags>
             
-            <tag> Java </tag>
-            
             <tag> Android </tag>
+            
+            <tag> Java </tag>
             
         </tags>
       
@@ -1860,9 +1891,9 @@
       
         <tags>
             
-            <tag> Java </tag>
-            
             <tag> Android </tag>
+            
+            <tag> Java </tag>
             
         </tags>
       
@@ -1887,9 +1918,9 @@
       
         <tags>
             
-            <tag> Java </tag>
-            
             <tag> Android </tag>
+            
+            <tag> Java </tag>
             
         </tags>
       
@@ -1914,9 +1945,9 @@
       
         <tags>
             
-            <tag> Java </tag>
-            
             <tag> Android </tag>
+            
+            <tag> Java </tag>
             
         </tags>
       
@@ -1941,9 +1972,9 @@
       
         <tags>
             
-            <tag> Java </tag>
-            
             <tag> Android </tag>
+            
+            <tag> Java </tag>
             
         </tags>
       
@@ -1968,9 +1999,9 @@
       
         <tags>
             
-            <tag> Java </tag>
-            
             <tag> Android </tag>
+            
+            <tag> Java </tag>
             
         </tags>
       
@@ -1995,9 +2026,9 @@
       
         <tags>
             
-            <tag> Java </tag>
-            
             <tag> Android </tag>
+            
+            <tag> Java </tag>
             
         </tags>
       
@@ -2022,9 +2053,9 @@
       
         <tags>
             
-            <tag> Java </tag>
-            
             <tag> Android </tag>
+            
+            <tag> Java </tag>
             
         </tags>
       
@@ -2049,9 +2080,9 @@
       
         <tags>
             
-            <tag> Java </tag>
-            
             <tag> Android </tag>
+            
+            <tag> Java </tag>
             
         </tags>
       
@@ -2076,9 +2107,9 @@
       
         <tags>
             
-            <tag> Java </tag>
-            
             <tag> Android </tag>
+            
+            <tag> Java </tag>
             
             <tag> HTML </tag>
             
@@ -2105,9 +2136,9 @@
       
         <tags>
             
-            <tag> Java </tag>
-            
             <tag> Android </tag>
+            
+            <tag> Java </tag>
             
         </tags>
       
@@ -2132,9 +2163,9 @@
       
         <tags>
             
-            <tag> Java </tag>
-            
             <tag> Android </tag>
+            
+            <tag> Java </tag>
             
         </tags>
       
@@ -2159,9 +2190,9 @@
       
         <tags>
             
-            <tag> Java </tag>
-            
             <tag> Android </tag>
+            
+            <tag> Java </tag>
             
         </tags>
       
