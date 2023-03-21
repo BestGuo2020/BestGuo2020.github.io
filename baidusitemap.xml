@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://www.bestguo.top/journal/design-pattern-observer/</loc>
-    <lastmod>2023-03-15</lastmod>
+    <loc>https://www.bestguo.top/journal/redis-type-of-data/</loc>
+    <lastmod>2023-03-21</lastmod>
   </url>
   <url>
-    <loc>https://www.bestguo.top/journal/design-pattern-mediator/</loc>
-    <lastmod>2023-03-15</lastmod>
+    <loc>https://www.bestguo.top/journal/design-pattern-observer/</loc>
+    <lastmod>2023-03-21</lastmod>
   </url>
   <url>
     <loc>https://www.bestguo.top/journal/design-pattern-builder/</loc>
+    <lastmod>2023-03-21</lastmod>
+  </url>
+  <url>
+    <loc>https://www.bestguo.top/journal/design-pattern-mediator/</loc>
     <lastmod>2023-03-15</lastmod>
   </url>
   <url>
@@ -181,10 +185,6 @@
     <lastmod>2022-05-25</lastmod>
   </url>
   <url>
-    <loc>https://www.bestguo.top/journal/redis-type-of-data/</loc>
-    <lastmod>2022-05-25</lastmod>
-  </url>
-  <url>
     <loc>https://www.bestguo.top/journal/redis-transaction/</loc>
     <lastmod>2022-05-25</lastmod>
   </url>
@@ -329,11 +329,11 @@
     <lastmod>2022-05-25</lastmod>
   </url>
   <url>
-    <loc>https://www.bestguo.top/journal/How-do-you-configure-ssh-in-your-pc/</loc>
+    <loc>https://www.bestguo.top/journal/ConstraintLayout-component/</loc>
     <lastmod>2022-05-25</lastmod>
   </url>
   <url>
-    <loc>https://www.bestguo.top/journal/ConstraintLayout-component/</loc>
+    <loc>https://www.bestguo.top/journal/How-do-you-configure-ssh-in-your-pc/</loc>
     <lastmod>2022-05-25</lastmod>
   </url>
   <url>
